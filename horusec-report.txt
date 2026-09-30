@@ -1,0 +1,191 @@
+
+==================================================================================
+
+HORUSEC ENDED THE ANALYSIS WITH STATUS OF "success" AND WITH THE FOLLOWING RESULTS:
+
+==================================================================================
+
+Analysis StartedAt: 2026-09-27 18:48:59
+Analysis FinishedAt: 2026-09-27 18:49:32
+
+==================================================================================
+
+Language: Python
+Severity: LOW
+Line: 14
+Column: 0
+SecurityTool: Bandit
+Confidence: HIGH
+File: /home/baltasar/Documents/Calidad_software/src/SatisPlanning/componentes/comportamiento_movimiento.py
+Code: 13         self.tiempo_cambio_direccion = 0
+14         self.duracion_direccion = random.randint(30, 
+RuleID: B311
+Type: Vulnerability
+ReferenceHash: a3dfe0cec44ab3668a711b78dda572e322fbe634f78da6792638533567b1d055
+Details: (1/1) * Possible vulnerability detected: Standard pseudo-random generators are not suitable for security/cryptographic purposes.
+
+==================================================================================
+
+Language: Python
+Severity: LOW
+Line: 15
+Column: 0
+SecurityTool: Bandit
+Confidence: HIGH
+File: /home/baltasar/Documents/Calidad_software/src/SatisPlanning/componentes/comportamiento_movimiento.py
+Code: 14         self.duracion_direccion = random.randint(30, 90)
+15         self.direccion_aleatoria = ra
+RuleID: B311
+Type: Vulnerability
+ReferenceHash: 2f7aa63bf3edfad71af0741802592e3ed948cbeab1d0b9f462b087dfafbcb1e0
+Details: (1/1) * Possible vulnerability detected: Standard pseudo-random generators are not suitable for security/cryptographic purposes.
+
+==================================================================================
+
+Language: Python
+Severity: LOW
+Line: 21
+Column: 0
+SecurityTool: Bandit
+Confidence: HIGH
+File: /home/baltasar/Documents/Calidad_software/src/SatisPlanning/componentes/comportamiento_movimiento.py
+Code: 20         if self.tiempo_cambio_direccion > self.duracion_direccion:
+21             self.direccion_
+RuleID: B311
+Type: Vulnerability
+ReferenceHash: 7f38d38f68adf5974332df231105dc275923a1f92a9f07a4e2e3d5159fd9ec8c
+Details: (1/1) * Possible vulnerability detected: Standard pseudo-random generators are not suitable for security/cryptographic purposes.
+
+==================================================================================
+
+Language: Python
+Severity: LOW
+Line: 22
+Column: 0
+SecurityTool: Bandit
+Confidence: HIGH
+File: /home/baltasar/Documents/Calidad_software/src/SatisPlanning/componentes/comportamiento_movimiento.py
+Code: 21             self.direccion_aleatoria = random.choice([-1, 0, 1])
+22             self.duracion_dir
+RuleID: B311
+Type: Vulnerability
+ReferenceHash: 57b4ae331082674207b2c1dd9eb04465af25dd77139d3be3d4786bfa3f04f614
+Details: (1/1) * Possible vulnerability detected: Standard pseudo-random generators are not suitable for security/cryptographic purposes.
+
+==================================================================================
+
+Language: Python
+Severity: LOW
+Line: 34
+Column: 0
+SecurityTool: Bandit
+Confidence: HIGH
+File: /home/baltasar/Documents/Calidad_software/src/SatisPlanning/componentes/comportamiento_movimiento.py
+Code: 33         # Decidir si salta (por pared o aleatoriamente)
+34         salto = hay_pared or random.ra
+RuleID: B311
+Type: Vulnerability
+ReferenceHash: 02e0260d92ce983597648963b21cff1384f5bdf7865f0a6211b90d8108eeee55
+Details: (1/1) * Possible vulnerability detected: Standard pseudo-random generators are not suitable for security/cryptographic purposes.
+
+==================================================================================
+
+Language: Python
+Severity: LOW
+Line: 70
+Column: 0
+SecurityTool: Bandit
+Confidence: HIGH
+File: /home/baltasar/Documents/Calidad_software/src/SatisPlanning/componentes/comportamiento_movimiento.py
+Code: 69         # Decidir si salta (por pared o aleatoriamente)
+70         salto = hay_pared or random.ra
+RuleID: B311
+Type: Vulnerability
+ReferenceHash: 742db892dcec685ac9e60cdbee2f2ca082a66374c2a0abc9356e0677cabf5147
+Details: (1/1) * Possible vulnerability detected: Standard pseudo-random generators are not suitable for security/cryptographic purposes.
+
+==================================================================================
+
+Language: Python
+Severity: LOW
+Line: 73
+Column: 0
+SecurityTool: Bandit
+Confidence: HIGH
+File: /home/baltasar/Documents/Calidad_software/src/SatisPlanning/entidades/enemigo.py
+Code: 72         probabilidad = 0.4  # 40% de probabilidad
+73         if hasattr(self, "mundo") and random
+RuleID: B311
+Type: Vulnerability
+ReferenceHash: 18745421dc92c17d3477738f364d65009d4202d928940945fab85f8232d00c44
+Details: (1/1) * Possible vulnerability detected: Standard pseudo-random generators are not suitable for security/cryptographic purposes.
+
+==================================================================================
+
+Language: Python
+Severity: LOW
+Line: 24
+Column: 0
+SecurityTool: Bandit
+Confidence: HIGH
+File: /home/baltasar/Documents/Calidad_software/src/SatisPlanning/fabrica_juego.py
+Code: 23         # Objetos del mundo
+24         mapa = Mapa(random.randint(0, 1000))
+25         personaje 
+RuleID: B311
+Type: Vulnerability
+ReferenceHash: ee0d6ef5e1bcbf952014140185a0067303f9c00f1b7dcef85d66eef10f0408b0
+Details: (1/1) * Possible vulnerability detected: Standard pseudo-random generators are not suitable for security/cryptographic purposes.
+
+==================================================================================
+
+Language: Python
+Severity: LOW
+Line: 113
+Column: 0
+SecurityTool: Bandit
+Confidence: HIGH
+File: /home/baltasar/Documents/Calidad_software/src/SatisPlanning/manejador_niveles.py
+Code: 112         px, py = personaje.x, personaje.y
+113         distancia = random.uniform(self.spawn_dist
+RuleID: B311
+Type: Vulnerability
+ReferenceHash: bc423e7d5de04e5c43ae42816f5f7dbeaa60af8115fdc6229ae082b6d791afae
+Details: (1/1) * Possible vulnerability detected: Standard pseudo-random generators are not suitable for security/cryptographic purposes.
+
+==================================================================================
+
+Language: Python
+Severity: LOW
+Line: 114
+Column: 0
+SecurityTool: Bandit
+Confidence: HIGH
+File: /home/baltasar/Documents/Calidad_software/src/SatisPlanning/manejador_niveles.py
+Code: 113         distancia = random.uniform(self.spawn_dist_min, self.spawn_dist_max)
+114         x = px 
+RuleID: B311
+Type: Vulnerability
+ReferenceHash: 79af262e4159567437ca7b2e519f19d818051b3f09f8347d68e64d125b1469bc
+Details: (1/1) * Possible vulnerability detected: Standard pseudo-random generators are not suitable for security/cryptographic purposes.
+
+==================================================================================
+
+Language: Python
+Severity: LOW
+Line: 115
+Column: 0
+SecurityTool: Bandit
+Confidence: HIGH
+File: /home/baltasar/Documents/Calidad_software/src/SatisPlanning/manejador_niveles.py
+Code: 114         x = px + distancia * random.choice([-1, 1])
+115         y = py + random.randint(-100, 10
+RuleID: B311
+Type: Vulnerability
+ReferenceHash: dd958147b9fedf2b39acd56a663d28debbc48258ec2800741ce5e225e86f415e
+Details: (1/1) * Possible vulnerability detected: Standard pseudo-random generators are not suitable for security/cryptographic purposes.
+
+==================================================================================
+
+In this analysis, a total of 11 possible vulnerabilities were found and we classified them into:
+Total of Vulnerability LOW is: 11
