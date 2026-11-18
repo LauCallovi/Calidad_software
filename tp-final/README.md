@@ -335,10 +335,22 @@ se explica por los bytes o los requests extra de la v1.1.0? ¿El límite lo puso
 
 | Criterio | Umbral | Dato (stress del back, escalones 200 y 400 req/s) |
 |---|---|---|
-| p95 `POST /api/sensores` | < 300 ms a ≥ 333 req/s | _completar_ |
-| Tasa de errores | < 1% a ≥ 333 req/s | _completar_ |
-| Réplicas del HPA a esa carga | < 8 (margen para picos) | _completar_ |
+| p95 `POST /api/sensores` | < 300 ms a ≥ 333 req/s | ✅ p95 = 3,96 ms en toda la corrida (50 → 1200 req/s, promedio 477 req/s) |
+| Tasa de errores | < 1% a ≥ 333 req/s | ✅ 2 errores en 286.439 requests (0,0007%); 60 iteraciones descartadas por el generador |
+| Réplicas del HPA a esa carga | < 8 (margen para picos) | ✅ ~5 réplicas entre 333 y 490 req/s; ⚠️ llega al máximo (8) desde ~700 req/s (≈ 2× la carga de 10.000 sensores) |
 | Recuperación ante pico (E2) | Vuelve a SLO sin intervención manual | _completar_ |
+
+**Línea base del back (TP3), corrida por Jere el 17/11** (`evidencias/jere/`):
+
+| Prueba | Carga | p95 `POST_sensores` | Errores | HPA | Evidencia |
+|---|---|---|---|---|---|
+| Smoke | 1 VU, 30 s | 7,83 ms | 0% | 2 réplicas | `reportes/tp3-smoke.txt`, `capturas/02-smoke.png` |
+| Load | 67 req/s (2.000 sensores), 5 min | 4,69 ms | 0% (0/20.100) | 2 réplicas | `reportes/tp3-load.txt`, `capturas/02-load.png` |
+| Stress | 50 → 1200 req/s, 10 min | 3,96 ms (máx. 851 ms) | 0,0007% (2/286.439) | 2 → 3 → 5 → 7 → 8, vuelve a 2 al terminar | `reportes/tp3-stress.txt`, `videos/02-stress-hpa.mp4`, `capturas/02-hpa-8-replicas.png`, `capturas/02-stress.png` |
+
+Una primera corrida del stress (misma configuración) dio p95 = 14,69 ms, 40 errores (0,01%) y 1.144
+iteraciones descartadas: el generador y el cluster comparten la notebook, y la variación entre corridas
+es del mismo orden que la diferencia. No se encontró el punto de quiebre del back dentro de 1200 req/s.
 
 **Veredicto 10.000 sensores:** _completar_. Si no se cumple, indicar el cuello de botella observado
 (CPU del back con HPA al máximo, conexiones de PostgreSQL, recursos del nodo de Minikube) y la
@@ -362,4 +374,8 @@ Aclaración: el resultado vale para este entorno; en producción hay que repetir
 | **SAST por patrones marca comentarios** | La regla de Horusec es una regex sobre el texto | Reescribir el comentario; revisión humana de cada hallazgo; falsos positivos y riesgos aceptados registrados por hash |
 | **Sin análisis de dependencias** | Falta `package-lock.json` | Documentado como limitación, con propuesta (sección 4.4) |
 | **ingress-nginx retirado (marzo de 2026)** | El proyecto dejó de recibir mantenimiento | Se usa porque es el addon de Minikube de la consigna. La migración natural es **Gateway API**: `HTTPRoute` con `backendRefs` ponderados (peso) y `matches` por header/cookie |
+| **Clave del repo de k6 rechazada por apt** (`NO_PUBKEY C780D0BDB1A69C86`) | `gpg --keyring` genera un keybox que apt ignora; la subclave de firma no se leía | Bajar `https://dl.k6.io/key.gpg` con `gpg --dearmor` (corregido en la guía) |
+| **`deploy.sh` no podía construir las imágenes** (error de buildkit) | Minikube 1.39 usa **containerd** por defecto; `minikube docker-env` no expone un daemon Docker | `--container-runtime=docker` en `minikube start`; el script corta si encuentra un cluster con otro runtime |
+| **Grabación de pantalla en negro / cortada** | Sesión Wayland: SimpleScreenRecorder no captura; la pantalla se apagó a mitad del video | Grabador nativo de GNOME (Impr Pant → video) y pantalla en blanco: nunca. Se repitió la corrida del stress |
+| **Evidencias de varios integrantes mezcladas** | Los scripts escribían siempre en `evidencias/` | Variable `EVIDENCIAS=evidencias/<nombre>` en scripts y k6 |
 | _completar tras la ejecución_ | | |
