@@ -168,7 +168,7 @@ Generada por `rollout.sh` en `evidencias/reportes/bitacora.csv`. Cambios de peso
 | 01:28:13 | 01:28:30 | etapa-0 | 1.2.0 | 0 | — | 3 | — | — | — | — | 3 | ROLLBACK (esperado) | 3 de 3 visitas con pantalla en blanco; ningún usuario expuesto |
 | 17:38:24 | 17:40:31 | peso-25 (ensayo) | 1.2.0 | 25 | 25,91 | 2401 | 2,58 | 1,61 | 0 | 0 | 5 | ROLLBACK (esperado) | 5 de 20 visitas en blanco; rollback en 1,7 s |
 | 17:41:55 | 17:44:02 | peso-25 (grabada) | 1.2.0 | 25 | 22,99 | 2401 | 2,42 | 1,63 | 0 | 0 | 5 | ROLLBACK (esperado) | 5 de 20 visitas en blanco; rollback en 1,7 s |
-| | | promocion | 1.1.0 | 0 | — | — | — | — | — | — | — | PROMOCION | |
+| 17:46:08 | 17:46:21 | promocion | 1.1.0 | 0 | — | — | — | — | — | — | — | PROMOCION | stable ahora sirve 1.1.0 (`capturas/07-promocion.png`); canary a 0 réplicas |
 
 **Verificación independiente del reparto** (`conteo-curl.sh`, 100 requests por etapa):
 

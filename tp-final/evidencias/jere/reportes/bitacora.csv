@@ -5,3 +5,4 @@ inicio,fin,etapa,version,peso,pct_observado,visitas,p95_canary_ms,p95_stable_ms,
 2026-11-18T00:50:11-03:00,2026-11-18T00:55:19-03:00,peso-50,1.1.0,50,49.61,6001,2.378783,1.597097,0,0,0,AVANZA,criterios cumplidos
 2026-11-18T00:55:19-03:00,2026-11-18T01:00:25-03:00,peso-100,1.1.0,100,100,6001,2.435438,1.597097,0,0,0,AVANZA,criterios cumplidos
 2026-11-18T01:28:13-03:00,2026-11-18T01:28:30-03:00,etapa-0,1.2.0,0,,3,,,,,3,ROLLBACK,3 de 3 visitas con pantalla en blanco
+2026-11-18T17:46:08-03:00,2026-11-18T17:46:21-03:00,promocion,1.1.0,0,,,,,,,,PROMOCION,stable ahora sirve 1.1.0; canary a 0 replicas
