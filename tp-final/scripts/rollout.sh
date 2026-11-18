@@ -95,7 +95,7 @@ rollback() {
     sleep 1
   done
   t1=$(date +%s.%N)
-  DURACION_ROLLBACK=$(awk -v a="$t0" -v b="$t1" 'BEGIN { printf "%.1f", b - a }')
+  DURACION_ROLLBACK=$(LC_ALL=C awk -v a="$t0" -v b="$t1" 'BEGIN { printf "%.1f", b - a }')
   echo ">>> ROLLBACK completo: tráfico 100% en stable en ${DURACION_ROLLBACK} s"
 }
 
