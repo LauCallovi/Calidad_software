@@ -257,7 +257,8 @@ curl -s http://terrasense.local/version.txt        # → 1.1.0 (ahora desde la s
 📸 `capturas/07-promocion.png`: pods stable en 1.1.0, canary con 0 réplicas.
 
 > Después de promover, la stable es la 1.1.0: para cualquier corrida posterior usar `VERSION_STABLE=1.1.0`.
-> `k8s/stable/deployment.yaml` quedó modificado por la promoción: commitearlo junto con las evidencias.
+> `k8s/stable/deployment.yaml` queda modificado por la promoción: **no commitearlo** (`git checkout -- k8s/stable/deployment.yaml`).
+> El repo describe el estado inicial (stable 1.0.0 + canary 1.1.0) para que cualquiera pueda repetir el rollout desde cero.
 
 ---
 
