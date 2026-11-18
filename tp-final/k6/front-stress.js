@@ -153,6 +153,6 @@ export function handleSummary(data) {
 
   return {
     stdout: texto,
-    [`evidencias/reportes/estres-front-${TARGET}.json`]: JSON.stringify(reporte, null, 2),
+    [`${__ENV.EVIDENCIAS || 'evidencias'}/reportes/estres-front-${TARGET}.json`]: JSON.stringify(reporte, null, 2),
   };
 }

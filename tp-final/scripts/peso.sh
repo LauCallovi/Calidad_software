@@ -17,7 +17,9 @@ cd "$TP_DIR"
 NS=terrasense
 INGRESS=terrasense-ingress-canary
 YAML=k8s/canary/ingress-canary.yaml
-LOG=evidencias/reportes/cambios-de-peso.log
+EVID="${EVIDENCIAS:-evidencias}"
+mkdir -p "$EVID/reportes"
+LOG="$EVID/reportes/cambios-de-peso.log"
 
 PESO="${1:-}"
 if ! [[ "$PESO" =~ ^[0-9]+$ ]] || [ "$PESO" -gt 100 ]; then

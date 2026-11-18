@@ -13,6 +13,7 @@ import { cargarPagina, VERSION_STABLE, VERSION_CANARY } from './front-common.js'
 const RATE = Number(__ENV.RATE || 20);
 const DURATION = __ENV.DURATION || '5m';
 const ETAPA = __ENV.ETAPA || 'manual';
+const EVID = __ENV.EVIDENCIAS || 'evidencias';
 const PESO = Number(__ENV.PESO || 0);
 
 // Cuántas visitas cayeron en cada versión (para calcular el % observado).
@@ -140,6 +141,6 @@ export function handleSummary(data) {
 
   return {
     stdout: texto,
-    [`evidencias/reportes/${ETAPA}-split.json`]: JSON.stringify(reporte, null, 2),
+    [`${EVID}/reportes/${ETAPA}-split.json`]: JSON.stringify(reporte, null, 2),
   };
 }

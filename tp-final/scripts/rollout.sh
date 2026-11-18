@@ -11,7 +11,7 @@
 #            Si algo falla → ROLLBACK (peso 0), se mide cuánto tardó y se corta.
 #   PROMOVER=1: al terminar bien, la stable pasa a la versión nueva y el canary se apaga.
 #
-# Cada etapa queda registrada en evidencias/reportes/bitacora.csv.
+# Cada etapa queda registrada en $EVIDENCIAS/reportes/bitacora.csv (default: evidencias/).
 #
 # Uso (desde tp-final/ o desde cualquier lado):
 #   ./scripts/rollout.sh                                   # plan completo con la 1.1.0
@@ -44,9 +44,11 @@ SALTEAR_ETAPA0="${SALTEAR_ETAPA0:-0}"
 TOLERANCIA_PCT=10
 TOLERANCIA_MS=5
 
-REP=evidencias/reportes
+# EVIDENCIAS permite separar las evidencias de cada integrante (ej. evidencias/jere).
+EVID="${EVIDENCIAS:-evidencias}"
+REP="$EVID/reportes"
 BITACORA="$REP/bitacora.csv"
-mkdir -p "$REP" evidencias/capturas
+mkdir -p "$REP" "$EVID/capturas"
 
 for cmd in kubectl k6 python3 curl; do
   command -v "$cmd" >/dev/null || { echo "Falta '$cmd' en el PATH"; exit 1; }

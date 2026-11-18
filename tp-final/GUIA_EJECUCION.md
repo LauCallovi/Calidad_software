@@ -28,8 +28,15 @@ Orden para correr el TP completo y qué capturar en cada paso. Todos los comando
 - **Videos con pantalla partida:** terminal con k6 o el script + terminal con `kubectl ... -w` o el navegador.
 - Grabar con **SimpleScreenRecorder** (`sudo apt install simplescreenrecorder`) o con el atajo de GNOME
   `Ctrl+Alt+Shift+R` (graba hasta 30 s por defecto; para videos largos usar SimpleScreenRecorder).
-- Guardar con los nombres de la tabla de evidencias del README (sección 5): `evidencias/capturas/...`,
-  `evidencias/videos/...`. Los reportes JSON/CSV y los screenshots del navegador los generan los scripts.
+- **Evidencias por integrante.** Cada uno guarda las suyas en su carpeta. Antes de empezar, en cada terminal:
+  ```bash
+  export EVIDENCIAS=evidencias/<nombre>      # ej. evidencias/jere
+  mkdir -p "$EVIDENCIAS"/{capturas,reportes,videos}
+  ```
+  Los scripts (`rollout.sh`, `peso.sh`, `conteo-curl.sh` y los k6 que generan reportes o screenshots)
+  escriben en `$EVIDENCIAS` (si no está definida, en `evidencias/`).
+- Guardar con los nombres de la tabla de evidencias del README (sección 5): `$EVIDENCIAS/capturas/...`,
+  `$EVIDENCIAS/videos/...`. Los reportes JSON/CSV y los screenshots del navegador los generan los scripts.
 - GitHub no acepta archivos de más de 100 MB: si un video es más grande, comprimirlo o subirlo a
   Drive y dejar el link en el README.
 
@@ -100,8 +107,8 @@ Antes de tocar el front se mide el back, para tener contra qué comparar.
 
 ### 2.1 Smoke y load
 ```bash
-k6 run k6/smoke.js 2>&1 | tee evidencias/reportes/tp3-smoke.txt
-k6 run k6/load.js  2>&1 | tee evidencias/reportes/tp3-load.txt     # 5 min a 67 req/s
+k6 run k6/smoke.js 2>&1 | tee "$EVIDENCIAS"/reportes/tp3-smoke.txt
+k6 run k6/load.js  2>&1 | tee "$EVIDENCIAS"/reportes/tp3-load.txt     # 5 min a 67 req/s
 ```
 📸 `capturas/02-smoke.png`, `capturas/02-load.png`: el resumen final de k6, con los thresholds en verde.
 
@@ -112,7 +119,7 @@ watch -n2 'date; kubectl -n terrasense get hpa; kubectl -n terrasense get pods -
 ```
 Terminal 1:
 ```bash
-k6 run k6/stress.js 2>&1 | tee evidencias/reportes/tp3-stress.txt    # ~10 min, puede abortar al encontrar el quiebre
+k6 run k6/stress.js 2>&1 | tee "$EVIDENCIAS"/reportes/tp3-stress.txt    # ~10 min, puede abortar al encontrar el quiebre
 ```
 🎥 `videos/02-stress-hpa.mp4`: k6 y el HPA escalando (réplicas 2 → N).
 Anotar: req/s y p95 en cada escalón, réplicas máximas, si abortó y en qué escalón.
@@ -122,7 +129,7 @@ Esperar a que el HPA vuelva a 2 réplicas (`kubectl -n terrasense get hpa`, unos
 
 Terminal 1 (carga, 90 s):
 ```bash
-k6 run k6/e1-carga-estable.js 2>&1 | tee evidencias/reportes/tp3-e1.txt
+k6 run k6/e1-carga-estable.js 2>&1 | tee "$EVIDENCIAS"/reportes/tp3-e1.txt
 ```
 Terminal 2 (navegador, al mismo tiempo):
 ```bash
@@ -138,11 +145,11 @@ Anotar: cantidad de errores (`errores_e1`), hora del primero y del último (lín
 
 ### 2.4 E2: spike de CPU y OOM
 ```bash
-k6 run -e MODE=cpu k6/spike.js 2>&1 | tee evidencias/reportes/tp3-spike-cpu.txt
+k6 run -e MODE=cpu k6/spike.js 2>&1 | tee "$EVIDENCIAS"/reportes/tp3-spike-cpu.txt
 ```
 Esperar a que se estabilice y después:
 ```bash
-k6 run -e MODE=oom k6/spike.js 2>&1 | tee evidencias/reportes/tp3-spike-oom.txt
+k6 run -e MODE=oom k6/spike.js 2>&1 | tee "$EVIDENCIAS"/reportes/tp3-spike-oom.txt
 ```
 En otra terminal, durante el OOM:
 ```bash
@@ -186,7 +193,7 @@ Terminal 2, **durante cada etapa** (cuando el script muestra "ETAPA peso-N"):
 🎥 `videos/05-rollout-1.1.0.mp4`: el script avanzando de etapa (se puede grabar solo el principio y el final de cada etapa).
 📸 `capturas/05-conteo-peso-NN.png` en cada peso; `capturas/05-bitacora.png` con:
 ```bash
-column -s, -t < evidencias/reportes/bitacora.csv
+column -s, -t < "$EVIDENCIAS"/reportes/bitacora.csv
 ```
 **No promover todavía:** el estrés A/B necesita la stable en 1.0.0.
 
@@ -202,8 +209,8 @@ kubectl -n terrasense rollout status deployment/front-canary
 ```
 Cerrar otros programas pesados. Después, una corrida tras otra (~9 min cada una):
 ```bash
-TARGET=stable k6 run k6/front-stress.js 2>&1 | tee evidencias/reportes/estres-front-stable.txt
-TARGET=canary k6 run k6/front-stress.js 2>&1 | tee evidencias/reportes/estres-front-canary.txt
+TARGET=stable k6 run k6/front-stress.js 2>&1 | tee "$EVIDENCIAS"/reportes/estres-front-stable.txt
+TARGET=canary k6 run k6/front-stress.js 2>&1 | tee "$EVIDENCIAS"/reportes/estres-front-canary.txt
 ```
 📸 `capturas/04-estres-stable.png`, `capturas/04-estres-canary.png`: la tabla por escalón que muestra k6 al final.
 
@@ -260,8 +267,8 @@ curl -s http://terrasense.local/version.txt        # → 1.1.0 (ahora desde la s
    - 📸 `capturas/07-ci-rojo.png`: run **#43995990963** (horusec en rojo, build skipped).
    - 📸 `capturas/07-ci-verde.png`: run **#44008882096** (los tres jobs en verde).
 2. Completar las tablas **_completar_** del `README.md` (bitácora, conteos, estrés, veredicto,
-   aprendizaje) con los datos de `evidencias/reportes/`. Para ver un JSON:
-   `python3 -m json.tool evidencias/reportes/peso-25-split.json`.
+   aprendizaje) con los datos de `$EVIDENCIAS/reportes/`. Para ver un JSON:
+   `python3 -m json.tool "$EVIDENCIAS"/reportes/peso-25-split.json`.
 3. Commitear las evidencias y los YAML modificados (peso y promoción):
    ```bash
    git add evidencias k8s README.md && git commit -m "docs(tp-final): evidencias de ejecucion"
@@ -283,5 +290,5 @@ Para volver a empezar desde cero: `minikube delete` y otra vez `./scripts/deploy
 | Back no pasa a `Ready` | La DB no está lista o falta el Secret | `kubectl -n terrasense get secret db-secret`; `kubectl -n terrasense logs deploy/back` |
 | k6 browser: `could not find browser` | No encuentra Chrome | `export K6_BROWSER_EXECUTABLE_PATH=/usr/bin/google-chrome` |
 | HPA en `<unknown>` | metrics-server sin datos todavía | Esperar 1–2 min; `minikube addons list | grep metrics` |
-| `rollout.sh`: "sin reporte del split" | k6 se cortó | Leer `evidencias/reportes/peso-N-split.log` |
+| `rollout.sh`: "sin reporte del split" | k6 se cortó | Leer `$EVIDENCIAS/reportes/peso-N-split.log` |
 | La PC se cuelga en stress/spike | El generador de carga y el cluster comparten la máquina | Bajar los `target` de los escalones y anotarlo; revisar las iteraciones descartadas |

@@ -18,7 +18,8 @@ const N = Number(__ENV.N || 20);
 const FRONT = __ENV.FRONT_URL || 'http://terrasense.local';
 const ETAPA = __ENV.ETAPA || 'manual';
 const FORZAR = __ENV.FORZAR_CANARY === '1';
-const DIR = __ENV.CAPTURAS || 'evidencias/capturas';
+const EVID = __ENV.EVIDENCIAS || 'evidencias';
+const DIR = __ENV.CAPTURAS || `${EVID}/capturas`;
 // Tiempo para que el JS haga el primer polling y dibuje los datos.
 const ESPERA_MS = 2500;
 
@@ -98,6 +99,6 @@ export function handleSummary(data) {
     + `stable ${reporte.vistas_stable}, pantallas en blanco ${reporte.pantallas_blancas} ===\n`;
   return {
     stdout: texto,
-    [`evidencias/reportes/${ETAPA}-browser.json`]: JSON.stringify(reporte, null, 2),
+    [`${EVID}/reportes/${ETAPA}-browser.json`]: JSON.stringify(reporte, null, 2),
   };
 }

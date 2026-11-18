@@ -14,7 +14,9 @@ cd "$TP_DIR"
 
 N="${1:-100}"
 URL="${FRONT_URL:-http://terrasense.local}/version.txt"
-SALIDA="evidencias/reportes/conteo-$(date +%Y%m%d-%H%M%S).txt"
+EVID="${EVIDENCIAS:-evidencias}"
+mkdir -p "$EVID/reportes"
+SALIDA="$EVID/reportes/conteo-$(date +%Y%m%d-%H%M%S).txt"
 DESDE="$(date -u +%Y-%m-%dT%H:%M:%SZ)"
 PESO="$(kubectl -n terrasense get ingress terrasense-ingress-canary \
   -o jsonpath='{.metadata.annotations.nginx\.ingress\.kubernetes\.io/canary-weight}' 2>/dev/null || echo '?')"

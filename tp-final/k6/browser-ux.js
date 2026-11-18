@@ -17,7 +17,8 @@ export const options = {
 
 const FRONT = __ENV.FRONT_URL || 'http://terrasense.local';
 const DURACION_S = Number(__ENV.DURATION_S || 60);
-const DIR = __ENV.CAPTURAS || 'evidencias/capturas';
+const EVID = __ENV.EVIDENCIAS || 'evidencias';
+const DIR = __ENV.CAPTURAS || `${EVID}/capturas`;
 
 export default async function () {
   const page = await browser.newPage();
