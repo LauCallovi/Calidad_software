@@ -2,7 +2,7 @@ import http from 'k6/http';
 import { check } from 'k6';
 import { BASE, reportar } from './common.js';
 
-// E2 (SPIKE): pico casi vertical de 20 a 1500 req/s en 5 s.
+// E2 (SPIKE): pico casi vertical de 20 a 600 req/s en 5 s (bajado de 1500: la notebook se colgaba).
 // MODE=cpu (default): mitad escrituras, mitad /api/debug/burn -> satura CPU y
 //   muestra si el HPA llega a tiempo.
 // MODE=oom: /api/debug/leak retiene memoria -> los pods superan el limit,
@@ -15,12 +15,12 @@ export const options = {
       executor: 'ramping-arrival-rate',
       startRate: 20,
       timeUnit: '1s',
-      preAllocatedVUs: 500,
-      maxVUs: 3000,
+      preAllocatedVUs: 200,
+      maxVUs: 800,
       stages: [
         { target: 20, duration: '30s' },    // calma (referencia)
-        { target: 1500, duration: '5s' },   // pico casi vertical
-        { target: 1500, duration: '2m' },   // sostenido
+        { target: 600, duration: '5s' },   // pico casi vertical
+        { target: 600, duration: '2m' },   // sostenido
         { target: 20, duration: '10s' },    // vuelta a la calma
         { target: 20, duration: '2m' },     // observar recuperación
       ],

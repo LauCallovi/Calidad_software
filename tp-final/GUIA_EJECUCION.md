@@ -137,7 +137,7 @@ k6 run -e DURATION_S=60 k6/browser-ux.js
 ```
 Terminal 3, unos **20 s después** de arrancar la carga:
 ```bash
-date; kubectl -n terrasense delete pod "$(kubectl -n terrasense get pods -l app=back -o name | head -1)"
+date; kubectl -n terrasense delete "$(kubectl -n terrasense get pods -l app=back -o name | head -1)"
 kubectl -n terrasense get pods -l app=back -w
 ```
 🎥 `videos/03-e1-pod-eliminado.mp4`. Los screenshots `capturas/e1-ux-NN.png` se generan solos.
@@ -145,11 +145,11 @@ Anotar: cantidad de errores (`errores_e1`), hora del primero y del último (lín
 
 ### 2.4 E2: spike de CPU y OOM
 ```bash
-k6 run -e MODE=cpu k6/spike.js 2>&1 | tee "$EVIDENCIAS"/reportes/tp3-spike-cpu.txt
+k6 run --log-output=file="$EVIDENCIAS"/reportes/tp3-spike-cpu-warnings.log -e MODE=cpu k6/spike.js 2>&1 | tee "$EVIDENCIAS"/reportes/tp3-spike-cpu.txt
 ```
 Esperar a que se estabilice y después:
 ```bash
-k6 run -e MODE=oom k6/spike.js 2>&1 | tee "$EVIDENCIAS"/reportes/tp3-spike-oom.txt
+k6 run --log-output=file="$EVIDENCIAS"/reportes/tp3-spike-oom-warnings.log -e MODE=oom k6/spike.js 2>&1 | tee "$EVIDENCIAS"/reportes/tp3-spike-oom.txt
 ```
 En otra terminal, durante el OOM:
 ```bash
@@ -160,8 +160,8 @@ kubectl -n terrasense describe pods -l app=back | grep -A3 "Last State"     # �
 🎥 `videos/04-e2-oom.mp4`: pods pasando a `OOMKilled` y reiniciándose (RESTARTS sube).
 📸 `capturas/04-oomkilled.png`: el `describe` con `OOMKilled`.
 
-> 1500 req/s puede ser demasiado para una notebook. Si la PC se cuelga, bajar el `target` del pico
-> en `k6/spike.js` (por ejemplo a 600) y anotarlo en el informe.
+> Se bajó el pico de 1500 a 600 req/s porque la notebook se colgaba (anotarlo en el informe). Los
+> warnings de timeout van a `*-warnings.log` para no saturar la terminal.
 
 Antes de seguir, verificar que el back quedó sano:
 `kubectl -n terrasense get pods -l app=back` (todos `Running` y `READY 1/1`).
