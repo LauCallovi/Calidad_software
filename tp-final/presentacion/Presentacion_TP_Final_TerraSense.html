@@ -5,6 +5,12 @@
 <title>TerraSense S.A. - TP Final Calidad del Software</title>
 <style>
   @font-face {
+    font-family: 'PlayfairDisplay';
+    src: url('./assets/fonts/PlayfairDisplay-Italic.ttf') format('truetype');
+    font-style: italic;
+    font-weight: 400 800;
+  }
+  @font-face {
     font-family: 'BodoniModa';
     src: url('./assets/fonts/BodoniModa-Italic.ttf') format('truetype');
     font-style: italic;
@@ -103,37 +109,39 @@
     overflow: hidden;
   }
   .photo-bottom-strip img {
-    width: 100%; height: 100%; object-fit: cover; object-position: center 65%;
+    width: 100%; height: 100%; object-fit: cover; object-position: center 55%;
   }
   .content {
     position: relative;
     z-index: 4;
     width: 100%;
     height: 100%;
-    padding: 96px 110px 60px 110px;
+    padding: 100px 110px 56px 124px;
     display: flex;
     flex-direction: column;
   }
   h1.serif-title {
-    font-family: 'BodoniModa', 'Didot', Georgia, serif;
+    font-family: 'PlayfairDisplay', 'BodoniModa', Georgia, serif;
     font-style: italic;
-    font-weight: 400;
+    font-weight: 600;
     text-transform: uppercase;
     color: #0c2231;
-    font-size: 76px;
-    line-height: 1.06;
-    letter-spacing: 0.02em;
+    font-size: 74px;
+    line-height: 1.08;
+    letter-spacing: 0.015em;
+    -webkit-font-smoothing: antialiased;
   }
   h2.serif-head {
-    font-family: 'BodoniModa', 'Didot', Georgia, serif;
+    font-family: 'PlayfairDisplay', 'BodoniModa', Georgia, serif;
     font-style: italic;
-    font-weight: 400;
+    font-weight: 600;
     text-transform: uppercase;
     color: #0c2231;
-    font-size: 56px;
-    line-height: 1.1;
-    letter-spacing: 0.02em;
+    font-size: 52px;
+    line-height: 1.12;
+    letter-spacing: 0.015em;
     margin-bottom: 10px;
+    -webkit-font-smoothing: antialiased;
   }
   .sub-teal {
     font-size: 22px;
@@ -259,7 +267,7 @@
   .footer-left {
     position: absolute;
     bottom: 26px;
-    left: 110px;
+    left: 124px;
     font-size: 18px;
     color: #64748b;
     z-index: 5;
@@ -273,10 +281,10 @@
 <section class="slide">
   <div class="bg-poly-left"></div>
   <svg class="lines-svg" viewBox="0 0 1920 1080">
-    <line x1="0" y1="115" x2="490" y2="0" stroke="#b8a3a6" stroke-width="1.3"/>
-    <line x1="145" y1="0" x2="0" y2="950" stroke="#b8a3a6" stroke-width="1.3"/>
+    <line x1="0" y1="88" x2="360" y2="0" stroke="#b8a3a6" stroke-width="1.3"/>
+    <line x1="88" y1="0" x2="0" y2="760" stroke="#b8a3a6" stroke-width="1.3"/>
   </svg>
-  <div class="photo-cover"><img src="./assets/cover_photo.jpg" alt=""></div>
+  <div class="photo-cover"><img src="./assets/iot_sensor_field.jpg" alt="Sensor IoT agronómico TerraSense"></div>
   <div class="content" style="justify-content:center; width:54%; padding-left:130px;">
     <div class="sub-teal" style="margin-bottom:18px;">FCEFyN UNC · Gestión de la Calidad del Software</div>
     <h1 class="serif-title">TerraSense<br>Canary &amp; QA</h1>
@@ -294,11 +302,11 @@
 <section class="slide">
   <div class="bg-poly-agenda"></div>
   <svg class="lines-svg" viewBox="0 0 1920 1080">
-    <line x1="0" y1="115" x2="490" y2="0" stroke="#b8a3a6" stroke-width="1.3"/>
-    <line x1="145" y1="0" x2="0" y2="950" stroke="#b8a3a6" stroke-width="1.3"/>
-    <line x1="0" y1="860" x2="990" y2="1080" stroke="#b8a3a6" stroke-width="1.3"/>
+    <line x1="0" y1="88" x2="360" y2="0" stroke="#b8a3a6" stroke-width="1.3"/>
+    <line x1="88" y1="0" x2="0" y2="760" stroke="#b8a3a6" stroke-width="1.3"/>
+    <line x1="0" y1="900" x2="960" y2="1080" stroke="#b8a3a6" stroke-width="1.3"/>
   </svg>
-  <div class="photo-right-strip"><img src="./assets/agro_aerial.jpg" alt=""></div>
+  <div class="photo-right-strip"><img src="./assets/cloud_cluster_teal.jpg" alt="Infraestructura cloud TerraSense"></div>
   <div class="content" style="display:grid; grid-template-columns:0.8fr 1.2fr; align-items:center; padding-right:26%;">
     <h2 class="serif-head" style="font-size:66px;">Agenda</h2>
     <div style="display:flex; flex-direction:column; gap:36px; font-size:32px; color:#0c2231; font-weight:300;">
@@ -318,7 +326,7 @@
     <line x1="510" y1="920" x2="1020" y2="1080" stroke="#b8a3a6" stroke-width="1.2"/>
     <line x1="1865" y1="0" x2="1730" y2="1080" stroke="#b8a3a6" stroke-width="1.2"/>
   </svg>
-  <div class="photo-left-strip"><img src="./assets/cover_photo.jpg" alt=""></div>
+  <div class="photo-left-strip"><img src="./assets/iot_sensor_field.jpg" alt="Nodo ESP32 en parcela"></div>
   <div class="content" style="padding-left:32%; justify-content:center;">
     <h2 class="serif-head">Contexto y objetivos</h2>
     <div class="sub-teal">Por qué 200 OK no evita un apagón</div>
@@ -336,8 +344,8 @@
 <!-- SLIDE 4: ARCHITECTURE & DEPLOY -->
 <section class="slide">
   <svg class="lines-svg" viewBox="0 0 1920 1080">
-    <line x1="0" y1="70" x2="310" y2="0" stroke="#b8a3a6" stroke-width="1.2"/>
-    <line x1="82" y1="0" x2="0" y2="620" stroke="#b8a3a6" stroke-width="1.2"/>
+    <line x1="0" y1="54" x2="250" y2="0" stroke="#b8a3a6" stroke-width="1.2"/>
+    <line x1="66" y1="0" x2="0" y2="540" stroke="#b8a3a6" stroke-width="1.2"/>
     <line x1="1760" y1="0" x2="1920" y2="700" stroke="#b8a3a6" stroke-width="1.2"/>
   </svg>
   <div class="content">
@@ -367,7 +375,8 @@
 <!-- SLIDE 5: CI QUALITY GATE -->
 <section class="slide">
   <svg class="lines-svg" viewBox="0 0 1920 1080">
-    <line x1="0" y1="105" x2="460" y2="0" stroke="#b8a3a6" stroke-width="1.2"/>
+    <line x1="0" y1="54" x2="250" y2="0" stroke="#b8a3a6" stroke-width="1.2"/>
+    <line x1="66" y1="0" x2="0" y2="540" stroke="#b8a3a6" stroke-width="1.2"/>
     <line x1="1780" y1="1080" x2="1920" y2="420" stroke="#b8a3a6" stroke-width="1.2"/>
   </svg>
   <div class="content">
@@ -394,7 +403,8 @@
 <!-- SLIDE 6: TP3 BASELINE & HPA STRESS -->
 <section class="slide">
   <svg class="lines-svg" viewBox="0 0 1920 1080">
-    <line x1="135" y1="0" x2="0" y2="960" stroke="#b8a3a6" stroke-width="1.2"/>
+    <line x1="0" y1="54" x2="250" y2="0" stroke="#b8a3a6" stroke-width="1.2"/>
+    <line x1="66" y1="0" x2="0" y2="540" stroke="#b8a3a6" stroke-width="1.2"/>
     <line x1="1700" y1="0" x2="1920" y2="850" stroke="#b8a3a6" stroke-width="1.2"/>
   </svg>
   <div class="content">
@@ -429,7 +439,8 @@
 <!-- SLIDE 7: FAILURE INJECTION E1 & E2 -->
 <section class="slide">
   <svg class="lines-svg" viewBox="0 0 1920 1080">
-    <line x1="0" y1="105" x2="460" y2="0" stroke="#b8a3a6" stroke-width="1.2"/>
+    <line x1="0" y1="54" x2="250" y2="0" stroke="#b8a3a6" stroke-width="1.2"/>
+    <line x1="66" y1="0" x2="0" y2="540" stroke="#b8a3a6" stroke-width="1.2"/>
     <line x1="1200" y1="1080" x2="1920" y2="900" stroke="#b8a3a6" stroke-width="1.2"/>
   </svg>
   <div class="content">
@@ -453,14 +464,14 @@
 <!-- SLIDE 8: SECTION DIVIDER (matches Presentation.pdf p. 3) -->
 <section class="slide">
   <svg class="lines-svg" viewBox="0 0 1920 1080">
-    <line x1="0" y1="115" x2="490" y2="0" stroke="#b8a3a6" stroke-width="1.3"/>
-    <line x1="145" y1="0" x2="0" y2="750" stroke="#b8a3a6" stroke-width="1.3"/>
-    <line x1="1700" y1="0" x2="1920" y2="720" stroke="#b8a3a6" stroke-width="1.3"/>
+    <line x1="0" y1="88" x2="360" y2="0" stroke="#b8a3a6" stroke-width="1.3"/>
+    <line x1="88" y1="0" x2="0" y2="680" stroke="#b8a3a6" stroke-width="1.3"/>
+    <line x1="1750" y1="0" x2="1920" y2="680" stroke="#b8a3a6" stroke-width="1.3"/>
   </svg>
-  <div class="photo-bottom-strip"><img src="./assets/agro_aerial.jpg" alt=""></div>
+  <div class="photo-bottom-strip"><img src="./assets/cloud_cluster_teal.jpg" alt="Cluster Kubernetes Canary"></div>
   <div class="content" style="justify-content:center; align-items:center; text-align:center; padding-bottom:280px;">
     <div class="sub-teal">Actividad 1 · Entrega Progresiva en NGINX Ingress</div>
-    <h1 class="serif-title" style="font-size:68px;">Despliegue Canary y<br>Rollback Automático</h1>
+    <h1 class="serif-title" style="font-size:66px;">Despliegue Canary y<br>Rollback Automático</h1>
   </div>
   <div class="footer-num" style="color:#ffffff;">8 / 16</div>
 </section>
@@ -468,7 +479,8 @@
 <!-- SLIDE 9: CANARY DESIGN & STAGE 0 -->
 <section class="slide">
   <svg class="lines-svg" viewBox="0 0 1920 1080">
-    <line x1="135" y1="0" x2="0" y2="960" stroke="#b8a3a6" stroke-width="1.2"/>
+    <line x1="0" y1="54" x2="250" y2="0" stroke="#b8a3a6" stroke-width="1.2"/>
+    <line x1="66" y1="0" x2="0" y2="540" stroke="#b8a3a6" stroke-width="1.2"/>
     <line x1="0" y1="900" x2="960" y2="1080" stroke="#b8a3a6" stroke-width="1.2"/>
   </svg>
   <div class="content">
@@ -494,7 +506,8 @@
 <!-- SLIDE 10: AUTOMATED ROLLOUT 1.1.0 -->
 <section class="slide">
   <svg class="lines-svg" viewBox="0 0 1920 1080">
-    <line x1="0" y1="105" x2="460" y2="0" stroke="#b8a3a6" stroke-width="1.2"/>
+    <line x1="0" y1="54" x2="250" y2="0" stroke="#b8a3a6" stroke-width="1.2"/>
+    <line x1="66" y1="0" x2="0" y2="540" stroke="#b8a3a6" stroke-width="1.2"/>
     <line x1="1760" y1="0" x2="1920" y2="780" stroke="#b8a3a6" stroke-width="1.2"/>
   </svg>
   <div class="content">
@@ -518,7 +531,8 @@
 <!-- SLIDE 11: BROKEN v1.2.0 ANATOMY -->
 <section class="slide">
   <svg class="lines-svg" viewBox="0 0 1920 1080">
-    <line x1="135" y1="0" x2="0" y2="960" stroke="#b8a3a6" stroke-width="1.2"/>
+    <line x1="0" y1="54" x2="250" y2="0" stroke="#b8a3a6" stroke-width="1.2"/>
+    <line x1="66" y1="0" x2="0" y2="540" stroke="#b8a3a6" stroke-width="1.2"/>
     <line x1="1400" y1="1080" x2="1920" y2="880" stroke="#b8a3a6" stroke-width="1.2"/>
   </svg>
   <div class="content">
@@ -542,7 +556,8 @@
 <!-- SLIDE 12: AUTOMATIC ROLLBACK IN 3.5s -->
 <section class="slide">
   <svg class="lines-svg" viewBox="0 0 1920 1080">
-    <line x1="0" y1="105" x2="460" y2="0" stroke="#b8a3a6" stroke-width="1.2"/>
+    <line x1="0" y1="54" x2="250" y2="0" stroke="#b8a3a6" stroke-width="1.2"/>
+    <line x1="66" y1="0" x2="0" y2="540" stroke="#b8a3a6" stroke-width="1.2"/>
     <line x1="1750" y1="0" x2="1920" y2="750" stroke="#b8a3a6" stroke-width="1.2"/>
   </svg>
   <div class="content">
@@ -568,7 +583,8 @@
 <!-- SLIDE 13: STRESS A/B & 10,000 SENSORS (matches Presentation.pdf p. 10) -->
 <section class="slide">
   <svg class="lines-svg" viewBox="0 0 1920 1080">
-    <line x1="0" y1="70" x2="310" y2="0" stroke="#b8a3a6" stroke-width="1.2"/>
+    <line x1="0" y1="54" x2="250" y2="0" stroke="#b8a3a6" stroke-width="1.2"/>
+    <line x1="66" y1="0" x2="0" y2="540" stroke="#b8a3a6" stroke-width="1.2"/>
     <line x1="0" y1="900" x2="960" y2="1080" stroke="#b8a3a6" stroke-width="1.2"/>
     <line x1="1760" y1="0" x2="1920" y2="850" stroke="#b8a3a6" stroke-width="1.2"/>
   </svg>
@@ -609,7 +625,8 @@
 <!-- SLIDE 14: ISO/IEC 25000 MAP (matches Presentation.pdf p. 12) -->
 <section class="slide">
   <svg class="lines-svg" viewBox="0 0 1920 1080">
-    <line x1="0" y1="70" x2="310" y2="0" stroke="#b8a3a6" stroke-width="1.2"/>
+    <line x1="0" y1="54" x2="250" y2="0" stroke="#b8a3a6" stroke-width="1.2"/>
+    <line x1="66" y1="0" x2="0" y2="540" stroke="#b8a3a6" stroke-width="1.2"/>
     <line x1="1780" y1="0" x2="1920" y2="850" stroke="#b8a3a6" stroke-width="1.2"/>
   </svg>
   <div class="content">
@@ -636,7 +653,8 @@
 <!-- SLIDE 15: PROMOTION & GO / NO-GO VERDICT -->
 <section class="slide">
   <svg class="lines-svg" viewBox="0 0 1920 1080">
-    <line x1="135" y1="0" x2="0" y2="960" stroke="#b8a3a6" stroke-width="1.2"/>
+    <line x1="0" y1="54" x2="250" y2="0" stroke="#b8a3a6" stroke-width="1.2"/>
+    <line x1="66" y1="0" x2="0" y2="540" stroke="#b8a3a6" stroke-width="1.2"/>
     <line x1="0" y1="900" x2="960" y2="1080" stroke="#b8a3a6" stroke-width="1.2"/>
   </svg>
   <div class="content">
@@ -672,7 +690,7 @@
   </svg>
   <!-- Faceted angled photo matching p. 13 of Presentation.pdf -->
   <div style="position:absolute; inset:0; z-index:2; clip-path:polygon(0 0, 64% 0, 23% 54%, 46% 100%, 9% 100%, 23% 54%, 0 36%); overflow:hidden;">
-    <img src="./assets/cover_photo.jpg" alt="" style="width:100%; height:100%; object-fit:cover;">
+    <img src="./assets/iot_sensor_field.jpg" alt="Sensor IoT TerraSense" style="width:100%; height:100%; object-fit:cover;">
   </div>
   <div class="content" style="padding-left:50%; justify-content:center;">
     <h1 class="serif-title" style="font-size:66px; margin-bottom:26px;">Muchas gracias</h1>
