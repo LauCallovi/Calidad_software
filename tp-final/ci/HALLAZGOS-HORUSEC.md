@@ -1,96 +1,67 @@
-# Hallazgos de Horusec — primer run del CI
+# Hallazgos de Horusec en el primer run de CI
 
 **Run:** GitHub Actions #43995990963 (commit `e00a083`, 2026-11-17).
-**Resultado:** job `horusec` en **rojo** → job `build` **skipped**: la quality gate bloqueó la
-construcción de imágenes, que es el comportamiento esperado.
+**Resultado:** el job `horusec` cortó en **rojo** y el job `build` quedó **skipped**. Así probamos que la compuerta del pipeline frena el armado de imágenes cuando aparecen problemas de seguridad.
 
-**22 hallazgos** con severidad MEDIUM o mayor (los LOW se ignoran con `-s LOW`).
+Salieron **22 alertas** de severidad MEDIUM o HIGH (las LOW las filtramos con `-s LOW`).
 
 ## Resumen de decisiones
 
-| # | Hallazgo | Herramienta / regla | Severidad | Archivos | Cant. | Decisión |
+| # | Alerta | Motor / regla | Severidad | Archivos | Cant. | Qué hicimos |
 |---|---|---|---|---|---|---|
-| 1 | `Math.random()`: generador de números aleatorios débil | HorusecEngine `HS-JAVASCRIPT-6` | HIGH | `app/back/server.js` (`/api/debug/burn`) | 1 | **Corregido** |
-| 2 | Ídem | `HS-JAVASCRIPT-6` | HIGH | `k6/common.js` (4), `k6/spike.js` (1) | 5 | **Falso positivo** |
-| 3 | Contenedor puede escalar privilegios | Trivy (misconfig K8s) | MEDIUM | back, front-stable, front-canary, db | 4 | **Corregido** (los 4) |
-| 4 | Contenedor corre como root | Trivy | MEDIUM | back, front-stable, front-canary | 3 | **Corregido** |
-| 5 | UID bajo (≤ 10000) | Trivy | MEDIUM | back, front-stable, front-canary | 3 | **Corregido** |
-| 6 | GID bajo (≤ 10000) | Trivy | MEDIUM | back, front-stable, front-canary | 3 | **Corregido** |
-| 7 | Root / UID bajo / GID bajo | Trivy | MEDIUM | `k8s/base/02-db.yaml` (PostgreSQL) | 3 | **Riesgo aceptado** |
+| 1 | `Math.random()`: generador pseudoaleatorio débil | HorusecEngine `HS-JAVASCRIPT-6` | HIGH | `app/back/server.js` (`/api/debug/burn`) | 1 | **Corregido** |
+| 2 | Misma regla sobre scripts de carga | `HS-JAVASCRIPT-6` | HIGH | `k6/common.js` (4), `k6/spike.js` (1) | 5 | **Falso positivo** (y reemplazado en `spike.js`) |
+| 3 | El contenedor podría escalar privilegios | Trivy (K8s) | MEDIUM | back, front-stable, front-canary, db | 4 | **Corregido** |
+| 4 | Contenedor ejecutando como root | Trivy | MEDIUM | back, front-stable, front-canary | 3 | **Corregido** |
+| 5 | UID menor o igual a 10000 | Trivy | MEDIUM | back, front-stable, front-canary | 3 | **Corregido** |
+| 6 | GID menor o igual a 10000 | Trivy | MEDIUM | back, front-stable, front-canary | 3 | **Corregido** |
+| 7 | Root / UID bajo / GID bajo en la base | Trivy | MEDIUM | `k8s/base/02-db.yaml` (PostgreSQL) | 3 | **Riesgo aceptado** |
 
-Total: **14 corregidos** (1 + 4 + 3 + 3 + 3), **5 falsos positivos** y **3 riesgos aceptados** = 22.
+En números: **14 corregidos**, **5 falsos positivos** y **3 riesgos aceptados** (22 en total).
 
-## Justificaciones
+## Detalle por grupo
 
-### 1. `Math.random()` en `server.js` — corregido
-Se usaba en `/api/debug/burn`, el endpoint de laboratorio que consume CPU para probar el HPA.
-Ahí no hace falta azar: se reemplazó por un cálculo determinístico (`x = Math.sqrt(x + 1)`).
-Fue más simple eliminar la causa que justificarla.
+### 1. Azar innecesario en `server.js` (corregido)
+Aparecía adentro de `/api/debug/burn`, la ruta de prueba que quema CPU para forzar el HPA. Para gastar ciclos de procesador no hace falta ningún número al azar, así que pusimos una cuenta determinista (`x = Math.sqrt(x + 1)`). Fue más directo sacar la llamada que cargar una excepción.
 
-### 2. `Math.random()` en scripts k6 — falso positivo
-`HS-JAVASCRIPT-6` advierte que `Math.random()` no sirve para **criptografía**: tokens, claves,
-IDs de sesión. En `k6/common.js` y `k6/spike.js` se usa para generar **datos de prueba** (ID de
-sensor, temperatura, humedad) y para mezclar tipos de request. Además, estos scripts son
-herramientas de prueba de carga: **no se despliegan** ni forman parte de la aplicación. Un valor
-predecible no tiene ningún impacto de seguridad. Se registran por hash en
-`tp-final/horusec-config.json` (`horusecCliFalsePositiveHashes`).
+### 2. Uso de `Math.random()` en scripts de k6 (falso positivo + ajuste en `spike.js`)
+La regla `HS-JAVASCRIPT-6` apunta a casos donde alguien arma tokens, claves o sesiones con un PRNG predecible (CWE-338). Acá `k6/common.js` solamente inventa valores de temperatura y humedad para poblar lecturas de sensores simulados, y esos archivos ni siquiera entran a las imágenes Docker de producción. Por eso quedaron declarados por hash en `tp-final/horusec-config.json` bajo `horusecCliFalsePositiveHashes`.
 
-### 3 a 6. Contenedores del back y del front — corregido
-Las imágenes ya corrían como usuarios sin privilegios (`node` UID 1000; nginx UID 101), pero
-**los manifiestos no lo exigían**. Trivy lee el manifiesto, no la imagen, y si alguien cambiaba la
-imagen por una que corre como root, Kubernetes la habría aceptado. Se agregó a cada contenedor:
+Durante las corridas de ejecución pasó algo interesante en el PR #6 (runs #44247654114 y #44247683182): al parametrizar `PEAK` y `MAX_VUS` arriba de `k6/spike.js`, se corrieron los números de línea y el hash viejo dejó de coincidir, volviendo a poner Horusec en rojo. Para no depender del número de línea en `spike.js`, cambiamos ese sorteo 50/50 por `exec.scenario.iterationInTest % 2 === 0`.
+
+### 3 a 6. Permisos de contenedores en back y front (corregido)
+Aunque los Dockerfiles ya bajaban a usuarios comunes (`node` con UID 1000 y nginx con UID 101), los manifiestos YAML no obligaban a Kubernetes a chequearlo. Trivy revisa el YAML estático, porque mañana alguien podría cambiar el tag de la imagen por otra que arranque como root. Agregamos en cada Deployment:
 
 ```yaml
 securityContext:
-  runAsNonRoot: true            # K8s se niega a arrancar un contenedor root
-  runAsUser: 10001              # back (front: 10101); > 10000 para no chocar con usuarios del nodo
+  runAsNonRoot: true            # K8s rechaza levantar el pod si intenta ser root
+  runAsUser: 10001              # back (en front usamos 10101), lejos de UIDs del host
   runAsGroup: 10001
   allowPrivilegeEscalation: false
   capabilities:
     drop: ["ALL"]
 ```
 
-En el front, nginx necesita escribir en `/var/cache/nginx` y `/tmp` (archivo pid). Con un UID
-distinto al de la imagen no tiene permiso, así que se montan dos volúmenes `emptyDir`.
-El job `build` del CI verifica que las imágenes **arrancan** con esos mismos UID (ver el workflow).
+En el frontend apareció un detalle práctico: nginx escribe su pid y archivos temporales en `/var/cache/nginx` y `/tmp`. Al correr con UID 10101 no tenía permisos sobre las carpetas de la imagen base, así que montamos dos volúmenes `emptyDir` en esas rutas. Además, el job `build` del workflow levanta cada imagen con `docker run --user` usando esos mismos UIDs para comprobar que no crashean al iniciar.
 
-### 7. PostgreSQL como root — riesgo aceptado (corregido parcialmente)
-- **Corregido:** `allowPrivilegeEscalation: false` (hallazgo #3 en `02-db.yaml`).
-- **Aceptado:** root, UID bajo y GID bajo.
-- **Por qué:** la imagen oficial `postgres` arranca como root para preparar los permisos del volumen
-  de datos y después baja al usuario `postgres` (`su-exec`). Forzar un UID no-root desde el inicio
-  exige preparar los permisos del volumen a mano (initContainer o `fsGroup`). En Minikube, el
-  provisionador de volúmenes `hostPath` no aplica `fsGroup`, y el cambio no se puede validar sin
-  arriesgar el despliegue.
-- **Mitigaciones vigentes:** la DB no se expone fuera del cluster (Service ClusterIP, sin Ingress);
-  la contraseña es aleatoria y no está en el repo (la genera `deploy.sh`); el proceso que atiende
-  conexiones corre como `postgres`, no como root; se bloquea la escalada de privilegios.
-- **Propuesta para producción:** usar un operador de PostgreSQL (ej. CloudNativePG, que corre sin
-  root) o un servicio administrado.
-- Registrados por hash en `horusecCliRiskAcceptHashes`.
+### 7. PostgreSQL iniciando como root (riesgo aceptado)
+- **Qué cerramos:** pusimos `allowPrivilegeEscalation: false` en `02-db.yaml`.
+- **Qué aceptamos:** el arranque inicial como root y el UID/GID bajos de la imagen `postgres:15-alpine`.
+- **Motivo técnico:** el entrypoint oficial de Postgres ajusta permisos del directorio de datos como root y enseguida hace `su-exec` al usuario `postgres`. Forzar `runAsUser` desde afuera rompe la inicialización del PVC `hostPath` de Minikube salvo que agreguemos un `initContainer` privilegiado, que termina teniendo el mismo problema.
+- **Mitigaciones activas:** el Service `db` es `ClusterIP` interno sin Ingress expuesto; la clave no vive en Git sino que la crea `deploy.sh` con `/dev/urandom` al levantar el cluster; las queries las atiende el proceso `postgres` sin privilegios.
+- **Cómo resolverlo en un cluster productivo:** pasar a un operador como CloudNativePG (que maneja los volúmenes directo con UID 26 sin tocar root) o a una base administrada.
+- Los tres hashes quedaron asentados en `horusecCliRiskAcceptHashes`.
 
 ## Segundo run (#44003617085, commit `6e0af9f`)
 
-Después de las correcciones, quedaron **21 de 22 resueltos**. Quedó **1 hallazgo nuevo**:
-`HS-JAVASCRIPT-6` en `server.js`, en un **comentario** que explicaba el cambio y nombraba la
-función de random. La regla de Horusec es una expresión regular sobre el texto y no distingue
-código de comentarios. Se reescribió el comentario sin nombrar la función.
+Tras subir los parches bajamos de 22 alertas a 1 sola, pero en un lugar insólito: `HS-JAVASCRIPT-6` saltó sobre un **comentario** en `server.js` donde habíamos escrito el nombre de la función vieja explicando por qué la sacábamos. Como el motor busca con expresiones regulares sobre el archivo plano, no distingue código ejecutable de comentarios. Reemplazamos esa línea del comentario y en el run #44008882096 todo el pipeline pasó en verde.
 
-Esto muestra una limitación del SAST por patrones: puede marcar texto que no se ejecuta.
-Siempre hace falta que una persona revise cada hallazgo.
+## Deuda detectada: falta escaneo de librerías (SCA)
 
-## Limitación detectada: no hay análisis de dependencias (SCA)
+En la consola de Horusec salió el aviso `Error while running tool NpmAudit: file package-lock.json was not found`. Al no haber commiteado `package-lock.json` en `app/back/`, NpmAudit no pudo cruzar las versiones instaladas de `express`, `pg` y `cors` contra bases de CVEs. Hoy revisamos nuestro código y los YAML, pero no los paquetes de npm. Queda anotado como mejora: generar el lockfile, pasar el Dockerfile a `npm ci` y sumar `npm audit` o `trivy fs` en el job de seguridad.
 
-El log del run avisa: `Error while running tool NpmAudit: file package-lock.json was not found`.
-Sin `package-lock.json`, Horusec **no revisa vulnerabilidades conocidas de las dependencias**
-del back (express, pg, cors). El pipeline actual cubre el código propio y la configuración de
-K8s, pero **no las librerías de terceros**. Propuesta: versionar `package-lock.json` y usar
-`npm ci` en el Dockerfile, para que el build sea reproducible y NpmAudit pueda analizarlo.
+## Criterio entre falso positivo y riesgo aceptado
+- **Falso positivo:** la alerta no aplica porque en ese archivo no existe riesgo real (por ejemplo, datos sintéticos de carga en `k6`).
+- **Riesgo aceptado:** la debilidad técnica sí está, pero decidimos dejarla acotada con controles compensatorios y fecha/plan de reemplazo documentado.
 
-## Diferencia entre falso positivo y riesgo aceptado
-- **Falso positivo:** la herramienta se equivoca; no hay vulnerabilidad en este contexto.
-- **Riesgo aceptado:** el problema **existe**, pero se decide convivir con él por una razón
-  documentada, con mitigaciones, y queda pendiente para más adelante.
-
-Los dos quedan **registrados y visibles**: no se borran del análisis, se marcan con su hash.
-Si el código cambia, el hash cambia y el hallazgo vuelve a aparecer para revisarlo de nuevo.
+En ambos casos los hashes quedan versionados en `horusec-config.json` en vez de apagar reglas enteras: si alguien toca el archivo, el hash cambia y el pipeline obliga a mirarlo otra vez.

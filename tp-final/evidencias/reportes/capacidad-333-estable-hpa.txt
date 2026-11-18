@@ -1,0 +1,370 @@
+=== 16:55:02 ===
+NAME       REFERENCE         TARGETS        MINPODS   MAXPODS   REPLICAS   AGE
+back-hpa   Deployment/back   cpu: 63%/60%   2         8         2          5m15s
+NAME                            CPU(cores)   MEMORY(bytes)   
+back-58cd87b8d9-5stn6           70m          28Mi            
+back-58cd87b8d9-84kzd           57m          24Mi            
+db-0                            63m          54Mi            
+front-canary-7ffd64d94f-j9w5g   1m           5Mi             
+front-stable-57b67d9bbd-2xzw2   1m           5Mi             
+front-stable-57b67d9bbd-wntlq   1m           5Mi             
+=== 16:55:08 ===
+NAME       REFERENCE         TARGETS        MINPODS   MAXPODS   REPLICAS   AGE
+back-hpa   Deployment/back   cpu: 63%/60%   2         8         2          5m20s
+NAME                            CPU(cores)   MEMORY(bytes)   
+back-58cd87b8d9-5stn6           70m          28Mi            
+back-58cd87b8d9-84kzd           57m          24Mi            
+db-0                            63m          54Mi            
+front-canary-7ffd64d94f-j9w5g   1m           5Mi             
+front-stable-57b67d9bbd-2xzw2   1m           5Mi             
+front-stable-57b67d9bbd-wntlq   1m           5Mi             
+=== 16:55:13 ===
+NAME       REFERENCE         TARGETS        MINPODS   MAXPODS   REPLICAS   AGE
+back-hpa   Deployment/back   cpu: 63%/60%   2         8         2          5m25s
+NAME                            CPU(cores)   MEMORY(bytes)   
+back-58cd87b8d9-5stn6           51m          27Mi            
+back-58cd87b8d9-84kzd           46m          24Mi            
+db-0                            48m          33Mi            
+front-canary-7ffd64d94f-j9w5g   1m           5Mi             
+front-stable-57b67d9bbd-2xzw2   1m           5Mi             
+front-stable-57b67d9bbd-wntlq   1m           5Mi             
+=== 16:55:18 ===
+NAME       REFERENCE         TARGETS        MINPODS   MAXPODS   REPLICAS   AGE
+back-hpa   Deployment/back   cpu: 63%/60%   2         8         2          5m30s
+NAME                            CPU(cores)   MEMORY(bytes)   
+back-58cd87b8d9-5stn6           51m          27Mi            
+back-58cd87b8d9-84kzd           46m          24Mi            
+db-0                            48m          33Mi            
+front-canary-7ffd64d94f-j9w5g   1m           5Mi             
+front-stable-57b67d9bbd-2xzw2   1m           5Mi             
+front-stable-57b67d9bbd-wntlq   1m           5Mi             
+=== 16:55:23 ===
+NAME       REFERENCE         TARGETS        MINPODS   MAXPODS   REPLICAS   AGE
+back-hpa   Deployment/back   cpu: 48%/60%   2         8         2          5m35s
+NAME                            CPU(cores)   MEMORY(bytes)   
+back-58cd87b8d9-5stn6           51m          27Mi            
+back-58cd87b8d9-84kzd           46m          24Mi            
+db-0                            48m          33Mi            
+front-canary-7ffd64d94f-j9w5g   1m           5Mi             
+front-stable-57b67d9bbd-2xzw2   1m           5Mi             
+front-stable-57b67d9bbd-wntlq   1m           5Mi             
+=== 16:55:28 ===
+NAME       REFERENCE         TARGETS        MINPODS   MAXPODS   REPLICAS   AGE
+back-hpa   Deployment/back   cpu: 48%/60%   2         8         2          5m40s
+NAME                            CPU(cores)   MEMORY(bytes)   
+back-58cd87b8d9-5stn6           51m          27Mi            
+back-58cd87b8d9-84kzd           46m          24Mi            
+db-0                            48m          33Mi            
+front-canary-7ffd64d94f-j9w5g   1m           5Mi             
+front-stable-57b67d9bbd-2xzw2   1m           5Mi             
+front-stable-57b67d9bbd-wntlq   1m           5Mi             
+=== 16:55:33 ===
+NAME       REFERENCE         TARGETS        MINPODS   MAXPODS   REPLICAS   AGE
+back-hpa   Deployment/back   cpu: 48%/60%   2         8         2          5m45s
+NAME                            CPU(cores)   MEMORY(bytes)   
+back-58cd87b8d9-5stn6           51m          27Mi            
+back-58cd87b8d9-84kzd           46m          24Mi            
+db-0                            48m          33Mi            
+front-canary-7ffd64d94f-j9w5g   1m           5Mi             
+front-stable-57b67d9bbd-2xzw2   1m           5Mi             
+front-stable-57b67d9bbd-wntlq   1m           5Mi             
+=== 16:55:38 ===
+NAME       REFERENCE         TARGETS        MINPODS   MAXPODS   REPLICAS   AGE
+back-hpa   Deployment/back   cpu: 48%/60%   2         8         2          5m50s
+NAME                            CPU(cores)   MEMORY(bytes)   
+back-58cd87b8d9-5stn6           51m          27Mi            
+back-58cd87b8d9-84kzd           46m          24Mi            
+db-0                            48m          33Mi            
+front-canary-7ffd64d94f-j9w5g   1m           5Mi             
+front-stable-57b67d9bbd-2xzw2   1m           5Mi             
+front-stable-57b67d9bbd-wntlq   1m           5Mi             
+=== 16:55:43 ===
+NAME       REFERENCE         TARGETS        MINPODS   MAXPODS   REPLICAS   AGE
+back-hpa   Deployment/back   cpu: 48%/60%   2         8         2          5m55s
+NAME                            CPU(cores)   MEMORY(bytes)   
+back-58cd87b8d9-5stn6           51m          27Mi            
+back-58cd87b8d9-84kzd           46m          24Mi            
+db-0                            48m          33Mi            
+front-canary-7ffd64d94f-j9w5g   1m           5Mi             
+front-stable-57b67d9bbd-2xzw2   1m           5Mi             
+front-stable-57b67d9bbd-wntlq   1m           5Mi             
+=== 16:55:48 ===
+NAME       REFERENCE         TARGETS        MINPODS   MAXPODS   REPLICAS   AGE
+back-hpa   Deployment/back   cpu: 48%/60%   2         8         2          6m1s
+NAME                            CPU(cores)   MEMORY(bytes)   
+back-58cd87b8d9-5stn6           51m          27Mi            
+back-58cd87b8d9-84kzd           46m          24Mi            
+db-0                            48m          33Mi            
+front-canary-7ffd64d94f-j9w5g   1m           5Mi             
+front-stable-57b67d9bbd-2xzw2   1m           5Mi             
+front-stable-57b67d9bbd-wntlq   1m           5Mi             
+=== 16:55:54 ===
+NAME       REFERENCE         TARGETS        MINPODS   MAXPODS   REPLICAS   AGE
+back-hpa   Deployment/back   cpu: 48%/60%   2         8         2          6m6s
+NAME                            CPU(cores)   MEMORY(bytes)   
+back-58cd87b8d9-5stn6           51m          27Mi            
+back-58cd87b8d9-84kzd           46m          24Mi            
+db-0                            48m          33Mi            
+front-canary-7ffd64d94f-j9w5g   1m           5Mi             
+front-stable-57b67d9bbd-2xzw2   1m           5Mi             
+front-stable-57b67d9bbd-wntlq   1m           5Mi             
+=== 16:55:59 ===
+NAME       REFERENCE         TARGETS        MINPODS   MAXPODS   REPLICAS   AGE
+back-hpa   Deployment/back   cpu: 48%/60%   2         8         2          6m11s
+NAME                            CPU(cores)   MEMORY(bytes)   
+back-58cd87b8d9-5stn6           51m          27Mi            
+back-58cd87b8d9-84kzd           46m          24Mi            
+db-0                            48m          33Mi            
+front-canary-7ffd64d94f-j9w5g   1m           5Mi             
+front-stable-57b67d9bbd-2xzw2   1m           5Mi             
+front-stable-57b67d9bbd-wntlq   1m           5Mi             
+=== 16:56:04 ===
+NAME       REFERENCE         TARGETS        MINPODS   MAXPODS   REPLICAS   AGE
+back-hpa   Deployment/back   cpu: 48%/60%   2         8         2          6m16s
+NAME                            CPU(cores)   MEMORY(bytes)   
+back-58cd87b8d9-5stn6           51m          27Mi            
+back-58cd87b8d9-84kzd           46m          24Mi            
+db-0                            48m          33Mi            
+front-canary-7ffd64d94f-j9w5g   1m           5Mi             
+front-stable-57b67d9bbd-2xzw2   1m           5Mi             
+front-stable-57b67d9bbd-wntlq   1m           5Mi             
+=== 16:56:09 ===
+NAME       REFERENCE         TARGETS        MINPODS   MAXPODS   REPLICAS   AGE
+back-hpa   Deployment/back   cpu: 48%/60%   2         8         2          6m21s
+NAME                            CPU(cores)   MEMORY(bytes)   
+back-58cd87b8d9-5stn6           51m          27Mi            
+back-58cd87b8d9-84kzd           46m          24Mi            
+db-0                            48m          33Mi            
+front-canary-7ffd64d94f-j9w5g   1m           5Mi             
+front-stable-57b67d9bbd-2xzw2   1m           5Mi             
+front-stable-57b67d9bbd-wntlq   1m           5Mi             
+=== 16:56:14 ===
+NAME       REFERENCE         TARGETS        MINPODS   MAXPODS   REPLICAS   AGE
+back-hpa   Deployment/back   cpu: 48%/60%   2         8         2          6m26s
+NAME                            CPU(cores)   MEMORY(bytes)   
+back-58cd87b8d9-5stn6           84m          29Mi            
+back-58cd87b8d9-84kzd           72m          27Mi            
+db-0                            67m          60Mi            
+front-canary-7ffd64d94f-j9w5g   1m           5Mi             
+front-stable-57b67d9bbd-2xzw2   1m           5Mi             
+front-stable-57b67d9bbd-wntlq   1m           5Mi             
+=== 16:56:19 ===
+NAME       REFERENCE         TARGETS        MINPODS   MAXPODS   REPLICAS   AGE
+back-hpa   Deployment/back   cpu: 78%/60%   2         8         2          6m31s
+NAME                            CPU(cores)   MEMORY(bytes)   
+back-58cd87b8d9-5stn6           84m          29Mi            
+back-58cd87b8d9-84kzd           72m          27Mi            
+db-0                            67m          60Mi            
+front-canary-7ffd64d94f-j9w5g   1m           5Mi             
+front-stable-57b67d9bbd-2xzw2   1m           5Mi             
+front-stable-57b67d9bbd-wntlq   1m           5Mi             
+=== 16:56:24 ===
+NAME       REFERENCE         TARGETS        MINPODS   MAXPODS   REPLICAS   AGE
+back-hpa   Deployment/back   cpu: 78%/60%   2         8         2          6m36s
+NAME                            CPU(cores)   MEMORY(bytes)   
+back-58cd87b8d9-5stn6           84m          29Mi            
+back-58cd87b8d9-84kzd           72m          27Mi            
+db-0                            67m          60Mi            
+front-canary-7ffd64d94f-j9w5g   1m           5Mi             
+front-stable-57b67d9bbd-2xzw2   1m           5Mi             
+front-stable-57b67d9bbd-wntlq   1m           5Mi             
+=== 16:56:29 ===
+NAME       REFERENCE         TARGETS        MINPODS   MAXPODS   REPLICAS   AGE
+back-hpa   Deployment/back   cpu: 78%/60%   2         8         2          6m41s
+NAME                            CPU(cores)   MEMORY(bytes)   
+back-58cd87b8d9-5stn6           84m          29Mi            
+back-58cd87b8d9-84kzd           72m          27Mi            
+db-0                            67m          60Mi            
+front-canary-7ffd64d94f-j9w5g   1m           5Mi             
+front-stable-57b67d9bbd-2xzw2   1m           5Mi             
+front-stable-57b67d9bbd-wntlq   1m           5Mi             
+=== 16:56:34 ===
+NAME       REFERENCE         TARGETS        MINPODS   MAXPODS   REPLICAS   AGE
+back-hpa   Deployment/back   cpu: 78%/60%   2         8         3          6m46s
+NAME                            CPU(cores)   MEMORY(bytes)   
+back-58cd87b8d9-5stn6           84m          29Mi            
+back-58cd87b8d9-84kzd           72m          27Mi            
+db-0                            67m          60Mi            
+front-canary-7ffd64d94f-j9w5g   1m           5Mi             
+front-stable-57b67d9bbd-2xzw2   1m           5Mi             
+front-stable-57b67d9bbd-wntlq   1m           5Mi             
+=== 16:56:40 ===
+NAME       REFERENCE         TARGETS        MINPODS   MAXPODS   REPLICAS   AGE
+back-hpa   Deployment/back   cpu: 78%/60%   2         8         3          6m52s
+NAME                            CPU(cores)   MEMORY(bytes)   
+back-58cd87b8d9-5stn6           84m          29Mi            
+back-58cd87b8d9-84kzd           72m          27Mi            
+db-0                            67m          60Mi            
+front-canary-7ffd64d94f-j9w5g   1m           5Mi             
+front-stable-57b67d9bbd-2xzw2   1m           5Mi             
+front-stable-57b67d9bbd-wntlq   1m           5Mi             
+=== 16:56:45 ===
+NAME       REFERENCE         TARGETS        MINPODS   MAXPODS   REPLICAS   AGE
+back-hpa   Deployment/back   cpu: 78%/60%   2         8         3          6m57s
+NAME                            CPU(cores)   MEMORY(bytes)   
+back-58cd87b8d9-5stn6           84m          29Mi            
+back-58cd87b8d9-84kzd           72m          27Mi            
+db-0                            67m          60Mi            
+front-canary-7ffd64d94f-j9w5g   1m           5Mi             
+front-stable-57b67d9bbd-2xzw2   1m           5Mi             
+front-stable-57b67d9bbd-wntlq   1m           5Mi             
+=== 16:56:50 ===
+NAME       REFERENCE         TARGETS        MINPODS   MAXPODS   REPLICAS   AGE
+back-hpa   Deployment/back   cpu: 78%/60%   2         8         3          7m2s
+NAME                            CPU(cores)   MEMORY(bytes)   
+back-58cd87b8d9-5stn6           84m          29Mi            
+back-58cd87b8d9-84kzd           72m          27Mi            
+db-0                            67m          60Mi            
+front-canary-7ffd64d94f-j9w5g   1m           5Mi             
+front-stable-57b67d9bbd-2xzw2   1m           5Mi             
+front-stable-57b67d9bbd-wntlq   1m           5Mi             
+=== 16:56:55 ===
+NAME       REFERENCE         TARGETS        MINPODS   MAXPODS   REPLICAS   AGE
+back-hpa   Deployment/back   cpu: 78%/60%   2         8         3          7m7s
+NAME                            CPU(cores)   MEMORY(bytes)   
+back-58cd87b8d9-5stn6           84m          29Mi            
+back-58cd87b8d9-84kzd           72m          27Mi            
+db-0                            67m          60Mi            
+front-canary-7ffd64d94f-j9w5g   1m           5Mi             
+front-stable-57b67d9bbd-2xzw2   1m           5Mi             
+front-stable-57b67d9bbd-wntlq   1m           5Mi             
+=== 16:57:00 ===
+NAME       REFERENCE         TARGETS        MINPODS   MAXPODS   REPLICAS   AGE
+back-hpa   Deployment/back   cpu: 78%/60%   2         8         3          7m12s
+NAME                            CPU(cores)   MEMORY(bytes)   
+back-58cd87b8d9-5stn6           84m          29Mi            
+back-58cd87b8d9-84kzd           72m          27Mi            
+db-0                            67m          60Mi            
+front-canary-7ffd64d94f-j9w5g   1m           5Mi             
+front-stable-57b67d9bbd-2xzw2   1m           5Mi             
+front-stable-57b67d9bbd-wntlq   1m           5Mi             
+=== 16:57:05 ===
+NAME       REFERENCE         TARGETS        MINPODS   MAXPODS   REPLICAS   AGE
+back-hpa   Deployment/back   cpu: 78%/60%   2         8         3          7m17s
+NAME                            CPU(cores)   MEMORY(bytes)   
+back-58cd87b8d9-5stn6           84m          29Mi            
+back-58cd87b8d9-84kzd           72m          27Mi            
+db-0                            67m          60Mi            
+front-canary-7ffd64d94f-j9w5g   1m           5Mi             
+front-stable-57b67d9bbd-2xzw2   1m           5Mi             
+front-stable-57b67d9bbd-wntlq   1m           5Mi             
+=== 16:57:10 ===
+NAME       REFERENCE         TARGETS        MINPODS   MAXPODS   REPLICAS   AGE
+back-hpa   Deployment/back   cpu: 78%/60%   2         8         3          7m22s
+NAME                            CPU(cores)   MEMORY(bytes)   
+back-58cd87b8d9-5stn6           84m          29Mi            
+back-58cd87b8d9-84kzd           72m          27Mi            
+db-0                            67m          60Mi            
+front-canary-7ffd64d94f-j9w5g   1m           5Mi             
+front-stable-57b67d9bbd-2xzw2   1m           5Mi             
+front-stable-57b67d9bbd-wntlq   1m           5Mi             
+=== 16:57:15 ===
+NAME       REFERENCE         TARGETS        MINPODS   MAXPODS   REPLICAS   AGE
+back-hpa   Deployment/back   cpu: 78%/60%   2         8         3          7m27s
+NAME                            CPU(cores)   MEMORY(bytes)   
+back-58cd87b8d9-5stn6           97m          29Mi            
+back-58cd87b8d9-84kzd           85m          27Mi            
+back-58cd87b8d9-tr2lj           101m         29Mi            
+db-0                            91m          44Mi            
+front-canary-7ffd64d94f-j9w5g   1m           5Mi             
+front-stable-57b67d9bbd-2xzw2   1m           5Mi             
+front-stable-57b67d9bbd-wntlq   1m           5Mi             
+=== 16:57:20 ===
+NAME       REFERENCE         TARGETS        MINPODS   MAXPODS   REPLICAS   AGE
+back-hpa   Deployment/back   cpu: 91%/60%   2         8         3          7m32s
+NAME                            CPU(cores)   MEMORY(bytes)   
+back-58cd87b8d9-5stn6           97m          29Mi            
+back-58cd87b8d9-84kzd           85m          27Mi            
+back-58cd87b8d9-tr2lj           101m         29Mi            
+db-0                            91m          44Mi            
+front-canary-7ffd64d94f-j9w5g   1m           5Mi             
+front-stable-57b67d9bbd-2xzw2   1m           5Mi             
+front-stable-57b67d9bbd-wntlq   1m           5Mi             
+=== 16:57:25 ===
+NAME       REFERENCE         TARGETS        MINPODS   MAXPODS   REPLICAS   AGE
+back-hpa   Deployment/back   cpu: 91%/60%   2         8         3          7m37s
+NAME                            CPU(cores)   MEMORY(bytes)   
+back-58cd87b8d9-5stn6           97m          29Mi            
+back-58cd87b8d9-84kzd           85m          27Mi            
+back-58cd87b8d9-tr2lj           101m         29Mi            
+db-0                            91m          44Mi            
+front-canary-7ffd64d94f-j9w5g   1m           5Mi             
+front-stable-57b67d9bbd-2xzw2   1m           5Mi             
+front-stable-57b67d9bbd-wntlq   1m           5Mi             
+=== 16:57:30 ===
+NAME       REFERENCE         TARGETS        MINPODS   MAXPODS   REPLICAS   AGE
+back-hpa   Deployment/back   cpu: 91%/60%   2         8         3          7m42s
+NAME                            CPU(cores)   MEMORY(bytes)   
+back-58cd87b8d9-5stn6           97m          29Mi            
+back-58cd87b8d9-84kzd           85m          27Mi            
+back-58cd87b8d9-tr2lj           101m         29Mi            
+db-0                            91m          44Mi            
+front-canary-7ffd64d94f-j9w5g   1m           5Mi             
+front-stable-57b67d9bbd-2xzw2   1m           5Mi             
+front-stable-57b67d9bbd-wntlq   1m           5Mi             
+=== 16:57:36 ===
+NAME       REFERENCE         TARGETS        MINPODS   MAXPODS   REPLICAS   AGE
+back-hpa   Deployment/back   cpu: 91%/60%   2         8         3          7m48s
+NAME                            CPU(cores)   MEMORY(bytes)   
+back-58cd87b8d9-5stn6           97m          29Mi            
+back-58cd87b8d9-84kzd           85m          27Mi            
+back-58cd87b8d9-tr2lj           101m         29Mi            
+db-0                            91m          44Mi            
+front-canary-7ffd64d94f-j9w5g   1m           5Mi             
+front-stable-57b67d9bbd-2xzw2   1m           5Mi             
+front-stable-57b67d9bbd-wntlq   1m           5Mi             
+=== 16:57:41 ===
+NAME       REFERENCE         TARGETS        MINPODS   MAXPODS   REPLICAS   AGE
+back-hpa   Deployment/back   cpu: 91%/60%   2         8         3          7m53s
+NAME                            CPU(cores)   MEMORY(bytes)   
+back-58cd87b8d9-5stn6           97m          29Mi            
+back-58cd87b8d9-84kzd           85m          27Mi            
+back-58cd87b8d9-tr2lj           101m         29Mi            
+db-0                            91m          44Mi            
+front-canary-7ffd64d94f-j9w5g   1m           5Mi             
+front-stable-57b67d9bbd-2xzw2   1m           5Mi             
+front-stable-57b67d9bbd-wntlq   1m           5Mi             
+=== 16:57:46 ===
+NAME       REFERENCE         TARGETS        MINPODS   MAXPODS   REPLICAS   AGE
+back-hpa   Deployment/back   cpu: 91%/60%   2         8         3          7m58s
+NAME                            CPU(cores)   MEMORY(bytes)   
+back-58cd87b8d9-5stn6           97m          29Mi            
+back-58cd87b8d9-84kzd           85m          27Mi            
+back-58cd87b8d9-tr2lj           101m         29Mi            
+db-0                            91m          44Mi            
+front-canary-7ffd64d94f-j9w5g   1m           5Mi             
+front-stable-57b67d9bbd-2xzw2   1m           5Mi             
+front-stable-57b67d9bbd-wntlq   1m           5Mi             
+=== 16:57:51 ===
+NAME       REFERENCE         TARGETS        MINPODS   MAXPODS   REPLICAS   AGE
+back-hpa   Deployment/back   cpu: 91%/60%   2         8         3          8m3s
+NAME                            CPU(cores)   MEMORY(bytes)   
+back-58cd87b8d9-5stn6           97m          29Mi            
+back-58cd87b8d9-84kzd           85m          27Mi            
+back-58cd87b8d9-tr2lj           101m         29Mi            
+db-0                            91m          44Mi            
+front-canary-7ffd64d94f-j9w5g   1m           5Mi             
+front-stable-57b67d9bbd-2xzw2   1m           5Mi             
+front-stable-57b67d9bbd-wntlq   1m           5Mi             
+=== 16:57:56 ===
+NAME       REFERENCE         TARGETS        MINPODS   MAXPODS   REPLICAS   AGE
+back-hpa   Deployment/back   cpu: 91%/60%   2         8         3          8m8s
+NAME                            CPU(cores)   MEMORY(bytes)   
+back-58cd87b8d9-5stn6           97m          29Mi            
+back-58cd87b8d9-84kzd           85m          27Mi            
+back-58cd87b8d9-tr2lj           101m         29Mi            
+db-0                            91m          44Mi            
+front-canary-7ffd64d94f-j9w5g   1m           5Mi             
+front-stable-57b67d9bbd-2xzw2   1m           5Mi             
+front-stable-57b67d9bbd-wntlq   1m           5Mi             
+=== 16:58:01 ===
+NAME       REFERENCE         TARGETS        MINPODS   MAXPODS   REPLICAS   AGE
+back-hpa   Deployment/back   cpu: 91%/60%   2         8         3          8m13s
+NAME                            CPU(cores)   MEMORY(bytes)   
+back-58cd87b8d9-5stn6           97m          29Mi            
+back-58cd87b8d9-84kzd           85m          27Mi            
+back-58cd87b8d9-tr2lj           101m         29Mi            
+db-0                            91m          44Mi            
+front-canary-7ffd64d94f-j9w5g   1m           5Mi             
+front-stable-57b67d9bbd-2xzw2   1m           5Mi             
+front-stable-57b67d9bbd-wntlq   1m           5Mi             

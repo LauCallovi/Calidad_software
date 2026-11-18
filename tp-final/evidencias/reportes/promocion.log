@@ -1,0 +1,29 @@
+
+================ [2026-11-18 17:49:25] PROMOCIÓN: front-stable → 1.1.0 ================
+deployment.apps/front-stable configured
+Waiting for deployment "front-stable" rollout to finish: 1 out of 2 new replicas have been updated...
+Waiting for deployment "front-stable" rollout to finish: 1 out of 2 new replicas have been updated...
+Waiting for deployment "front-stable" rollout to finish: 1 out of 2 new replicas have been updated...
+Waiting for deployment "front-stable" rollout to finish: 1 old replicas are pending termination...
+Waiting for deployment "front-stable" rollout to finish: 1 old replicas are pending termination...
+Waiting for deployment "front-stable" rollout to finish: 1 old replicas are pending termination...
+deployment "front-stable" successfully rolled out
+stable responde: 1.1.0
+2026-11-18T17:49:37-03:00 peso 0 -> 0
+deployment.apps/front-canary scaled
+NAME                            READY   STATUS      RESTARTS   AGE   TRACK    VERSION
+back-8698764b48-4fk8k           1/1     Running     0          29m            1.0.0
+back-8698764b48-qdfjd           1/1     Running     0          29m            1.0.0
+db-0                            1/1     Running     0          60m            
+front-stable-57b67d9bbd-2xzw2   0/1     Completed   0          59m   stable   1.0.0
+front-stable-6c96cdb74-42586    1/1     Running     0          12s   stable   1.1.0
+front-stable-6c96cdb74-zxxl4    1/1     Running     0          6s    stable   1.1.0
+
+$ kubectl -n terrasense get pods -l app=front -L track,version
+NAME                            READY   STATUS      RESTARTS   AGE   TRACK    VERSION
+front-stable-57b67d9bbd-2xzw2   0/1     Completed   0          59m   stable   1.0.0
+front-stable-6c96cdb74-42586    1/1     Running     0          12s   stable   1.1.0
+front-stable-6c96cdb74-zxxl4    1/1     Running     0          6s    stable   1.1.0
+
+$ curl -s http://terrasense.local/version.txt
+1.1.0

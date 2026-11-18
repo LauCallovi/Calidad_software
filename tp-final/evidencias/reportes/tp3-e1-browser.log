@@ -1,0 +1,244 @@
+
+         /\      Grafana   /‾‾/  
+    /\  /  \     |\  __   /  /   
+   /  \/    \    | |/ /  /   ‾‾\ 
+  /          \   |   (  |  (‾)  |
+ / __________ \  |_|\_\  \_____/ 
+
+
+     execution: local
+        script: k6/browser-ux.js
+        output: -
+
+     scenarios: (100.00%) 1 scenario, 1 max VUs, 10m30s max duration (incl. graceful stop):
+              * ux: 1 iterations shared among 1 VUs (maxDuration: 10m0s, gracefulStop: 30s)
+
+
+running (00m01.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+ux     [   0% ] 1 VUs  00m01.0s/10m0s  0/1 shared iters
+time="2026-11-18T17:08:44-03:00" level=info msg="[t+0s] estado UI: Sistema operativo" source=console
+
+running (00m02.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+ux     [   0% ] 1 VUs  00m02.0s/10m0s  0/1 shared iters
+
+running (00m03.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+ux     [   0% ] 1 VUs  00m03.0s/10m0s  0/1 shared iters
+
+running (00m04.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+ux     [   0% ] 1 VUs  00m04.0s/10m0s  0/1 shared iters
+
+running (00m05.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+ux     [   0% ] 1 VUs  00m05.0s/10m0s  0/1 shared iters
+
+running (00m06.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+ux     [   0% ] 1 VUs  00m06.0s/10m0s  0/1 shared iters
+time="2026-11-18T17:08:49-03:00" level=info msg="[t+5s] estado UI: Sistema operativo" source=console
+
+running (00m07.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+ux     [   0% ] 1 VUs  00m07.0s/10m0s  0/1 shared iters
+
+running (00m08.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+ux     [   0% ] 1 VUs  00m08.0s/10m0s  0/1 shared iters
+
+running (00m09.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+ux     [   0% ] 1 VUs  00m09.0s/10m0s  0/1 shared iters
+
+running (00m10.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+ux     [   0% ] 1 VUs  00m10.0s/10m0s  0/1 shared iters
+
+running (00m11.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+ux     [   0% ] 1 VUs  00m11.0s/10m0s  0/1 shared iters
+time="2026-11-18T17:08:54-03:00" level=info msg="[t+10s] estado UI: Sistema operativo" source=console
+
+running (00m12.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+ux     [   0% ] 1 VUs  00m12.0s/10m0s  0/1 shared iters
+
+running (00m13.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+ux     [   0% ] 1 VUs  00m13.0s/10m0s  0/1 shared iters
+
+running (00m14.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+ux     [   0% ] 1 VUs  00m14.0s/10m0s  0/1 shared iters
+
+running (00m15.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+ux     [   0% ] 1 VUs  00m15.0s/10m0s  0/1 shared iters
+
+running (00m16.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+ux     [   0% ] 1 VUs  00m16.0s/10m0s  0/1 shared iters
+time="2026-11-18T17:08:59-03:00" level=info msg="[t+15s] estado UI: Sistema operativo" source=console
+
+running (00m17.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+ux     [   0% ] 1 VUs  00m17.0s/10m0s  0/1 shared iters
+
+running (00m18.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+ux     [   0% ] 1 VUs  00m18.0s/10m0s  0/1 shared iters
+
+running (00m19.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+ux     [   0% ] 1 VUs  00m19.0s/10m0s  0/1 shared iters
+
+running (00m20.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+ux     [   0% ] 1 VUs  00m20.0s/10m0s  0/1 shared iters
+
+running (00m21.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+ux     [   0% ] 1 VUs  00m21.0s/10m0s  0/1 shared iters
+time="2026-11-18T17:09:04-03:00" level=info msg="[t+20s] estado UI: Sistema operativo" source=console
+
+running (00m22.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+ux     [   0% ] 1 VUs  00m22.0s/10m0s  0/1 shared iters
+
+running (00m23.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+ux     [   0% ] 1 VUs  00m23.0s/10m0s  0/1 shared iters
+
+running (00m24.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+ux     [   0% ] 1 VUs  00m24.0s/10m0s  0/1 shared iters
+
+running (00m25.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+ux     [   0% ] 1 VUs  00m25.0s/10m0s  0/1 shared iters
+
+running (00m26.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+ux     [   0% ] 1 VUs  00m26.0s/10m0s  0/1 shared iters
+time="2026-11-18T17:09:09-03:00" level=info msg="[t+25s] estado UI: Sistema operativo" source=console
+
+running (00m27.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+ux     [   0% ] 1 VUs  00m27.0s/10m0s  0/1 shared iters
+
+running (00m28.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+ux     [   0% ] 1 VUs  00m28.0s/10m0s  0/1 shared iters
+
+running (00m29.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+ux     [   0% ] 1 VUs  00m29.0s/10m0s  0/1 shared iters
+
+running (00m30.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+ux     [   0% ] 1 VUs  00m30.0s/10m0s  0/1 shared iters
+
+running (00m31.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+ux     [   0% ] 1 VUs  00m31.0s/10m0s  0/1 shared iters
+time="2026-11-18T17:09:14-03:00" level=info msg="[t+31s] estado UI: Sistema operativo" source=console
+
+running (00m32.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+ux     [   0% ] 1 VUs  00m32.0s/10m0s  0/1 shared iters
+
+running (00m33.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+ux     [   0% ] 1 VUs  00m33.0s/10m0s  0/1 shared iters
+
+running (00m34.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+ux     [   0% ] 1 VUs  00m34.0s/10m0s  0/1 shared iters
+
+running (00m35.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+ux     [   0% ] 1 VUs  00m35.0s/10m0s  0/1 shared iters
+
+running (00m36.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+ux     [   0% ] 1 VUs  00m36.0s/10m0s  0/1 shared iters
+time="2026-11-18T17:09:19-03:00" level=info msg="[t+36s] estado UI: Sistema operativo" source=console
+
+running (00m37.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+ux     [   0% ] 1 VUs  00m37.0s/10m0s  0/1 shared iters
+
+running (00m38.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+ux     [   0% ] 1 VUs  00m38.0s/10m0s  0/1 shared iters
+
+running (00m39.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+ux     [   0% ] 1 VUs  00m39.0s/10m0s  0/1 shared iters
+
+running (00m40.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+ux     [   0% ] 1 VUs  00m40.0s/10m0s  0/1 shared iters
+
+running (00m41.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+ux     [   0% ] 1 VUs  00m41.0s/10m0s  0/1 shared iters
+time="2026-11-18T17:09:24-03:00" level=info msg="[t+41s] estado UI: Sistema operativo" source=console
+
+running (00m42.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+ux     [   0% ] 1 VUs  00m42.0s/10m0s  0/1 shared iters
+
+running (00m43.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+ux     [   0% ] 1 VUs  00m43.0s/10m0s  0/1 shared iters
+
+running (00m44.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+ux     [   0% ] 1 VUs  00m44.0s/10m0s  0/1 shared iters
+
+running (00m45.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+ux     [   0% ] 1 VUs  00m45.0s/10m0s  0/1 shared iters
+
+running (00m46.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+ux     [   0% ] 1 VUs  00m46.0s/10m0s  0/1 shared iters
+time="2026-11-18T17:09:29-03:00" level=info msg="[t+46s] estado UI: Sistema operativo" source=console
+
+running (00m47.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+ux     [   0% ] 1 VUs  00m47.0s/10m0s  0/1 shared iters
+
+running (00m48.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+ux     [   0% ] 1 VUs  00m48.0s/10m0s  0/1 shared iters
+
+running (00m49.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+ux     [   0% ] 1 VUs  00m49.0s/10m0s  0/1 shared iters
+
+running (00m50.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+ux     [   0% ] 1 VUs  00m50.0s/10m0s  0/1 shared iters
+
+running (00m51.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+ux     [   0% ] 1 VUs  00m51.0s/10m0s  0/1 shared iters
+time="2026-11-18T17:09:34-03:00" level=info msg="[t+51s] estado UI: Sistema operativo" source=console
+
+running (00m52.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+ux     [   0% ] 1 VUs  00m52.0s/10m0s  0/1 shared iters
+
+running (00m53.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+ux     [   0% ] 1 VUs  00m53.0s/10m0s  0/1 shared iters
+
+running (00m54.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+ux     [   0% ] 1 VUs  00m54.0s/10m0s  0/1 shared iters
+
+running (00m55.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+ux     [   0% ] 1 VUs  00m55.0s/10m0s  0/1 shared iters
+
+running (00m56.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+ux     [   0% ] 1 VUs  00m56.0s/10m0s  0/1 shared iters
+time="2026-11-18T17:09:39-03:00" level=info msg="[t+56s] estado UI: Sistema operativo" source=console
+
+running (00m57.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+ux     [   0% ] 1 VUs  00m57.0s/10m0s  0/1 shared iters
+
+running (00m58.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+ux     [   0% ] 1 VUs  00m58.0s/10m0s  0/1 shared iters
+
+running (00m59.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+ux     [   0% ] 1 VUs  00m59.0s/10m0s  0/1 shared iters
+
+running (01m00.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+ux     [   0% ] 1 VUs  01m00.0s/10m0s  0/1 shared iters
+
+running (01m01.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+ux     [   0% ] 1 VUs  01m01.0s/10m0s  0/1 shared iters
+
+running (01m02.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+ux     [   0% ] 1 VUs  01m02.0s/10m0s  0/1 shared iters
+
+
+  █ TOTAL RESULTS 
+
+    EXECUTION
+    iteration_duration..........: avg=1m1s     min=1m1s     med=1m1s     max=1m1s     p(90)=1m1s     p(95)=1m1s    
+    iterations..................: 1      0.016104/s
+    vus.........................: 1      min=1       max=1
+    vus_max.....................: 1      min=1       max=1
+
+    NETWORK
+    data_received...............: 0 B    0 B/s
+    data_sent...................: 0 B    0 B/s
+
+    BROWSER
+    browser_data_received.......: 100 kB 1.6 kB/s
+    browser_data_sent...........: 13 kB  206 B/s
+    browser_http_req_duration...: avg=15.68ms  min=3.42ms   med=16.67ms  max=36.1ms   p(90)=27.24ms  p(95)=29.02ms 
+    browser_http_req_failed.....: 0.00%  0 out of 64
+
+    WEB_VITALS
+    browser_web_vital_cls.......: avg=0.004657 min=0.004657 med=0.004657 max=0.004657 p(90)=0.004657 p(95)=0.004657
+    browser_web_vital_fcp.......: avg=56ms     min=56ms     med=56ms     max=56ms     p(90)=56ms     p(95)=56ms    
+    browser_web_vital_lcp.......: avg=56ms     min=56ms     med=56ms     max=56ms     p(90)=56ms     p(95)=56ms    
+    browser_web_vital_ttfb......: avg=6.5ms    min=6.5ms    med=6.5ms    max=6.5ms    p(90)=6.5ms    p(95)=6.5ms   
+
+
+
+
+running (01m02.1s), 0/1 VUs, 1 complete and 0 interrupted iterations
+ux   ✓ [ 100% ] 1 VUs  01m02.1s/10m0s  1/1 shared iters

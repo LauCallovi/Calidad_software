@@ -1,0 +1,63 @@
+$ kubectl -n terrasense get pods -l app=back
+NAME                    READY   STATUS             RESTARTS        AGE
+back-58cd87b8d9-5stn6   0/1     CrashLoopBackOff   6 (2m10s ago)   30m
+back-58cd87b8d9-84kzd   0/1     CrashLoopBackOff   6 (114s ago)    30m
+back-58cd87b8d9-8xs9c   0/1     CrashLoopBackOff   6 (71s ago)     8m48s
+back-58cd87b8d9-9m5ps   0/1     CrashLoopBackOff   6 (54s ago)     8m48s
+back-58cd87b8d9-ff52m   0/1     CrashLoopBackOff   6 (60s ago)     7m48s
+back-58cd87b8d9-sfz6j   0/1     CrashLoopBackOff   6 (64s ago)     7m48s
+
+$ kubectl -n terrasense describe pods -l app=back | grep -B2 -A5 'Last State'
+    State:          Waiting
+      Reason:       CrashLoopBackOff
+    Last State:     Terminated
+      Reason:       OOMKilled
+      Exit Code:    137
+      Started:      Wed, 18 Nov 2026 17:17:53 -0300
+      Finished:     Wed, 18 Nov 2026 17:17:57 -0300
+    Ready:          False
+--
+    State:          Waiting
+      Reason:       CrashLoopBackOff
+    Last State:     Terminated
+      Reason:       OOMKilled
+      Exit Code:    137
+      Started:      Wed, 18 Nov 2026 17:18:07 -0300
+      Finished:     Wed, 18 Nov 2026 17:18:13 -0300
+    Ready:          False
+--
+    State:          Waiting
+      Reason:       CrashLoopBackOff
+    Last State:     Terminated
+      Reason:       OOMKilled
+      Exit Code:    137
+      Started:      Wed, 18 Nov 2026 17:18:50 -0300
+      Finished:     Wed, 18 Nov 2026 17:18:56 -0300
+    Ready:          False
+--
+    State:          Waiting
+      Reason:       CrashLoopBackOff
+    Last State:     Terminated
+      Reason:       OOMKilled
+      Exit Code:    137
+      Started:      Wed, 18 Nov 2026 17:19:04 -0300
+      Finished:     Wed, 18 Nov 2026 17:19:13 -0300
+    Ready:          False
+--
+    State:          Waiting
+      Reason:       CrashLoopBackOff
+    Last State:     Terminated
+      Reason:       OOMKilled
+      Exit Code:    137
+      Started:      Wed, 18 Nov 2026 17:19:00 -0300
+      Finished:     Wed, 18 Nov 2026 17:19:07 -0300
+    Ready:          False
+--
+    State:          Waiting
+      Reason:       CrashLoopBackOff
+    Last State:     Terminated
+      Reason:       OOMKilled
+      Exit Code:    137
+      Started:      Wed, 18 Nov 2026 17:18:57 -0300
+      Finished:     Wed, 18 Nov 2026 17:19:03 -0300
+    Ready:          False

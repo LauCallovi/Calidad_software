@@ -1,31 +1,34 @@
-# Cómo explico este TP en 15 minutos
+# Apunte de tiempos para la defensa oral (15 a 18 min)
 
-**Idea central (decirla al principio y al final):** un "200 OK" no significa que el usuario ve la
-página. Por eso el release pasa por dos quality gates: el CI controla el **código** y el canary
-controla la **aplicación corriendo**, con criterios escritos antes de medir.
+En el Aula 102 no hay demo en vivo, todo sale de las capturas y videos que grabamos en el repo. Nos repartimos en 5 tramos de unos 3 minutos por integrante, actuando como el equipo de plataforma y QA de TerraSense S.A. frente al directorio y la gente de la Cooperativa.
 
-| Min | Tema | Qué decir | Qué mostrar |
-|---|---|---|---|
-| 0–1 | **Problema** | TerraSense: sensores en el campo y un panel web. En la helada, un release dejó la pantalla en blanco con el monitoreo en verde. Pregunta: ¿cómo liberar sin repetirlo? | Diagrama de arquitectura (README §0) |
-| 1–3 | **Línea base (TP3)** | Back en Kubernetes: probes (readiness saca el pod del Service, liveness lo reinicia) y HPA por CPU (el % se calcula sobre el request). k6 mide antes de cambiar nada: 67 req/s nominal, stress hasta el quiebre, pod eliminado, OOM | Captura del load en verde; video del HPA escalando o del OOMKilled |
-| 3–5 | **CI = gate 1** | Reutiliza TP1 (linters) y TP2 (Horusec). La imagen solo se construye si pasan las dos gates. Pasó de verdad: 22 hallazgos → rojo → 14 corregidos, 5 falsos positivos, 3 riesgos aceptados → verde | Captura del run rojo y del verde; tabla de `HALLAZGOS-HORUSEC.md` |
-| 5–6 | **Tres versiones** | Un Dockerfile para las tres. Versión marcada en el header, el meta y version.txt. 1.1.0 = la candidata; 1.2.0 = rota a propósito: 200 en todo, pantalla en blanco | Navegador 1.0.0 vs 1.1.0; Network en 200 + consola con TypeError |
-| 6–9 | **Canary = gate 2** | Dos Deployments idénticos salvo la versión, dos Services. El Ingress decide header → cookie → peso. Afinidad para no mezclar assets. API en otro Ingress, sin afinidad, para no distorsionar el HPA. Peso 100 no es promoción | Diagrama del Ingress (RESUMEN Fase 3); captura de etapa 0 con cookie |
-| 9–11 | **Rollout automatizado** | Plan escrito antes: etapa 0 con peso 0, después 10/25/50/100. En cada etapa, k6 HTTP + navegador real. Avanza solo si: thresholds OK, 0 pantallas en blanco, p95 ≤ stable +10%. Si no, rollback medido | Video del rollout; bitácora; conteo curl vs peso |
-| 11–12 | **Demo v1.2.0** | El split da OK (todo 200); el navegador ve la pantalla en blanco → rollback en X s. En la etapa 0 ni siquiera llega a usuarios | **Video del rollback** (el más importante) |
-| 12–13 | **Estrés A/B** | Hipótesis escrita antes: la 1.1.0 no empeora el p95 más de 10% y ambas sostienen 200 cargas/s con <1% de errores. A/B con header, canary a 2 réplicas, peso 0. Resultado: _completar_ | Tabla de escalones de las dos versiones |
-| 13–14 | **ISO/IEC 25000** | Cada prueba evidencia una característica de 25010: linters → mantenibilidad; Horusec → seguridad; probes/fallas → fiabilidad (recuperabilidad, 25045); HPA y k6 → eficiencia de desempeño; canary → fiabilidad y adecuación funcional. Los SLOs son requisitos (2503n), k6 mide (2502n), rollout.sh evalúa (2504n). El navegador acerca la calidad **en uso** (25019). Sin cubrir: accesibilidad (Lighthouse/axe), interoperabilidad (contract testing), seguridad en ejecución (ZAP) | Tabla del README §4.1 |
-| 14–15 | **Veredicto y aprendizaje** | Go/no-go de la 1.1.0 y de 10.000 sensores (≈ 333 req/s): _completar_. Aprendizajes: assets mezclados → afinidad; peso ≠ pods; peso 100 ≠ promoción; SAST marca comentarios; ingress-nginx retirado → Gateway API | README §6 y §7 |
+## Tramo 1 (min 0 a 3.5): Incidente de la helada y línea base en Minikube
+Arrancamos contando qué nos trajo hasta acá: en un deploy anterior se cambiaron todos los pods del panel al mismo tiempo y los productores quedaron 40 minutos viendo una página vacía en plena helada, mientras el chequeo HTTP daba todo 200. Además la Cooperativa quiere pasar de 2.000 a 10.000 sensores ESP32 mandando lecturas cada 30 segundos.
 
-## Tres frases para memorizar
-1. "El CI controla el código; el canary controla el comportamiento con tráfico real; los dos con criterios fijados antes."
-2. "La v1.2.0 responde 200 en todo y deja la pantalla en blanco: solo un navegador real la detecta."
-3. "Peso 100 no es promoción: promover es cambiar la imagen de la stable y recién después apagar el canary."
+Mostramos `01-deploy-kubectl.png` y `02-load.png`: PostgreSQL en StatefulSet con PVC, `back` en Node/Express con probes `/readyz` y `/healthz`, y el HPA regulando de 2 a 8 réplicas al superar 60% de CPU sobre el `request`. A carga actual (67 req/s) responde holgado debajo de los 300 ms de p95; en el video `02-stress-hpa.mp4` se ve hasta dónde escala antes de saturar.
 
-## Preguntas probables (respuesta corta)
-- **¿Por qué no un rolling update?** No controla qué % ve la versión nueva ni permite medirla al lado de la vieja.
-- **¿Quién reparte el tráfico?** El Ingress controller (nginx), no Kubernetes.
-- **¿Cuánto tarda un rollback?** _completar_ s: es una anotación, no reinicia pods.
-- **¿Por qué A/B con header y no con peso?** Con el peso, cada versión recibe una parte distinta de la carga.
-- **¿Falso positivo vs riesgo aceptado?** El primero no es un problema real; el segundo sí lo es, pero se acepta con una justificación y mitigaciones.
-- **¿Qué no cubre?** Accesibilidad, contrato front-API, seguridad en ejecución, dependencias, backup de la DB.
+## Tramo 2 (min 3.5 a 7): Compuerta de CI y pruebas de rotura (E1 / E2)
+Pasamos al workflow `.github/workflows/tp-final-ci.yml` con las capturas `07-ci-rojo.png` y `07-ci-verde.png`. Si fallan los linters (`htmlhint`, `ESLint`, `hadolint`) o salta Horusec + Trivy, el job `build` ni siquiera arranca. En la primera corrida saltaron 22 alertas: sacamos `Math.random()` del endpoint `/api/debug/burn`, endurecimos `securityContext` con UID mayores a 10000 y `emptyDir` para nginx, dejamos documentados los falsos positivos de `k6` y aceptamos con controles el inicio de Postgres. Hasta nos pasó en el segundo run que Horusec marcó un comentario de texto plano.
+
+Cerramos este tramo con `03-e1-pod-eliminado.mp4` y `04-oomkilled.png`: matando un pod del `back` bajo 40 req/s apenas caen un puñado de paquetes en menos de 1 segundo y la UI ni parpadea; forzando memoria con `/api/debug/leak` Kubernetes mata por `OOMKilled` (código 137) y levanta de nuevo el contenedor solo.
+
+## Tramo 3 (min 7 a 11.5): Despliegue Canary de la v1.1.0
+Acá mostramos las tres imágenes salidas del mismo Dockerfile (`1.0.0`, `1.1.0` verde flúo con CSS/JS externos, y `1.2.0` rota). Todas llevan tres marcas: header `X-App-Version`, etiqueta `<meta name="app-version">` y `/version.txt`.
+
+Explicamos los manifiestos de `k8s/`: dos Deployments (`front-stable` y `front-canary`), dos Services filtrando por `track`, y dos Ingress sobre `terrasense.local`. El pod de `ingress-nginx` evalúa en orden `X-Canary` -> cookie `canary` -> `canary-weight`. Pusimos afinidad por cookie `terrasense-front` en el front para que un navegador no cruce HTML de `1.1.0` con assets de `1.0.0`, y separamos `api.terrasense.local` en un tercer Ingress sin afinidad para no clavar la carga en un único pod del `back`.
+
+Con `03-etapa0-cookie.png`, la grilla de 20 visitas y el video `05-rollout-1.1.0.mp4` mostramos `rollout.sh` pasando por Etapa 0 (peso 0 con cookie) y después 10%, 25%, 50% y 100%, validado también desde afuera con `conteo-curl.sh` leyendo las IPs de pods en los logs del Ingress.
+
+## Tramo 4 (min 11.5 a 15): Rollback automático de la v1.2.0 y estrés A/B
+Ponemos el video `06-rollback-1.2.0.mp4` junto con `06-network-200.png` y `06-consola-typeerror.png`. La `v1.2.0` devuelve `200 OK` en red pero tira `TypeError` al buscar `window.__TERRASENSE_CONFIG__.api` y deja `<div id="app">` vacío. En Demo A la Etapa 0 la corta con peso 0 sin afectar a ningún productor. En Demo B abrimos al 25%: k6 HTTP da verde, pero Chromium detecta `innerText` vacío y ejecuta rollback llevando peso a 0 y `front-canary` a 0 réplicas para soltar también las sesiones sticky.
+
+Después mostramos `04-estres-stable.png`, `04-estres-canary.png` y `02-capacidad-333.png`: escalamos `front-canary` a 2 réplicas igual que `front-stable`, dejamos peso 0 y tiramos rampas de 50 a 800 cargas/s por versión con header `X-Canary`. Comparamos qué dio en la notebook de 2 CPUs / 3 GB frente a la máquina de 4 CPUs / 6 GB, y cómo rindió el backend a 333 req/s (equivalente a 10.000 sensores).
+
+## Tramo 5 (min 15 a 18): Norma ISO/IEC 25000 y dictamen final
+Recorremos la tabla SQuaRE: nuestros `thresholds` son requisitos `25030`, los JSON/CSV de k6 son mediciones `25022`/`25023`, `rollout.sh` implementa la evaluación `25040` (y `25045` en recuperabilidad ante fallas), y el salto de k6 HTTP a `k6/browser` marca el paso de mirar solo el producto (`25010`) a mirar calidad en uso (`25019`). Nombramos lo que falta cubrir: accesibilidad con Lighthouse/axe, pruebas de contrato front-back con Pact, DAST con OWASP ZAP, `package-lock.json` para NpmAudit y migración futura de `ingress-nginx` (archivado en marzo de 2026) a Gateway API (`HTTPRoute`). Cerramos con el dictamen Go / No-Go y el orden exacto de promoción (`front-stable` a `1.1.0` -> `rollout status` -> peso 0 -> canary en 0 réplicas).
+
+## Ayuda memoria para preguntas de los profes
+- **Por qué no usar un RollingUpdate común:** porque en un Deployment estándar el reparto depende del número de pods (con 2 pods pasás directo al 50%) y no podés entrar por cookie con 0% de tráfico público.
+- **Quién reparte los porcentajes:** NGINX Ingress Controller dentro del pod de `ingress-nginx`, no `kube-proxy`.
+- **Por qué bajar réplicas a 0 en el rollback:** la cookie sticky dura 1 hora; si solo bajás `canary-weight` a 0, el usuario que ya cayó en la `1.2.0` sigue viendo pantalla blanca al recargar hasta que matás las réplicas del canary.
+- **Por qué peso 100% no alcanza como promoción:** si dejás `front-stable` en `1.0.0` y mañana borrás el recurso canary, deshacés el release sin querer.

@@ -1,0 +1,9 @@
+time="2026-11-18T17:48:15-03:00" level=warning msg="Error from API server" error="listen tcp 127.0.0.1:6565: bind: address already in use"
+
+=== peso-25: peso configurado 25% → canary observado 23.58% ===
+visitas: 1200 (canary 283, stable 917, sin versión 0)
+p95 HTML    canary 3.9 ms | stable 4.0 ms
+p95 página  canary 5.6 ms | stable 4.0 ms
+errores     canary 0.00% | stable 0.00%
+assets rotos: 0 (0.00%)
+thresholds: OK

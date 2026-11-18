@@ -1,0 +1,29 @@
+$ kubectl -n terrasense get pods,svc,ingress,hpa -L track,version
+NAME                                READY   STATUS    RESTARTS   AGE    TRACK    VERSION
+pod/back-58cd87b8d9-5stn6           1/1     Running   0          93s             1.0.0
+pod/back-58cd87b8d9-84kzd           1/1     Running   0          93s             1.0.0
+pod/db-0                            1/1     Running   0          108s            
+pod/front-canary-7ffd64d94f-j9w5g   1/1     Running   0          88s    canary   1.1.0
+pod/front-stable-57b67d9bbd-2xzw2   1/1     Running   0          88s    stable   1.0.0
+pod/front-stable-57b67d9bbd-wntlq   1/1     Running   0          88s    stable   1.0.0
+
+NAME                   TYPE        CLUSTER-IP      EXTERNAL-IP   PORT(S)    AGE    TRACK   VERSION
+service/back           ClusterIP   10.103.182.38   <none>        3000/TCP   93s            
+service/db             ClusterIP   10.102.88.50    <none>        5432/TCP   108s           
+service/front-canary   ClusterIP   10.107.249.99   <none>        8080/TCP   88s            
+service/front-stable   ClusterIP   10.107.123.3    <none>        8080/TCP   88s            
+
+NAME                                                  CLASS   HOSTS                  ADDRESS        PORTS   AGE   TRACK   VERSION
+ingress.networking.k8s.io/terrasense-ingress          nginx   terrasense.local       192.168.49.2   80      82s           
+ingress.networking.k8s.io/terrasense-ingress-api      nginx   api.terrasense.local   192.168.49.2   80      82s           
+ingress.networking.k8s.io/terrasense-ingress-canary   nginx   terrasense.local       192.168.49.2   80      82s           
+
+NAME                                           REFERENCE         TARGETS       MINPODS   MAXPODS   REPLICAS   AGE   TRACK   VERSION
+horizontalpodautoscaler.autoscaling/back-hpa   Deployment/back   cpu: 4%/60%   2         8         2          93s           
+
+$ curl -s http://terrasense.local/version.txt
+1.0.0
+$ curl -s -H 'X-Canary: always' http://terrasense.local/version.txt
+1.1.0
+$ curl -s http://api.terrasense.local/api/stats
+{"total":0,"pod":"back-58cd87b8d9-5stn6","version":"1.0.0"}

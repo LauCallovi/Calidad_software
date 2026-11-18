@@ -1,365 +1,236 @@
-# TP Final — Canary del frontend de TerraSense
+# TerraSense S.A. - TP Final (Canary + k6 + ISO 25000)
 
-**Gestión de la Calidad del Software — FCEFyN, UNC**
+Acá armamos la entrega del trabajo práctico final de Gestión de la Calidad del Software (FCEFyN, UNC). Agarramos la plataforma de monitoreo rural que ya corría en Minikube desde el TP3 y le pusimos arriba el pipeline de GitHub Actions (`lint` + `horusec`) junto con el rollout gradual en `ingress-nginx` validado con `k6` y Chromium.
 
-Despliegue canary del frontend de TerraSense con NGINX Ingress en Minikube, prueba de estrés con
-hipótesis, pipeline de CI como primera quality gate y mapa de las pruebas a ISO/IEC 25000 (SQuaRE).
-Integra el TP3 (Kubernetes + HPA + k6) como **línea base**.
+## Índice
 
-> Los campos marcados **_completar_** se llenan con los datos de la ejecución
-> (`evidencias/reportes/`). El orden para correr todo está en [`GUIA_EJECUCION.md`](GUIA_EJECUCION.md).
-
-## Contenido
-
-0. [Contexto y arquitectura](#0-contexto-y-arquitectura)
-1. [Despliegue en un Minikube limpio](#1-despliegue-en-un-minikube-limpio)
-2. [Plan de rollout y bitácora](#2-plan-de-rollout-y-bitácora)
-3. [Prueba de estrés: hipótesis y fundamentación](#3-prueba-de-estrés-hipótesis-y-fundamentación)
-4. [Mapa ISO/IEC 25000](#4-mapa-isoiec-25000)
-5. [Índice de evidencia](#5-índice-de-evidencia)
-6. [Veredicto go / no-go](#6-veredicto-go--no-go)
-7. [Aprendizaje: problemas y soluciones](#7-aprendizaje-problemas-y-soluciones)
+0. [Escenario y carpetas del repo](#0-escenario-y-carpetas-del-repo)
+1. [Instrucciones de despliegue en Minikube limpio](#1-instrucciones-de-despliegue-en-minikube-limpio)
+2. [Plan de rollout y bitácora de ejecución](#2-plan-de-rollout-y-bitácora-de-ejecución)
+3. [Prueba de estrés A/B con hipótesis](#3-prueba-de-estrés-ab-con-hipótesis)
+4. [Mapa de calidad ISO/IEC 25000 (SQuaRE)](#4-mapa-de-calidad-isoiec-25000-square)
+5. [Índice de evidencias](#5-índice-de-evidencias)
+6. [Veredicto Go / No-Go (`v1.1.0` y 10.000 sensores)](#6-veredicto-go--no-go-v110-y-10000-sensores)
+7. [Problemas encontrados y cómo los destrabamos](#7-problemas-encontrados-y-cómo-los-destrabamos)
 
 ---
 
-## 0. Contexto y arquitectura
+## 0. Escenario y carpetas del repo
 
-TerraSense recibe lecturas de una flota de sensores ESP32 (temperatura y humedad) y las muestra en
-un panel web. Durante una madrugada de helada, un release del front dejó la **pantalla en blanco**
-mientras el monitoreo reportaba el servicio como sano (HTTP 200). El objetivo del TP es un proceso
-de release que detecte ese tipo de falla y limite su impacto.
+La plataforma junta datos de temperatura y humedad que mandan 2.000 placas ESP32 desde los lotes de la Cooperativa Agropecuaria del Centro cada 30 segundos (~67 req/s) y los grafica en una web. Semanas atrás un deploy directo cambió todos los pods del front al mismo tiempo en una noche de helada: un bug de JS dejó la página en blanco 40 minutos mientras nginx seguía contestando `200 OK`. Ahora hay que sacar la `v1.1.0` sin jugarse todo el tráfico de una vez y medir además si el backend aguanta pasar el contrato a **10.000 sensores** (~333 req/s).
 
 ```
                          terrasense.local                      api.terrasense.local
 Navegador / k6 ───────────────┬──────────────────────────────────────────┬──────────────
-                              ▼                                          ▼
-              ┌──────────── NGINX Ingress Controller (addon de Minikube) ─────────────┐
-              │ terrasense-ingress (afinidad cookie)      terrasense-ingress-api      │
-              │ terrasense-ingress-canary (peso/cookie/header)   (sin afinidad)       │
-              └──────────┬───────────────────┬─────────────────────┬──────────────────┘
-                         ▼                   ▼                     ▼
+                              v                                          v
+              +------------ NGINX Ingress Controller (addon de Minikube) -------------+
+              | terrasense-ingress (cookie sticky)        terrasense-ingress-api      |
+              | terrasense-ingress-canary (peso/cookie/header)   (sin afinidad)       |
+              +----------┬-------------------┬---------------------┬------------------+
+                         v                   v                     v
                Service front-stable  Service front-canary     Service back
-                ├ pod front 1.0.0     └ pod front 1.1.0        ├ pod back 1.0.0 ┐ HPA 2..8
-                └ pod front 1.0.0                              └ pod back 1.0.0 ┘ (CPU 60%)
-                                                                       ▼
+                |- pod front 1.0.0    `- pod front 1.1.0       |- pod back 1.0.0 ] HPA 2..8
+                `- pod front 1.0.0                             `- pod back 1.0.0 ] (CPU 60%)
+                                                                       v
                                                               StatefulSet db (PostgreSQL + PVC)
 ```
 
-| Componente | Ubicación | Descripción |
-|---|---|---|
-| Back | `app/back/` | Node/Express + pg. Header `X-App-Version`, probes `/readyz` y `/healthz`, endpoints de laboratorio `/api/debug/*` |
-| Front | `app/front/` | Un Dockerfile (nginx-unprivileged) para las 3 versiones: `v1.0.0/` stable, `v1.1.0/` canary, `v1.2.0/` rota a propósito |
-| Base K8s | `k8s/base/` | Namespace, ConfigMap, PostgreSQL, back, HPA (la línea base del TP3) |
-| Canary | `k8s/stable/`, `k8s/canary/`, `k8s/ingress.yaml` | Deployments y Services por track, Ingress principal, de API y canary |
-| Pruebas | `k6/` | Línea base del back (TP3) y pruebas del canary y del estrés del front |
-| Automatización | `scripts/` | `deploy.sh`, `peso.sh`, `conteo-curl.sh`, `rollout.sh` |
-| CI | `../.github/workflows/tp-final-ci.yml`, `ci/` | Linters + Horusec → build |
+Cómo están repartidas las carpetas adentro de `tp-final/`:
+- **`app/back/` y `app/front/`:** API en Node/Express + `pg` con probes `/readyz` y `/healthz`, y un solo `Dockerfile` (`nginx-unprivileged:1.27-alpine`) que compila las tres variantes del panel (`v1.0.0`, `v1.1.0` y `v1.2.0`).
+- **`k8s/`:** en `base/` vive lo heredado del TP3 (`db` en StatefulSet, `back` y HPA); en `stable/`, `canary/` e `ingress.yaml` están los Deployments y Services separados por `track` junto a los tres recursos Ingress.
+- **`k6/` y `scripts/`:** pruebas de carga/fallas sobre el back, pruebas de split/browser/estrés sobre el front y los scripts `deploy.sh`, `peso.sh`, `conteo-curl.sh` y `rollout.sh`.
+- **`../.github/workflows/tp-final-ci.yml` y `ci/`:** pipeline con `htmlhint`, `ESLint`, `hadolint`, Horusec y Trivy más el detalle de alertas tratadas.
 
-**Marcas de versión del front.** Cada versión se identifica en tres lugares, porque cada uno responde
-a una pregunta distinta:
-
-| Marca | Pregunta | Quién la usa |
-|---|---|---|
-| Header `X-App-Version` (en toda respuesta, incluso 404) | ¿Qué versión respondió **este request**? | k6 HTTP: detectar assets de otra versión |
-| `<meta name="app-version">` | ¿Qué versión **renderizó** el navegador? | k6 browser |
-| `/version.txt` | ¿Qué versión tiene este pod? | Probes, `conteo-curl.sh`, `rollout.sh` |
+Para distinguir qué versión respondió en cada capa pusimos tres marcas en el build del frontend:
+- Header `X-App-Version` en todas las respuestas de nginx (incluidos assets y 404), leído por `k6` HTTP para detectar cruce de archivos entre pods.
+- Meta tag `<meta name="app-version">` en el `<head>`, leído desde el DOM por `k6/browser`.
+- Archivo `/version.txt`, usado por las `readinessProbe` y por `conteo-curl.sh`.
 
 ---
 
-## 1. Despliegue en un Minikube limpio
+## 1. Instrucciones de despliegue en Minikube limpio
 
-**Requisitos (Ubuntu):** Docker, Minikube, kubectl, k6 (≥ 1.0, incluye el módulo browser), Chromium,
-python3 y curl. Instalación detallada en [`GUIA_EJECUCION.md`](GUIA_EJECUCION.md#0-preparación-de-ubuntu).
+Con Docker, Minikube, `kubectl`, `k6` (>= 1.x con soporte browser), Chromium/Chrome, `python3` y `curl` instalados en Ubuntu (paso a paso de paquetes en [`GUIA_EJECUCION.md`](GUIA_EJECUCION.md)):
 
 ```bash
-cd tp-final
+git clone https://github.com/LauCallovi/Calidad_software.git
+cd Calidad_software/tp-final
 ./scripts/deploy.sh
 ```
 
-`deploy.sh` ejecuta, en orden:
+Qué hace `deploy.sh` de principio a fin:
+1. Levanta `minikube start --driver=docker` y prende los addons `ingress` y `metrics-server`.
+2. Apunta el cliente al demonio interno con `eval $(minikube docker-env)` y compila ahí mismo las cuatro imágenes con tags fijos (`terrasense-back:1.0.0` y `terrasense-front:1.0.0`, `1.1.0`, `1.2.0`), evitando depender de un registry externo gracias a `imagePullPolicy: IfNotPresent`.
+3. Espera el pod del controlador en `ingress-nginx` y crea el namespace, el ConfigMap y el Secret `db-secret` con clave aleatoria tomada de `/dev/urandom` (si ya existía no lo pisa para no desincronizar el volumen de Postgres).
+4. Despliega PostgreSQL, el `back` con su HPA y los dos tracks del front con `canary-weight: "0"`.
+5. Aplica los Ingress reintentando hasta que responda el webhook de validación y actualiza `/etc/hosts` con `minikube ip`.
 
-1. `minikube start --driver=docker` y los addons `ingress` (ingress-nginx) y `metrics-server` (métricas de CPU para el HPA).
-2. `eval $(minikube docker-env)` y build de las 4 imágenes **dentro** de Minikube, con tags explícitos:
-   `terrasense-back:1.0.0` y `terrasense-front:1.0.0`, `1.1.0`, `1.2.0`. Los Deployments usan
-   `imagePullPolicy: IfNotPresent`, así que no hace falta un registry.
-3. Espera a que el Ingress controller esté listo.
-4. Aplica la base: namespace → ConfigMap → **Secret de la DB generado en el momento**, con contraseña
-   aleatoria, fuera del repo y sin regenerarlo si ya existe → PostgreSQL → back + HPA → front stable +
-   canary (peso 0).
-5. Aplica los Ingress con reintentos (el webhook de validación de ingress-nginx tarda unos segundos más que el pod).
-6. Agrega `terrasense.local` y `api.terrasense.local` a `/etc/hosts` con la IP de Minikube.
-
-Verificación:
+Comandos rápidos para chequear que levantó todo sano:
 ```bash
 kubectl -n terrasense get pods,svc,ingress,hpa -L track,version
-curl -s http://terrasense.local/version.txt          # 1.0.0 (peso 0)
-curl -s -H 'X-Canary: always' http://terrasense.local/version.txt   # 1.1.0
+curl -s http://terrasense.local/version.txt                        # devuelve 1.0.0
+curl -s -H 'X-Canary: always' http://terrasense.local/version.txt  # devuelve 1.1.0
 curl -s http://api.terrasense.local/api/stats
 ```
 
-**Endurecimiento.** Back y front corren con `runAsNonRoot`, UID/GID > 10000,
-`allowPrivilegeEscalation: false` y `capabilities: drop ALL`. El front monta `emptyDir` en
-`/var/cache/nginx` y `/tmp`. PostgreSQL bloquea la escalada de privilegios, y el arranque como root
-queda como riesgo aceptado (ver [`ci/HALLAZGOS-HORUSEC.md`](ci/HALLAZGOS-HORUSEC.md)).
+### Primera compuerta: CI (`.github/workflows/tp-final-ci.yml`)
 
-### CI: primera quality gate
+Cada cambio sobre `tp-final/**` dispara en paralelo `lint` (`htmlhint`, `ESLint`, `hadolint`) y `horusec` (Horusec + Trivy con `-s LOW -e true`). El job `build` tiene `needs: [lint, horusec]`, por lo que no se empaqueta ninguna imagen si antes hay errores estáticos o vulnerabilidades sin tratar.
 
-`.github/workflows/tp-final-ci.yml` corre en cada push o PR que toque `tp-final/**`:
-
-```
-lint (htmlhint, ESLint, hadolint) ─┐
-                                   ├─► build: 4 imágenes + arranque con UID no root
-horusec (SAST, -s LOW, -e true) ───┘   (solo si las dos gates pasan)
-```
-
-| Run | Commit | Resultado | Motivo |
+| Run en GitHub Actions | Commit | Estado | Qué pasó |
 |---|---|---|---|
-| #43995990963 | `e00a083` | ❌ horusec, build skipped | 22 hallazgos: contenedores sin `securityContext` (Trivy) y `Math.random()` |
-| #44003617085 | `6e0af9f` | ❌ horusec, build skipped | 1 hallazgo nuevo en un comentario (limitación del SAST por patrones) |
-| #44008882096 | `7dd88a8` | ✅ todo verde | 14 corregidos, 5 falsos positivos y 3 riesgos aceptados, registrados por hash |
-
-Reutiliza las herramientas de TP1 (linters como gate) y TP2 (Horusec compilado desde el fuente). Las
-copias originales de esos workflows están en [`ci/`](ci/README.md).
+| `#43995990963` | `e00a083` | Falló `horusec` (`build` skipped) | 22 alertas: falta de `securityContext` en K8s y `Math.random()` |
+| `#44003617085` | `6e0af9f` | Falló `horusec` (`build` skipped) | 1 alerta nueva por nombrar la función random adentro de un comentario |
+| `#44008882096` | `7dd88a8` | Verde en los 3 jobs | 14 corregidos, 5 falsos positivos y 3 riesgos aceptados en `ci/HALLAZGOS-HORUSEC.md` |
 
 ---
 
-## 2. Plan de rollout y bitácora
+## 2. Plan de rollout y bitácora de ejecución
 
-### 2.1 Plan (definido antes de ejecutar)
+### 2.1 Reglas del plan (fijadas antes de correr `scripts/rollout.sh`)
 
-Automatizado en `scripts/rollout.sh`. Cada etapa con peso corre en paralelo `k6/front-canary-split.js`
-(tráfico HTTP sin cookie ni header, 20 visitas/s × 5 min) y `k6/browser-canary.js` (20 visitas con
-Chromium, cada una en un contexto nuevo).
+En cada escalón corren al mismo tiempo `k6/front-canary-split.js` (tráfico abierto sin cookies previas a 20 req/s) y `k6/browser-canary.js` (20 aperturas reales en Chromium limpio).
 
-| Etapa | Peso | Duración | Criterio para avanzar (todos) | Si falla |
+| Etapa | Peso | Ventana | Condición para avanzar | Acción si falla |
 |---|---|---|---|---|
-| 0 | 0% + cookie `canary=always` | 3 visitas con navegador (~1 min) | 0 pantallas en blanco; 3/3 visitas renderizan la versión canary | Se corta. Ningún usuario real expuesto (peso 0) |
-| 1 | 10% | 5 min | Thresholds del split: `http_req_failed` < 1%, `err_canary` < 1%, `lat_canary` p95 < 300 ms, `assets_rotos` < 1%. **Y** 0 pantallas en blanco. **Y** p95 de página canary ≤ p95 stable + 10% (o diferencia < 5 ms) | **Rollback**: peso 0, se mide el tiempo hasta que ningún request llega al canary, se registra y se corta |
-| 2 | 25% | 5 min | Ídem | Ídem |
-| 3 | 50% | 5 min | Ídem | Ídem |
-| 4 | 100% | 5 min | Ídem. El p95 stable de referencia es el de la etapa 3 (con peso 100 no hay visitas a la stable) | Ídem |
-| Promoción | — | `rollout status` | La stable responde la versión nueva con `X-Canary: never` | `kubectl rollout undo deployment/front-stable` |
+| `etapa-0` | `0%` + cookie `canary=always` | 3 visitas browser | 3/3 en versión candidata y 0 pantallas blancas | Corta con peso 0 (0 productores afectados) |
+| `peso-10` | `10%` | 2 a 5 min | Split en verde (`err < 1%`, `p95 < 300 ms`, `assets_rotos < 1%`), 0 pantallas blancas y `p95 HTML canary <= p95 stable + 10%` (con margen de 5 ms por ruido local) | Rollback automático: peso a 0 + réplicas canary a 0 |
+| `peso-25` | `25%` | 2 a 5 min | Mismas condiciones | Rollback automático medido en segundos |
+| `peso-50` | `50%` | 2 a 5 min | Mismas condiciones | Rollback automático medido en segundos |
+| `peso-100` | `100%` | 2 a 5 min | Mismas condiciones (usando el `p95 stable` de `peso-50` como referencia) | Rollback automático medido en segundos |
+| `promocion` | `0%` tras actualizar stable | `rollout status` | `front-stable` responde `1.1.0` con `X-Canary: never` | `kubectl rollout undo deployment/front-stable` |
 
-**Peso 100 no es promoción.** Con peso 100 la stable sigue declarada en 1.0.0, todo el tráfico cae en
-un único pod canary, y quitar el Ingress canary devolvería la versión vieja. La promoción
-(`SOLO_PROMOVER=1` o `PROMOVER=1`) sigue este orden:
-1. `front-stable` pasa a la imagen nueva (sed en el YAML + apply + `rollout status`);
-2. peso 0;
-3. `front-canary` a 0 réplicas.
+Al probar el script contra el cluster aparecieron dos temas prácticos que corregimos en `rollout.sh`:
 
-Invertir el orden devolvería el tráfico a la versión vieja durante unos segundos.
+- **HTML suelto contra página con assets:** la `1.0.0` mete CSS y JS adentro del mismo `index.html` (1 pedido HTTP), pero la `1.1.0` pide además `/assets/app-1.1.0.css` y `/assets/app-1.1.0.js` (3 pedidos). Cuando medíamos tiempo total de página en la Etapa `peso-10`, saltaba un rollback falso por ~5 ms de diferencia aunque el HTML nuevo salía igual de rápido y con cero fallos. Pasamos el control del rollout al `p95` del HTML y dejamos la comparación de carga completa de página para el estrés A/B de la sección 3.
+- **Secuencia de promoción y limpieza de sesiones sticky:** poner `canary-weight` en `100` no cambia la imagen declarada en `front-stable`. Para promover sin microcortes actualizamos primero `front-stable` a `1.1.0`, esperamos `rollout status`, bajamos peso a `0` y recién al final llevamos `front-canary` a `0` réplicas. En sentido inverso, cuando `rollback()` corta una versión rota también baja `front-canary` a `0` réplicas porque la cookie `terrasense-front` dura 1 hora y dejaría a esos navegadores pegados al pod viejo si siguiera vivo.
 
-**Tolerancia de 5 ms.** En Minikube los tiempos de página son de pocos milisegundos: un 10% de 4 ms
-es ruido. Además, la v1.1.0 pide 2 assets externos que la v1.0.0 no pide, así que su tiempo de página
-incluye un request más.
+### 2.2 Bitácora registrada (`evidencias/reportes/bitacora.csv`)
 
-### 2.2 Bitácora
+Corrida en VM Ubuntu sobre Apple Silicon (4 CPUs y 6144 MB asignados a Minikube):
 
-Generada por `rollout.sh` en `evidencias/reportes/bitacora.csv`. Cambios de peso con hora en
-`evidencias/reportes/cambios-de-peso.log`.
-
-| Inicio | Fin | Etapa | Versión | Peso | % observado | Visitas | p95 canary (ms) | p95 stable (ms) | Err. canary | Assets rotos | Pant. blancas | Decisión | Motivo |
+| Inicio | Fin | Etapa | Versión | Peso | % obs. | Visitas | p95 HTML canary (ms) | p95 HTML stable (ms) | Err. canary | Assets rotos | Pant. blancas | Decisión | Detalle |
 |---|---|---|---|---|---|---|---|---|---|---|---|---|---|
-| _completar_ | | etapa-0 | 1.1.0 | 0 | — | 3 | — | — | — | — | | | |
-| | | peso-10 | 1.1.0 | 10 | | | | | | | | | |
-| | | peso-25 | 1.1.0 | 25 | | | | | | | | | |
-| | | peso-50 | 1.1.0 | 50 | | | | | | | | | |
-| | | peso-100 | 1.1.0 | 100 | | | | | | | | | |
-| | | etapa-0 | 1.2.0 | 0 | — | 3 | — | — | — | — | | ROLLBACK (esperado) | |
-| | | peso-25 | 1.2.0 | 25 | | | | | | | | ROLLBACK (esperado) | tiempo de rollback: _completar_ s |
-| | | promocion | 1.1.0 | 0 | — | — | — | — | — | — | — | PROMOCION | |
+| 17:20:26 | 17:20:41 | `etapa-0` | `1.1.0` | 0% | - | 3 | - | - | - | - | 0 | **AVANZA** | 3/3 visitas forzadas OK |
+| 17:20:41 | 17:22:47 | `peso-10` | `1.1.0` | 10% | 9 | 2401 | 3.38 | 6.18 | 0.00% | 0 | 0 | **AVANZA** | criterios cumplidos |
+| 17:22:47 | 17:24:52 | `peso-25` | `1.1.0` | 25% | 25.61 | 2401 | 5.10 | 5.02 | 0.00% | 0 | 0 | **AVANZA** | criterios cumplidos |
+| 17:24:52 | 17:26:58 | `peso-50` | `1.1.0` | 50% | 50.48 | 2401 | 6.52 | 6.31 | 0.00% | 0 | 0 | **AVANZA** | criterios cumplidos |
+| 17:26:58 | 17:29:04 | `peso-100` | `1.1.0` | 100% | 100 | 2400 | 5.52 | 6.31 | 0.00% | 0 | 0 | **AVANZA** | criterios cumplidos |
+| 17:47:51 | 17:48:06 | `etapa-0` | `1.2.0` | 0% | - | 3 | - | - | - | - | 3 | **ROLLBACK** | 3 de 3 visitas con pantalla en blanco |
+| 17:48:09 | 17:49:19 | `peso-25` | `1.2.0` | 25% | 23.58 | 1200 | 3.87 | 3.96 | 0.00% | 0 | 5 | **ROLLBACK** | 5 pantallas en blanco; rollback en 3.5 s |
+| 17:49:25 | 17:49:37 | `promocion` | `1.1.0` | 0% | - | - | - | - | - | - | - | **PROMOCION** | stable ahora sirve 1.1.0; canary a 0 replicas |
 
-**Verificación independiente del reparto** (`conteo-curl.sh`, 100 requests por etapa):
+### 2.3 Conteo externo con `curl` y logs de `ingress-nginx`
 
-| Peso | curl → 1.0.0 | curl → 1.1.0 | Logs Ingress → front-canary | k6 % observado |
-|---|---|---|---|---|
-| 10 | _completar_ | | | |
-| 25 | | | | |
-| 50 | | | | |
-| 100 | | | | |
+ En cada escalón tiramos 100 pedidos sin cookies a `/version.txt` (`conteo-curl.sh`) y contamos del lado servidor filtrando por `IP:8080` de cada pod en los logs del controlador (porque cada línea de `ingress-nginx` imprime ambos nombres de upstream `[front-stable]` y `[front-canary]`):
 
----
-
-## 3. Prueba de estrés: hipótesis y fundamentación
-
-### 3.1 Hipótesis (escrita antes de ejecutar)
-
-> **H:** la v1.1.0 no empeora el p95 de carga de página más de un 10% respecto de la v1.0.0, y
-> ambas sostienen **200 cargas de página por segundo** con **menos de 1% de errores**.
-
-- **Carga de página**: GET del HTML + todos los `/assets/` que referencia, pedidos en la misma
-  iteración (`k6/front-common.js`). Tiempo = HTML + asset más lento.
-- **Error de carga**: HTML distinto de 200 o algún asset roto (404, o de una versión distinta a la del HTML).
-- H se **rechaza** si, en la meseta de 200 cargas/s, p95(v1.1.0) > 1,10 × p95(v1.0.0), o si alguna
-  versión supera el 1% de errores.
-
-### 3.2 Por qué estresar el front en A/B
-
-- El canary compara las versiones con **poco tráfico**: sirve para detectar errores, no para saber
-  si la versión nueva **aguanta la carga**. Un cambio de front (más assets, más bytes) puede degradar la
-  capacidad sin generar errores con tráfico bajo.
-- **A/B**: la misma carga contra cada versión **por separado** (`TARGET=stable` y `TARGET=canary`) y
-  se comparan los resultados. Con el peso del canary, cada versión recibiría una fracción distinta de
-  la carga y no serían comparables.
-- El back no participa (el front es estático), así que se mide solo el cambio que se va a liberar.
-
-### 3.3 Condiciones comparables
-
-| Condición | Cómo se garantiza |
-|---|---|
-| Misma cantidad de pods | `kubectl -n terrasense scale deploy front-canary --replicas=2` (la stable tiene 2) |
-| Mismos recursos y probes | Deployments idénticos (50m/64Mi – 250m/128Mi) |
-| Sin usuarios reales en el canary | `./scripts/peso.sh 0` |
-| Cada corrida mide una sola versión | Header `X-Canary: never` (stable) / `always` (canary); threshold `version_inesperada == 0` |
-| Visitantes nuevos | Cookies borradas en cada iteración: la afinidad no concentra la carga en un pod |
-| Misma carga | `ramping-arrival-rate` (modelo abierto) con mesetas 50/100/200/400/800 cargas/s (1 min las dos primeras, 2 min el resto, 10 s de subida) |
-| Mismo entorno | Corridas consecutivas en la misma máquina, sin otras cargas; se registran las iteraciones descartadas (`dropped_iterations`) |
-
-### 3.4 Resultados
-
-Fuente: `evidencias/reportes/estres-front-stable.json` y `estres-front-canary.json`.
-
-| Escalón (cargas/s) | p95 v1.0.0 (ms) | p95 v1.1.0 (ms) | Δ % | Errores v1.0.0 | Errores v1.1.0 |
+| Peso config. | `curl` -> 1.0.0 | `curl` -> 1.1.0 | Logs Ingress (IP pod canary) | `k6` % obs. (n visitas) | `k6/browser` (de 20) -> canary |
 |---|---|---|---|---|---|
-| 50 | _completar_ | | | | |
-| 100 | | | | | |
-| **200** | | | | | |
-| 400 | | | | | |
-| 800 | | | | | |
+| 10% | 84 | 16 | 31 | 9% (2401) | 2 / 20 |
+| 25% | 75 | 25 | 67 | 25.61% (2401) | 5 / 20 |
+| 50% | 57 | 43 | 175 | 50.48% (2401) | 5 / 20 |
+| 100% | 0 | 100 | 284 | 100% (2400) | 20 / 20 |
 
-| Dato | v1.0.0 | v1.1.0 |
-|---|---|---|
-| Bytes por página (promedio) | _completar_ | |
-| Iteraciones descartadas | | |
-| Thresholds (escalón 200) | | |
-
-### 3.5 Conclusión
-
-_completar_: ¿se rechaza H? ¿En qué escalón aparece el punto de quiebre de cada versión? ¿La diferencia
-se explica por los bytes o los requests extra de la v1.1.0? ¿El límite lo puso la app o el generador
-(iteraciones descartadas)?
+Con `n = 100` en `curl` hay variación muestral normal (±3 a ±5 puntos), mientras que sobre las miles de iteraciones de `k6` el porcentaje observado queda pegado al peso configurado.
 
 ---
 
-## 4. Mapa ISO/IEC 25000
+## 3. Prueba de estrés A/B con hipótesis
 
-### 4.1 Etapa → característica de calidad (ISO/IEC 25010:2023)
+### 3.1 Hipótesis planteada antes de medir
 
-| Etapa / prueba | Característica → subcaracterística | Métrica / evidencia | Qué no cubre |
-|---|---|---|---|
-| **Linters** (htmlhint, ESLint, hadolint) | Mantenibilidad → analizabilidad, modificabilidad. Seguridad → resistencia (`no-eval`, Dockerfile sin root) | Hallazgos por job = 0 (run #44008882096) | Diseño y arquitectura; comportamiento en ejecución; ESLint no analiza el JS del front |
-| **Horusec + Trivy** (SAST + configuración K8s) | Seguridad → confidencialidad (credenciales fuera del código y del repo), integridad, resistencia (no root, sin escalada) | 22 hallazgos → 0 bloqueantes; `ci/HALLAZGOS-HORUSEC.md`, reportes del CI | Vulnerabilidades en ejecución (DAST); dependencias de terceros (sin `package-lock.json`, NpmAudit no corre); falsos positivos por patrones |
-| **K8s + probes** | Fiabilidad → disponibilidad, tolerancia a fallos. Flexibilidad → instalabilidad (`deploy.sh` reproducible en un Minikube limpio) | Pods `Ready`; reinicios por liveness; tiempo de despliegue | Fallas de nodo, red o almacenamiento; un solo nodo |
-| **HPA** | Eficiencia de desempeño → utilización de recursos, capacidad. Flexibilidad → escalabilidad | Réplicas en el tiempo vs carga (`kubectl get hpa -w`), CPU por pod | Escala solo por CPU; PostgreSQL no escala; tope de 8 réplicas por el nodo |
-| **k6 carga / estrés** (línea base TP3 + estrés A/B del front) | Eficiencia de desempeño → comportamiento temporal (p95), capacidad (punto de quiebre) | p95 y tasa de errores por escalón; req/s sostenidos | Entorno local (Minikube y generador en la misma máquina) distinto de producción; red real |
-| **Pruebas de fallas** (E1 pod eliminado, E2 spike CPU/OOM) | Fiabilidad → tolerancia a fallos, recuperabilidad, disponibilidad | Ventana de errores en E1; tiempo hasta `Ready` tras OOMKilled; capturas del navegador | Caída de la DB, del Ingress controller o del nodo; fallas parciales de red |
-| **Canary** (split + navegador + rollback) | Fiabilidad → ausencia de fallos (*faultlessness*) y recuperabilidad (tiempo de rollback). Adecuación funcional → corrección (pantalla en blanco = función no entregada). Compatibilidad → coexistencia (dos versiones en paralelo, assets sin mezclar) | % observado vs peso; p95 y errores por versión; pantallas en blanco; tiempo de rollback; `bitacora.csv` | Usabilidad y accesibilidad; regresiones funcionales que no dejan la pantalla en blanco; usuarios reales (se simulan) |
+> **Hipótesis H:** a 200 cargas completas de página por segundo (HTML + `/assets/`), la `v1.1.0` mantiene menos de `1%` de errores y su `p95` no supera en más de `10%` al `p95` de `v1.0.0`.
 
-### 4.2 Ubicación en las divisiones SQuaRE
+Elegimos estresar el **frontend en modalidad A/B aislada por header** (`TARGET=stable` con `X-Canary: never` y luego `TARGET=canary` con `X-Canary: always`) porque durante el rollout normal a 20 req/s las dos versiones trabajan sobradas y no se nota el costo extra de servir 3 archivos por visita en lugar de 1. Para que la cancha sea pareja escalamos `front-canary` a **2 réplicas** igual que `front-stable` (50m/64Mi request, 250m/128Mi limit), pusimos `canary-weight=0`, limpiamos el cookie jar en cada vuelta de `k6` y corrimos la misma escalera `ramping-arrival-rate` de `50 -> 100 -> 200 -> 400 -> 800` cargas/s.
 
-| División | Norma | Dónde aparece en el TP |
+### 3.2 Resultados medidos (`estres-front-stable.json` y `estres-front-canary.json`)
+
+| Escalón (cargas/s) | p95 `v1.0.0` (ms) | p95 `v1.1.0` (ms) | Diferencia % (abs.) | Errores `v1.0.0` | Errores `v1.1.0` |
+|---|---|---|---|---|---|
+| 50 | 5.58 | 8.94 | +60.2% (+3.36 ms) | 0.00% | 0.00% |
+| 100 | 4.93 | 6.30 | +27.7% (+1.37 ms) | 0.00% | 0.00% |
+| **200** | 2.86 | 3.94 | +37.8% (+1.08 ms) | 0.00% | 0.00% |
+| 400 | 0.93 | 1.26 | +36.6% (+0.34 ms) | 0.00% | 0.00% |
+| 800 | 0.60 | 1.21 | +101.5% (+0.61 ms) | 0.00% | 0.00% |
+
+| Indicador global | `v1.0.0` (`front-stable`) | `v1.1.0` (`front-canary`) |
 |---|---|---|
-| 2501n — Modelo de calidad | 25010 (producto), 25019 (calidad en uso) | El mapa 4.1: qué característica evidencia cada prueba |
-| **2503n — Requisitos de calidad** | 25030 | Los **SLOs y umbrales**, fijados antes de medir: p95 < 300 ms, errores < 1%, 0 pantallas en blanco, ≤ +10% de p95, 200 cargas/s, 333 req/s para 10.000 sensores. En el código son los `thresholds` de k6 |
-| **2502n — Medición** | 25023 (producto), 25022 (calidad en uso) | Las **medidas**: p95, tasas de error, % observado, bytes por página, réplicas, tiempo de rollback. Las producen k6, kubectl y los scripts, con salida en `evidencias/reportes/` |
-| **2504n — Evaluación** | 25040 (proceso de evaluación) | **Comparar medidas contra requisitos y decidir**: `rollout.sh` (avanza / rollback), la hipótesis de estrés, el veredicto go/no-go |
-| | **25045** (módulo de evaluación de recuperabilidad) | Las pruebas de **inyección de fallas** y la recuperación medida: E1 (pod eliminado), E2 (OOMKilled → reinicio), rollback del canary con v1.2.0 |
+| Bytes promedio por carga completa | 2713 B (1 GET inline) | 4668 B (3 GETs: HTML + CSS + JS) |
+| Iteraciones descartadas por `k6` | 0 | 212 |
+| Thresholds de SLO en escalón 200 (`p95 < 300 ms`, `err < 1%`) | OK | OK |
 
-### 4.3 ISO/IEC 25010 vs ISO/IEC 25019
+### 3.3 Lectura de los números y contraste entre máquinas del grupo
 
-- **25010** (calidad del **producto**): propiedades del sistema medidas sobre el propio sistema,
-  independientes de quién lo use. Ejemplos: p95 de un endpoint, réplicas del HPA, hallazgos de SAST.
-- **25019** (calidad **en uso**): el efecto del sistema sobre **usuarios concretos en un contexto de
-  uso**. Características: beneficio, ausencia de riesgo y aceptabilidad.
-- En el TP, la calidad en uso aparece en dos lugares:
-  1. **k6/browser** mide lo que **ve** un usuario: la v1.2.0 tiene una calidad de producto "aceptable"
-     para las probes y k6 HTTP (todo 200), pero su calidad en uso es nula (pantalla en blanco). Es la
-     diferencia entre las dos normas mostrada con un caso concreto.
-  2. **El canary ante usuarios reales**: exponer el 10% del tráfico es evaluar la calidad en uso con
-     usuarios reales en su contexto, acotando el riesgo (ausencia de riesgo) a ese porcentaje.
-- Límite: los usuarios del TP son **simulados**. La calidad en uso real requeriría métricas de usuarios
-  reales (RUM: errores de JS y tiempos de carga reportados por el navegador) o encuestas de satisfacción.
-
-### 4.4 Características sin cubrir y propuestas
-
-| Característica (25010:2023) | Situación | Propuesta |
-|---|---|---|
-| **Capacidad de interacción** → accesibilidad / inclusividad, operabilidad | No se mide. La v1.1.0 tiene un contraste extremo (verde #39ff14) que podría fallar criterios de accesibilidad | **Lighthouse CI** y **axe-core** en el pipeline sobre las 3 versiones, con umbral (ej. score de accesibilidad ≥ 90) como gate, y como criterio adicional del canary |
-| **Compatibilidad** → interoperabilidad | El contrato front ↔ API (`/api/sensores`, `/api/stats`) no se verifica: un cambio en el JSON del back rompería el front sin que nada lo detecte | **Contract testing** (Pact) o validación de esquema JSON de las respuestas en el CI |
-| **Seguridad** en ejecución → resistencia, autenticidad | El SAST no ve vulnerabilidades en ejecución, y los endpoints `/api/debug/*` son accesibles sin autenticación | **DAST** con OWASP ZAP (baseline scan) contra `terrasense.local` / `api.terrasense.local` en un entorno efímero; deshabilitar `/api/debug/*` fuera del laboratorio |
-| **Seguridad** → dependencias (resistencia) | Sin `package-lock.json`, NpmAudit no corre | Versionar el lockfile, `npm ci` en el Dockerfile y SCA (npm audit o Trivy fs) en el job horusec |
-| **Fiabilidad** → recuperabilidad de datos | No se prueba la pérdida del PVC ni el backup/restore de PostgreSQL | Backup periódico (pg_dump o operador) y prueba de restauración con tiempo medido (25045) |
+En el escalón de 200 cargas/s ambas versiones sostuvieron `0.00%` de errores y tiempos de respuesta de pocos milisegundos (`2.86 ms` en `v1.0.0` vs `3.94 ms` en `v1.1.0`, muy lejos del tope de `300 ms`). Sin embargo, al aplicar de forma estricta la regla relativa del `+10%`, el incremento porcentual dio `+37.8%` (`+1.08 ms` absolutos) porque `v1.1.0` resuelve 3 pedidos HTTP por página (HTML + CSS + JS externos, `4668 B`) frente a 1 solo pedido inline en `v1.0.0` (`2713 B`). Exactamente el mismo fenómeno se observó en la notebook de 2 CPUs / 3 GB del grupo (donde dio `3.16 ms` vs `2.60 ms`, `+21.5%`). Por apego estricto a la hipótesis predefinida se rechaza H, dejando documentado que la diferencia es de fracciones de milisegundo en loopback y no representa un cuello de botella real para los productores.
 
 ---
 
-## 5. Índice de evidencia
+## 4. Mapa de calidad ISO/IEC 25000 (SQuaRE)
 
-| Archivo | Qué demuestra |
-|---|---|
-| `evidencias/reportes/tp3-smoke.txt`, `tp3-load.txt` | El back cumple los SLOs a carga nominal (67 req/s) |
-| `evidencias/reportes/tp3-stress.txt` + `videos/02-stress-hpa.mp4` | Punto de quiebre del back y reacción del HPA |
-| `evidencias/reportes/tp3-e1.txt` + `videos/03-e1-pod-eliminado.mp4` + `capturas/e1-ux-*.png` | Ventana de errores y recuperación al eliminar un pod; lo que ve el usuario |
-| `evidencias/reportes/tp3-spike-cpu.txt`, `tp3-spike-oom.txt` + `videos/04-e2-oom.mp4` | Recuperación ante pico de CPU y OOMKilled |
-| `evidencias/capturas/01-deploy-*.png` | Despliegue completo: stable y canary conviviendo |
-| `evidencias/capturas/etapa-0-visita-*.png`, `evidencias/reportes/etapa-0-browser.json` | El canary se valida con peso 0, sin exponer usuarios |
-| `evidencias/reportes/peso-*-split.json`, `peso-*-browser.json`, `capturas/peso-*-visita-*.png` | Reparto observado, latencia, errores y UI en cada etapa |
-| `evidencias/reportes/conteo-*.txt` | Verificación independiente del reparto (curl + logs del Ingress) |
-| `evidencias/reportes/cambios-de-peso.log` | Hora exacta de cada cambio de peso |
-| `evidencias/reportes/bitacora.csv` | Decisión y motivo de cada etapa, tiempo de rollback |
-| `evidencias/videos/05-rollout-1.1.0.mp4` | Rollout completo avanzando por criterios |
-| `evidencias/videos/06-rollback-1.2.0.mp4` + `capturas/*-v1.2.0-BLANCA.png` + `capturas/06-consola-typeerror.png` | La v1.2.0 (HTTP 200, pantalla en blanco) se detecta y se revierte |
-| `evidencias/reportes/estres-front-stable.json`, `estres-front-canary.json` | Contraste de la hipótesis de estrés |
-| `evidencias/capturas/07-ci-rojo.png`, `07-ci-verde.png` + reportes de Horusec | La quality gate de CI bloquea y después habilita el build |
-| `ci/HALLAZGOS-HORUSEC.md` | Análisis y decisión de cada hallazgo de SAST |
+### 4.1 Qué cubre cada etapa según ISO/IEC 25010:2023
 
----
+- **Linters en CI (`htmlhint`, `ESLint`, `hadolint`):** apuntan a *Mantenibilidad* (analizabilidad, modificabilidad) y *Seguridad* (`no-eval`, usuario no-root en Dockerfile). La evidencia es el job `lint` en 0 errores (`#44008882096`). Límite: miran sintaxis estática archivo por archivo, no ven si el diseño está acoplado ni analizan el JS embebido del front.
+- **Horusec + Trivy en CI:** cubren *Seguridad* (confidencialidad al sacar claves del repo, integridad y resistencia con `securityContext`). Bajamos de 22 alertas a 0 bloqueantes en `ci/HALLAZGOS-HORUSEC.md`. Límite: no prueban la app levantada (DAST) y `NpmAudit` no corrió porque falta `package-lock.json`.
+- **Despliegue en K8s + probes `/readyz` y `/healthz`:** trabajan *Fiabilidad* (disponibilidad, tolerancia a fallos) y *Flexibilidad* (instalabilidad desde cero con `deploy.sh`). Límite: corre todo sobre un único nodo Minikube local sin cortes reales de red ni caída de disco.
+- **HPA sobre `back`:** cubre *Eficiencia de desempeño* (capacidad, uso de recursos) y *Flexibilidad* (escalabilidad horizontal de 2 a 8 pods al pasar 60% de CPU, grabado en `02-stress-hpa.mp4`). Límite: escala únicamente por CPU del backend mientras PostgreSQL sigue en una sola instancia.
+- **Pruebas `k6` de carga y estrés:** miden *Eficiencia de desempeño* (comportamiento temporal en `p95` y techo de req/s en `tp3-load.txt`, `tp3-stress.txt` y `front-stress.js`). Límite: el proceso `k6` comparte CPU y memoria con Minikube en la misma computadora.
+- **Inyección de fallas (E1 pod borrado y E2 pico CPU/OOM):** verifican *Fiabilidad* (tolerancia a fallos y recuperabilidad, con ventana de error en `tp3-e1.txt` y reinicio automático tras `OOMKilled` en `04-e2-oom.mp4`). Límite: no tumbamos el pod `db-0` ni el controlador Ingress.
+- **Rollout Canary + `k6/browser`:** cubren *Fiabilidad* (ausencia de fallos y tiempo de rollback), *Adecuación funcional* (que el panel realmente dibuje datos y no quede blanco) y *Compatibilidad* (coexistencia de `1.0.0` y `1.1.0` con `0` assets mezclados en `bitacora.csv`). Límite: usa navegadores automatizados en vez de productores reales y no mide accesibilidad visual.
 
-## 6. Veredicto go / no-go
+### 4.2 Divisiones de SQuaRE aplicadas en el TP
 
-### 6.1 Release de la v1.1.0
+- **2503n (Requisitos de calidad - 25030):** son nuestros umbrales escritos en código antes de lanzar tráfico (`p95 < 300 ms`, tasa de fallo `< 1%`, `0` pantallas blancas, `<= +10%` en A/B y meta de `333 req/s` para los 10.000 sensores).
+- **2502n (Medición - 25022 y 25023):** son los contadores y percentiles recolectados por `k6`, `kubectl top/get` y `conteo-curl.sh` guardados en `evidencias/reportes/`.
+- **2504n (Evaluación - 25040 y 25045):** es la comparación automática en `rollout.sh` que decide `AVANZA` o `ROLLBACK`, el contraste de la hipótesis A/B y las pruebas de recuperación tras matar un pod o agotar RAM (`25045`).
 
-| Criterio | Umbral | Resultado |
-|---|---|---|
-| CI (lint + horusec + build) | verde | ✅ run #44008882096 |
-| Etapa 0 (navegador, peso 0) | 0 pantallas en blanco, 3/3 en canary | _completar_ |
-| Etapas 10 / 25 / 50 / 100 | Thresholds del split OK, 0 pantallas en blanco, p95 ≤ stable + 10% (o < 5 ms) | _completar_ |
-| % observado vs peso | ± 3 puntos | _completar_ |
-| Hipótesis de estrés | No rechazada en el escalón 200 | _completar_ |
-| Control negativo: v1.2.0 detenida | Rollback automático | _completar_ (tiempo: ___ s) |
+### 4.3 Producto (`25010`) frente a Calidad en uso (`25019`)
 
-**Veredicto v1.1.0:** _completar_ (GO si se cumplen todos los criterios).
+Durante TP1, TP2 y las pruebas HTTP de TP3 medimos propiedades internas o de interfaz del **producto** (`25010`): reglas de código, permisos de contenedores, milisegundos de respuesta y códigos de estado. El límite apareció claro con la `v1.2.0`: para las probes de Kubernetes y para `k6` HTTP el producto luce impecable (`200 OK` en 4 ms), pero para el productor rural la **calidad en uso** (`25019`: efectividad y ausencia de riesgo en su tarea real) es cero porque ve el navegador en blanco. Incorporar `k6/browser` acerca esa medición desde el laboratorio, y abrir el canary al 10% permite validarla con tráfico real acotando el radio de impacto al mínimo.
 
-### 6.2 Capacidad para 10.000 sensores
+### 4.4 Huecos sin cubrir y cómo sumarlos al pipeline
 
-10.000 sensores × 1 reporte / 30 s ≈ **333 req/s** de escritura sobre el back.
-
-| Criterio | Umbral | Dato (stress del back, escalones 200 y 400 req/s) |
-|---|---|---|
-| p95 `POST /api/sensores` | < 300 ms a ≥ 333 req/s | _completar_ |
-| Tasa de errores | < 1% a ≥ 333 req/s | _completar_ |
-| Réplicas del HPA a esa carga | < 8 (margen para picos) | _completar_ |
-| Recuperación ante pico (E2) | Vuelve a SLO sin intervención manual | _completar_ |
-
-**Veredicto 10.000 sensores:** _completar_. Si no se cumple, indicar el cuello de botella observado
-(CPU del back con HPA al máximo, conexiones de PostgreSQL, recursos del nodo de Minikube) y la
-acción propuesta (más recursos para el nodo, pool de conexiones, cola de ingesta, réplicas de lectura).
-Aclaración: el resultado vale para este entorno; en producción hay que repetir la prueba allí.
+1. **Capacidad de interacción (accesibilidad y operabilidad):** el verde brillante `#39ff14` de la `v1.1.0` se pensó para distinguir capturas desde el fondo del aula, pero nadie midió relación de contraste WCAG ni navegación por teclado. Sumaríamos **axe-core / Lighthouse CI** en el workflow con puntaje mínimo de accesibilidad `>= 90`.
+2. **Compatibilidad (interoperabilidad front-back):** si alguien renombra un campo JSON en `/api/stats`, los dos builds compilan en verde y recién falla el navegador. Lo cubriríamos con **pruebas de contrato (Pact)** o validación de JSON Schema en el job `lint`.
+3. **Seguridad dinámica (DAST) y dependencias (SCA):** agregar `package-lock.json` + `npm ci` para habilitar `NpmAudit` / `trivy fs`, bloquear `/api/debug/*` fuera de entornos de prueba y correr un baseline scan de **OWASP ZAP** contra el Ingress antes de abrir peso.
 
 ---
 
-## 7. Aprendizaje: problemas y soluciones
+## 5. Índice de evidencias
 
-| Problema | Causa | Solución |
-|---|---|---|
-| **Assets mezclados** (HTML 1.1.0 + CSS pedido a un pod 1.0.0 → 404) | El Ingress sortea cada request por separado | Afinidad por cookie en el Ingress principal **y** en el canary (el canary ignora las demás anotaciones, pero no las de afinidad); `/assets/` sin fallback a `index.html` para que el error sea visible; métrica `assets_rotos` |
-| **Peso 100 ≠ promoción** | El peso solo redirige tráfico; la stable sigue declarando la versión vieja | Promoción explícita: imagen nueva en la stable → peso 0 → canary a 0 réplicas, en ese orden |
-| **El peso no sabe cuántos pods hay** | El peso reparte entre Services, no entre pods: con peso 50, 1 pod canary recibe lo mismo que 2 pods stable | Para el estrés A/B, canary escalado a 2 réplicas; en el rollout, se tiene en cuenta al leer la latencia |
-| **Selector inmutable** | `spec.selector` de un Deployment no se puede cambiar | Selector solo con `app` + `track`; `version` como label informativo |
-| **200 OK ≠ página funcionando** | Probes y k6 HTTP no ejecutan JavaScript | k6/browser con detección de `body.innerText` vacío y tolerancia cero |
-| **k6 reutiliza cookies por VU** | Con afinidad, un VU quedaba pegado a la primera versión y el % observado no reflejaba el peso | Borrar el cookie jar al inicio de cada iteración (visitante nuevo); la cookie sí se mantiene entre HTML y assets |
-| **Contraseña en el repo** | Default en `server.js` y Secret versionado | Sin default (fail fast); Secret generado por `deploy.sh`, que no se regenera porque PostgreSQL fija la contraseña al inicializar el volumen |
-| **SAST: contenedores sin restricciones** | Las imágenes no corren como root, pero los manifiestos no lo exigían | `securityContext` en los manifiestos; `emptyDir` para nginx; prueba de arranque con UID no root en el CI |
-| **SAST por patrones marca comentarios** | La regla de Horusec es una regex sobre el texto | Reescribir el comentario; revisión humana de cada hallazgo; falsos positivos y riesgos aceptados registrados por hash |
-| **Sin análisis de dependencias** | Falta `package-lock.json` | Documentado como limitación, con propuesta (sección 4.4) |
-| **ingress-nginx retirado (marzo de 2026)** | El proyecto dejó de recibir mantenimiento | Se usa porque es el addon de Minikube de la consigna. La migración natural es **Gateway API**: `HTTPRoute` con `backendRefs` ponderados (peso) y `matches` por header/cookie |
-| _completar tras la ejecución_ | | |
+Todos los archivos generados durante la corrida viven bajo `tp-final/evidencias/` (capturas PNG, videos MP4 acelerados con etiqueta de velocidad y reportes crudos TXT/JSON/CSV):
+
+- **Despliegue inicial:** `capturas/01-deploy-kubectl.png`, `01-deploy-navegador.png` y `01-deploy-kubectl-navegador.png` muestran los pods `stable` y `canary` conviviendo con peso 0 y el panel `v1.0.0` cargando lecturas reales.
+- **Línea base TP3 y 10.000 sensores:** `reportes/tp3-smoke.txt`, `tp3-load.txt` y `capturas/02-smoke.png`, `02-load.png` validan los 67 req/s actuales; `reportes/capacidad-333-estable.txt` (`+ hpa`) y `capturas/02-capacidad-333.png` prueban la ingesta sostenida a 333 req/s.
+- **Estrés del backend y fallas (E1 / E2):** `videos/02-stress-hpa.mp4` + `reportes/tp3-stress.txt` registran el HPA subiendo réplicas hasta encontrar saturación; `videos/03-e1-pod-eliminado.mp4` + `tp3-e1.txt` + `capturas/e1-ux-*.png` miden el corte al matar un pod vivo; `videos/04-e2-oom.mp4` + `capturas/04-oomkilled.png` + `tp3-spike-*.txt` documentan los reinicios por `OOMKilled` (exit 137).
+- **Rollout Canary `v1.1.0`:** `capturas/03-etapa0-cookie.png` valida la Etapa 0 lado a lado; `videos/05-rollout-1.1.0.mp4`, `reportes/peso-*-split.json`, `peso-*-browser.json`, `capturas/05-grilla-20-visitas-peso-25.png`, `05-conteo-peso-*.png` y `05-bitacora.png` respaldan las etapas 10, 25, 50 y 100% más el cruce contra IPs en logs de NGINX.
+- **Estrés A/B del frontend:** `reportes/estres-front-stable.json` y `estres-front-canary.json` junto con `capturas/04-estres-stable.png` y `04-estres-canary.png` contrastan la hipótesis entre 50 y 800 cargas/s con 2 pods por track.
+- **Freno y rollback de `v1.2.0`:** `capturas/06-consola-typeerror.png` y `06-network-200.png` muestran `200 OK` en red junto al `TypeError` y la pantalla vacía; `reportes/demo-a-1.2.0/` prueba el bloqueo en Etapa 0 y `videos/06-rollback-1.2.0.mp4` + `reportes/demo-b-1.2.0/` miden en segundos el rollback automático desde 25%.
+- **Promoción, CI y diapositivas:** `capturas/07-promocion.png` (`reportes/promocion.log`) muestra `front-stable` sirviendo `1.1.0`; `capturas/07-ci-rojo.png` y `07-ci-verde.png` documentan las corridas #43995990963 y #44008882096 en GitHub Actions; `presentacion/Presentacion_TP_Final_TerraSense.pdf` contiene las diapos listas para proyectar sin red en el Aula 102.
+
+---
+
+## 6. Veredicto Go / No-Go (`v1.1.0` y 10.000 sensores)
+
+### 6.1 Lanzamiento del panel `v1.1.0`
+
+- **Pipeline CI (`lint` + `horusec` + `build`):** aprobado en verde en el run `#44008882096` tras corregir 14 alertas de contenedores/código y documentar falsos positivos y riesgos aceptados.
+- **Etapa 0 y rollout gradual (`10 -> 25 -> 50 -> 100%`):** las 4 etapas avanzaron sin errores, con `0` pantallas en blanco en Chromium y reparto real medido en `9%, 25.61%, 50.48%, 100%`.
+- **Control negativo con `v1.2.0`:** frenada en Etapa 0 con `0` productores afectados (Demo A) y revertida de forma automática en **3.5 s** al inyectarla al 25% (Demo B), liberando incluso sesiones con cookie sticky.
+- **Contraste de estrés A/B (200 cargas/s):** `2.86 ms` (`v1.0.0`) frente a `3.94 ms` (`v1.1.0`), variación `+37.8%` y `0.00%` de errores.
+- **Dictamen `v1.1.0`:** **NO-GO estricto por regla relativa de estrés A/B (GO técnico condicionado a ajustar el umbral con tolerancia absoluta de 5 ms, igual que en el rollout)**. Ejecutamos además la secuencia real de promoción (`07-promocion.png`) para dejar validado el procedimiento operativo sin corte.
+
+### 6.2 Ampliación del contrato a 10.000 sensores (~333 req/s)
+
+- **En la notebook de 2 CPUs / 3 GB del grupo:** el HPA clavó `8/8` réplicas, el `p95` subió a `1.15 s` (por encima de los `300 ms` pedidos) y el arranque en frío saturó el nodo.
+- **En nuestra VM de 4 CPUs / 6 GB (`capacidad-333-estable.txt`):** con rampa de 1 minuto para darle tiempo al HPA, medimos `p95 = 2.44ms` y tasa de fallos `0.00%` sobre `POST /api/sensores`.
+- **Dictamen 10.000 sensores:** **GO condicionado a aprovisionar al menos 4 vCPUs dedicados y rampa/pre-escalado**. Incluso cuando 4 CPUs absorben mucho mejor la carga que 2 CPUs, en producción real no ampliaríamos a 10.000 placas sin antes agregar un pooler de conexiones (PgBouncer), separar lectura/escritura o encolar la ingesta para proteger el único pod `db-0` ante reconexiones masivas tras un corte de luz o antena.
+
+---
+
+## 7. Problemas encontrados y cómo los destrabamos
+
+- **Mezcla de CSS/JS entre versiones:** sin afinidad, un navegador bajaba el HTML de `1.1.0` y pedía `/assets/app-1.1.0.css` a un pod `1.0.0` recibiendo `404`. Activamos cookie `terrasense-front` en ambos Ingress del front y separamos la API en `terrasense-ingress-api` sin afinidad para no arruinar el reparto sobre `back`.
+- **La cookie sticky sobrevive al `canary-weight=0`:** durante el rollback vimos que poner solo peso 0 deja a los usuarios que ya tenían cookie del canary atrapados en la versión rota por 1 hora. Ajustamos `rollback()` en `rollout.sh` para bajar también `front-canary` a 0 réplicas y verificar con un cliente con cookie que NGINX lo reenvía a `front-stable`.
+- **Conteo engañoso por nombre de upstream en logs de NGINX:** cada línea de acceso de `ingress-nginx` imprime tanto `[terrasense-front-stable-8080]` como `[terrasense-front-canary-8080]`. Corregimos `conteo-curl.sh` para cruzar contra la `IP:8080` real de los pods de cada track.
+- **Coma decimal según `locale` y hash sensible a líneas en Horusec:** en sistemas con `es_AR` `awk` escribía comas que desarmaban columnas en `bitacora.csv` (resuelto con `export LC_NUMERIC=C`). Además, al parametrizar `k6/spike.js` se desplazó la línea de `Math.random()` e invalidó su hash en `horusec-config.json`; lo reemplazamos por `exec.scenario.iterationInTest % 2 === 0` para no depender del número de línea.
+- **Retiro oficial de `ingress-nginx` (marzo de 2026):** para el laboratorio usamos el addon estándar de Minikube pedido por la cátedra, pero en un cluster productivo nuevo migraríamos estas reglas a **Kubernetes Gateway API** (`HTTPRoute` con `backendRefs.weight` y filtros por header/cookie).
