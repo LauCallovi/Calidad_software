@@ -165,7 +165,7 @@ Generada por `rollout.sh` en `evidencias/reportes/bitacora.csv`. Cambios de peso
 | 00:45:04 | 00:50:11 | peso-25 | 1.1.0 | 25 | 25,38 | 6000 | 2,41 | 1,60 | 0 | 0 | 0 | AVANZA | criterios cumplidos |
 | 00:50:11 | 00:55:19 | peso-50 | 1.1.0 | 50 | 49,61 | 6001 | 2,38 | 1,60 | 0 | 0 | 0 | AVANZA | criterios cumplidos |
 | 00:55:19 | 01:00:25 | peso-100 | 1.1.0 | 100 | 100 | 6001 | 2,44 | 1,60 (ref. etapa 50) | 0 | 0 | 0 | AVANZA | criterios cumplidos |
-| | | etapa-0 | 1.2.0 | 0 | — | 3 | — | — | — | — | | ROLLBACK (esperado) | |
+| 01:28:13 | 01:28:30 | etapa-0 | 1.2.0 | 0 | — | 3 | — | — | — | — | 3 | ROLLBACK (esperado) | 3 de 3 visitas con pantalla en blanco; ningún usuario expuesto |
 | | | peso-25 | 1.2.0 | 25 | | | | | | | | ROLLBACK (esperado) | tiempo de rollback: _completar_ s |
 | | | promocion | 1.1.0 | 0 | — | — | — | — | — | — | — | PROMOCION | |
 
@@ -356,13 +356,16 @@ inlinear el CSS o servir con compresión) y, para la próxima hipótesis, combin
 | Criterio | Umbral | Resultado |
 |---|---|---|
 | CI (lint + horusec + build) | verde | ✅ run #44008882096 |
-| Etapa 0 (navegador, peso 0) | 0 pantallas en blanco, 3/3 en canary | _completar_ |
-| Etapas 10 / 25 / 50 / 100 | Thresholds del split OK, 0 pantallas en blanco, p95 ≤ stable + 10% (o < 5 ms) | _completar_ |
-| % observado vs peso | ± 3 puntos | _completar_ |
-| Hipótesis de estrés | No rechazada en el escalón 200 | _completar_ |
+| Etapa 0 (navegador, peso 0) | 0 pantallas en blanco, 3/3 en canary | ✅ 3/3 en canary, 0 en blanco |
+| Etapas 10 / 25 / 50 / 100 | Thresholds del split OK, 0 pantallas en blanco, p95 ≤ stable + 10% (o < 5 ms) | ✅ las 4 etapas AVANZA: 0 errores, 0 assets rotos, 0 pantallas en blanco en 80 visitas; p95 de página +0,8 ms (dentro de la tolerancia de 5 ms) |
+| % observado vs peso | ± 3 puntos | ✅ 10,50 / 25,38 / 49,61 / 100 % (desvío máximo 0,5 puntos) |
+| Hipótesis de estrés | No rechazada en el escalón 200 | ⚠️ capacidad confirmada (800 cargas/s, 0 errores); rendimiento relativo **rechazado** (+16 % de p95, +0,2 ms absolutos). Ver 3.5 |
 | Control negativo: v1.2.0 detenida | Rollback automático | _completar_ (tiempo: ___ s) |
 
-**Veredicto v1.1.0:** _completar_ (GO si se cumplen todos los criterios).
+**Veredicto v1.1.0: GO, con una observación.** Cumple todos los criterios de release salvo la parte relativa
+de la hipótesis de estrés: la v1.1.0 es un 16 % más lenta por pesar un 72 % más, pero son 0,2 ms y la capacidad
+no cambia (ambas versiones sostienen 4× la carga objetivo). Se promueve y se registra como deuda técnica la
+reducción del peso de la página. _(Pendiente: completar el control negativo con la demo B.)_
 
 ### 6.2 Capacidad para 10.000 sensores
 
@@ -373,7 +376,7 @@ inlinear el CSS o servir con compresión) y, para la próxima hipótesis, combin
 | p95 `POST /api/sensores` | < 300 ms a ≥ 333 req/s | ✅ p95 = 3,96 ms en toda la corrida (50 → 1200 req/s, promedio 477 req/s) |
 | Tasa de errores | < 1% a ≥ 333 req/s | ✅ 2 errores en 286.439 requests (0,0007%); 60 iteraciones descartadas por el generador |
 | Réplicas del HPA a esa carga | < 8 (margen para picos) | ✅ ~5 réplicas entre 333 y 490 req/s; ⚠️ llega al máximo (8) desde ~700 req/s (≈ 2× la carga de 10.000 sensores) |
-| Recuperación ante pico (E2) | Vuelve a SLO sin intervención manual | _completar_ |
+| Recuperación ante pico (E2) | Vuelve a SLO sin intervención manual | ⚠️ se recupera **sin intervención**, pero **no aguanta el pico**: a 600 req/s con la mitad de los requests quemando CPU, 70 % de errores, p95 13 s, la liveness reinicia pods saturados y el HPA queda en 5. Con OOM, caída total del back y vuelta sola ~1m40s después de terminar la carga (backoff de CrashLoopBackOff) |
 
 **Línea base del back (TP3), corrida por Jere el 17/11** (`evidencias/jere/`):
 
@@ -387,10 +390,17 @@ Una primera corrida del stress (misma configuración) dio p95 = 14,69 ms, 40 err
 iteraciones descartadas: el generador y el cluster comparten la notebook, y la variación entre corridas
 es del mismo orden que la diferencia. No se encontró el punto de quiebre del back dentro de 1200 req/s.
 
-**Veredicto 10.000 sensores:** _completar_. Si no se cumple, indicar el cuello de botella observado
-(CPU del back con HPA al máximo, conexiones de PostgreSQL, recursos del nodo de Minikube) y la
-acción propuesta (más recursos para el nodo, pool de conexiones, cola de ingesta, réplicas de lectura).
-Aclaración: el resultado vale para este entorno; en producción hay que repetir la prueba allí.
+**Veredicto 10.000 sensores: GO condicionado.** La carga nominal de 10.000 sensores (333 req/s) se atiende con
+holgura: p95 de 4 ms, 0 % de errores y ~5 de las 8 réplicas posibles. Lo que no está resuelto es la
+**resistencia a picos**: el HPA llega a 8 réplicas a ~700 req/s (2× la carga nominal) y ante un pico vertical
+con requests costosos el back colapsa antes de que el HPA reaccione. Condiciones para ampliar:
+
+1. Más margen de escalado: subir `maxReplicas` y los recursos del nodo (el tope de 8 lo pone la notebook).
+2. Liveness más tolerante y separada de la readiness, para no reiniciar pods que solo están saturados.
+3. HPA más agresivo al subir (`behavior.scaleUp`) o un umbral de CPU menor que 60 %.
+4. Repetir el stress y el spike en el entorno productivo: estos números valen para una notebook donde el
+   cluster y el generador de carga comparten CPU (la misma prueba dio p95 de 4, 15 y 53 ms según la corrida
+   y la máquina).
 
 ---
 
