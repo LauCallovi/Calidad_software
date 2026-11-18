@@ -46,9 +46,10 @@ curl -LO https://storage.googleapis.com/minikube/releases/latest/minikube-linux-
 sudo install minikube-linux-amd64 /usr/local/bin/minikube && rm minikube-linux-amd64
 sudo snap install kubectl --classic
 
-# k6 (repositorio oficial). La versión 1.x incluye el módulo browser.
-sudo gpg --no-default-keyring --keyring /usr/share/keyrings/k6-archive-keyring.gpg \
-  --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys C5AD17C747E3415A3642D57D77C6C491D6AC1D69
+# k6 (repositorio oficial). Desde la 1.x incluye el módulo browser (probado con 2.4.0).
+# La clave se baja en formato binario (dearmor): apt ignora el keybox que genera
+# gpg --keyring y falla con NO_PUBKEY C780D0BDB1A69C86 (subclave de firma).
+curl -fsSL https://dl.k6.io/key.gpg | sudo gpg --dearmor --yes -o /usr/share/keyrings/k6-archive-keyring.gpg
 echo "deb [signed-by=/usr/share/keyrings/k6-archive-keyring.gpg] https://dl.k6.io/deb stable main" \
   | sudo tee /etc/apt/sources.list.d/k6.list
 sudo apt update && sudo apt install -y k6
