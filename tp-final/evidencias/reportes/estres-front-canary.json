@@ -1,0 +1,36 @@
+{
+  "target": "canary",
+  "version_esperada": "1.1.0",
+  "escalones": {
+    "50": {
+      "cargas": 3000,
+      "p95_ms": 6.67833525,
+      "tasa_error": 0
+    },
+    "100": {
+      "cargas": 6000,
+      "p95_ms": 5.32646615,
+      "tasa_error": 0
+    },
+    "200": {
+      "cargas": 24000,
+      "p95_ms": 3.1600725499999998,
+      "tasa_error": 0
+    },
+    "400": {
+      "cargas": 48000,
+      "p95_ms": 3.8198377999999926,
+      "tasa_error": 0
+    },
+    "800": {
+      "cargas": 95218,
+      "p95_ms": 181.68283764999995,
+      "tasa_error": 0
+    }
+  },
+  "bytes_por_pagina_promedio": 4668,
+  "version_inesperada": 0,
+  "iteraciones_descartadas": 780,
+  "thresholds_ok": true,
+  "generado": "2026-11-18T05:09:14.911Z"
+}

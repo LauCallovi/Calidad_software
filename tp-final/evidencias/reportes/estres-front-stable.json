@@ -1,0 +1,36 @@
+{
+  "target": "stable",
+  "version_esperada": "1.0.0",
+  "escalones": {
+    "50": {
+      "cargas": 3000,
+      "p95_ms": 3.6522441999999975,
+      "tasa_error": 0
+    },
+    "100": {
+      "cargas": 6000,
+      "p95_ms": 3.1605265000000005,
+      "tasa_error": 0
+    },
+    "200": {
+      "cargas": 24000,
+      "p95_ms": 2.5956994499999992,
+      "tasa_error": 0
+    },
+    "400": {
+      "cargas": 48000,
+      "p95_ms": 1.7584245499999998,
+      "tasa_error": 0
+    },
+    "800": {
+      "cargas": 96000,
+      "p95_ms": 1.30107155,
+      "tasa_error": 0
+    }
+  },
+  "bytes_por_pagina_promedio": 2713,
+  "version_inesperada": 0,
+  "iteraciones_descartadas": 0,
+  "thresholds_ok": true,
+  "generado": "2026-11-18T04:59:44.039Z"
+}

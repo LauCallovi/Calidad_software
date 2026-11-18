@@ -1,0 +1,19 @@
+== 2026-11-18 01:38:30 peso 50
+Conteo 2026-11-18T01:38:30-03:00 | peso configurado: 50% | 100 requests
+--- Lado cliente (curl sin cookies: cada request se sortea de nuevo) ---
+     55 1.0.0
+     45 1.1.0
+--- Lado servidor (logs del Ingress controller desde 2026-11-18T04:38:30Z) ---
+requests a front-canary: 150
+requests a front-stable: 259
+(guardado en evidencias/reportes/conteo-20261118-013830.txt)
+
+--- CORRECCIÓN lado servidor (recalculado después, por IP del pod que respondió) ---
+El conteo de arriba está mal: cada línea del log del Ingress incluye los dos nombres de
+upstream (front-stable y front-canary), así que grep por nombre contaba todo dos veces.
+Bug corregido en scripts/conteo-curl.sh. Recalculado desde los logs rotados del controller
+(ventana de 12 s desde el inicio del conteo; pods canary 10.244.0.12, stable 10.244.0.10/.11):
+  solo los 100 curl a /version.txt -> canary: 45 | stable: 55   (coincide con el lado cliente)
+  todo el tráfico de la ventana    -> canary: 393 | stable: 183
+  (todo el tráfico sobrerrepresenta al canary: cada visita a la v1.1.0 son 3 requests
+   -HTML, CSS y JS- y a la v1.0.0 una sola; el % por visitas está en peso-50-split.json)

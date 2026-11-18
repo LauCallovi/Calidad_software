@@ -30,8 +30,19 @@ PESO="$(kubectl -n terrasense get ingress terrasense-ingress-canary \
   sleep 2
   echo "--- Lado servidor (logs del Ingress controller desde ${DESDE}) ---"
   LOGS="$(kubectl -n ingress-nginx logs deploy/ingress-nginx-controller --since-time="$DESDE" 2>/dev/null || true)"
-  echo "requests a front-canary: $(grep -c 'front-canary' <<<"$LOGS" || true)"
-  echo "requests a front-stable: $(grep -c 'front-stable' <<<"$LOGS" || true)"
+  # Cada línea del log trae los DOS nombres de upstream ([front-stable] y
+  # [front-canary], principal y alternativo) sin importar adónde fue el
+  # request, así que contar por nombre da lo mismo para ambos. Lo que sí
+  # identifica el destino es la IP:puerto del pod que respondió.
+  contar_track() {
+    local ips patron
+    ips=$(kubectl -n terrasense get pods -l "app=front,track=$1" -o jsonpath='{range .items[*]}{.status.podIP}{"\n"}{end}')
+    [ -z "$ips" ] && { echo 0; return; }
+    patron=$(sed 's/\./\\./g; s/$/:8080 /' <<<"$ips" | paste -sd'|')
+    grep -cE " (${patron})" <<<"$LOGS" || true
+  }
+  echo "requests a front-canary: $(contar_track canary)"
+  echo "requests a front-stable: $(contar_track stable)"
 } | tee "$SALIDA"
 
 echo "(guardado en $SALIDA)"

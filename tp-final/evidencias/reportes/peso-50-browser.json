@@ -1,0 +1,9 @@
+{
+  "etapa": "peso-50",
+  "forzar_canary": false,
+  "visitas": 20,
+  "vistas_canary": 10,
+  "vistas_stable": 10,
+  "pantallas_blancas": 0,
+  "generado": "2026-11-18T04:39:39.577Z"
+}

@@ -1,0 +1,231 @@
+================ [2026-11-18 01:32:59] ETAPA peso-25: 25% del tráfico al canary ================
+2026-11-18T01:32:59-03:00 peso 10 -> 25
+
+         /\      Grafana   /‾‾/  
+    /\  /  \     |\  __   /  /   
+   /  \/    \    | |/ /  /   ‾‾\ 
+  /          \   |   (  |  (‾)  |
+ / __________ \  |_|\_\  \_____/ 
+
+
+     execution: local
+        script: k6/browser-canary.js
+        output: -
+
+     scenarios: (100.00%) 1 scenario, 1 max VUs, 10m30s max duration (incl. graceful stop):
+              * visitas: 20 iterations shared among 1 VUs (maxDuration: 10m0s, gracefulStop: 30s)
+
+
+running (00m01.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+
+running (00m02.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+
+running (00m03.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+
+running (00m04.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+time="2026-11-18T01:33:09-03:00" level=info msg="2026-11-18T04:33:09.081Z visita 01: v1.0.0 OK" source=console
+
+running (00m05.0s), 1/1 VUs, 1 complete and 0 interrupted iterations
+
+running (00m06.0s), 1/1 VUs, 1 complete and 0 interrupted iterations
+
+running (00m07.0s), 1/1 VUs, 1 complete and 0 interrupted iterations
+
+running (00m08.0s), 1/1 VUs, 1 complete and 0 interrupted iterations
+time="2026-11-18T01:33:13-03:00" level=info msg="2026-11-18T04:33:13.412Z visita 02: v1.0.0 OK" source=console
+
+running (00m09.0s), 1/1 VUs, 2 complete and 0 interrupted iterations
+
+running (00m10.0s), 1/1 VUs, 2 complete and 0 interrupted iterations
+
+running (00m11.0s), 1/1 VUs, 2 complete and 0 interrupted iterations
+
+running (00m12.0s), 1/1 VUs, 2 complete and 0 interrupted iterations
+
+running (00m13.0s), 1/1 VUs, 2 complete and 0 interrupted iterations
+time="2026-11-18T01:33:18-03:00" level=info msg="2026-11-18T04:33:18.066Z visita 03: v1.0.0 OK" source=console
+
+running (00m14.0s), 1/1 VUs, 3 complete and 0 interrupted iterations
+
+running (00m15.0s), 1/1 VUs, 3 complete and 0 interrupted iterations
+
+running (00m16.0s), 1/1 VUs, 3 complete and 0 interrupted iterations
+
+running (00m17.0s), 1/1 VUs, 3 complete and 0 interrupted iterations
+time="2026-11-18T01:33:22-03:00" level=info msg="2026-11-18T04:33:22.547Z visita 04: v1.0.0 OK" source=console
+
+running (00m18.0s), 1/1 VUs, 4 complete and 0 interrupted iterations
+
+running (00m19.0s), 1/1 VUs, 4 complete and 0 interrupted iterations
+
+running (00m20.0s), 1/1 VUs, 4 complete and 0 interrupted iterations
+
+running (00m21.0s), 1/1 VUs, 4 complete and 0 interrupted iterations
+
+running (00m22.0s), 1/1 VUs, 4 complete and 0 interrupted iterations
+time="2026-11-18T01:33:27-03:00" level=info msg="2026-11-18T04:33:27.028Z visita 05: v1.0.0 OK" source=console
+
+running (00m23.0s), 1/1 VUs, 5 complete and 0 interrupted iterations
+
+running (00m24.0s), 1/1 VUs, 5 complete and 0 interrupted iterations
+
+running (00m25.0s), 1/1 VUs, 5 complete and 0 interrupted iterations
+
+running (00m26.0s), 1/1 VUs, 5 complete and 0 interrupted iterations
+time="2026-11-18T01:33:31-03:00" level=info msg="2026-11-18T04:33:31.387Z visita 06: v1.0.0 OK" source=console
+
+running (00m27.0s), 1/1 VUs, 6 complete and 0 interrupted iterations
+
+running (00m28.0s), 1/1 VUs, 6 complete and 0 interrupted iterations
+
+running (00m29.0s), 1/1 VUs, 6 complete and 0 interrupted iterations
+
+running (00m30.0s), 1/1 VUs, 6 complete and 0 interrupted iterations
+time="2026-11-18T01:33:35-03:00" level=info msg="2026-11-18T04:33:35.696Z visita 07: v1.1.0 OK" source=console
+
+running (00m31.0s), 1/1 VUs, 6 complete and 0 interrupted iterations
+
+running (00m32.0s), 1/1 VUs, 7 complete and 0 interrupted iterations
+
+running (00m33.0s), 1/1 VUs, 7 complete and 0 interrupted iterations
+
+running (00m34.0s), 1/1 VUs, 7 complete and 0 interrupted iterations
+
+running (00m35.0s), 1/1 VUs, 7 complete and 0 interrupted iterations
+time="2026-11-18T01:33:40-03:00" level=info msg="2026-11-18T04:33:40.061Z visita 08: v1.0.0 OK" source=console
+
+running (00m36.0s), 1/1 VUs, 8 complete and 0 interrupted iterations
+
+running (00m37.0s), 1/1 VUs, 8 complete and 0 interrupted iterations
+
+running (00m38.0s), 1/1 VUs, 8 complete and 0 interrupted iterations
+
+running (00m39.0s), 1/1 VUs, 8 complete and 0 interrupted iterations
+time="2026-11-18T01:33:44-03:00" level=info msg="2026-11-18T04:33:44.736Z visita 09: v1.0.0 OK" source=console
+
+running (00m40.0s), 1/1 VUs, 8 complete and 0 interrupted iterations
+
+running (00m41.0s), 1/1 VUs, 9 complete and 0 interrupted iterations
+
+running (00m42.0s), 1/1 VUs, 9 complete and 0 interrupted iterations
+
+running (00m43.0s), 1/1 VUs, 9 complete and 0 interrupted iterations
+
+running (00m44.0s), 1/1 VUs, 9 complete and 0 interrupted iterations
+time="2026-11-18T01:33:49-03:00" level=info msg="2026-11-18T04:33:49.174Z visita 10: v1.1.0 OK" source=console
+
+running (00m45.0s), 1/1 VUs, 10 complete and 0 interrupted iterations
+
+running (00m46.0s), 1/1 VUs, 10 complete and 0 interrupted iterations
+
+running (00m47.0s), 1/1 VUs, 10 complete and 0 interrupted iterations
+
+running (00m48.0s), 1/1 VUs, 10 complete and 0 interrupted iterations
+time="2026-11-18T01:33:53-03:00" level=info msg="2026-11-18T04:33:53.806Z visita 11: v1.0.0 OK" source=console
+
+running (00m49.0s), 1/1 VUs, 10 complete and 0 interrupted iterations
+
+running (00m50.0s), 1/1 VUs, 11 complete and 0 interrupted iterations
+
+running (00m51.0s), 1/1 VUs, 11 complete and 0 interrupted iterations
+
+running (00m52.0s), 1/1 VUs, 11 complete and 0 interrupted iterations
+
+running (00m53.0s), 1/1 VUs, 11 complete and 0 interrupted iterations
+time="2026-11-18T01:33:57-03:00" level=info msg="2026-11-18T04:33:57.933Z visita 12: v1.0.0 OK" source=console
+
+running (00m54.0s), 1/1 VUs, 12 complete and 0 interrupted iterations
+
+running (00m55.0s), 1/1 VUs, 12 complete and 0 interrupted iterations
+
+running (00m56.0s), 1/1 VUs, 12 complete and 0 interrupted iterations
+
+running (00m57.0s), 1/1 VUs, 12 complete and 0 interrupted iterations
+time="2026-11-18T01:34:02-03:00" level=info msg="2026-11-18T04:34:02.176Z visita 13: v1.0.0 OK" source=console
+
+running (00m58.0s), 1/1 VUs, 13 complete and 0 interrupted iterations
+
+running (00m59.0s), 1/1 VUs, 13 complete and 0 interrupted iterations
+
+running (01m00.0s), 1/1 VUs, 13 complete and 0 interrupted iterations
+
+running (01m01.0s), 1/1 VUs, 13 complete and 0 interrupted iterations
+time="2026-11-18T01:34:06-03:00" level=info msg="2026-11-18T04:34:06.850Z visita 14: v1.1.0 OK" source=console
+
+running (01m02.0s), 1/1 VUs, 13 complete and 0 interrupted iterations
+
+running (01m03.0s), 1/1 VUs, 14 complete and 0 interrupted iterations
+
+running (01m04.0s), 1/1 VUs, 14 complete and 0 interrupted iterations
+
+running (01m05.0s), 1/1 VUs, 14 complete and 0 interrupted iterations
+
+running (01m06.0s), 1/1 VUs, 14 complete and 0 interrupted iterations
+time="2026-11-18T01:34:11-03:00" level=info msg="2026-11-18T04:34:11.135Z visita 15: v1.0.0 OK" source=console
+
+running (01m07.0s), 1/1 VUs, 15 complete and 0 interrupted iterations
+
+running (01m08.0s), 1/1 VUs, 15 complete and 0 interrupted iterations
+
+running (01m09.0s), 1/1 VUs, 15 complete and 0 interrupted iterations
+
+running (01m10.0s), 1/1 VUs, 15 complete and 0 interrupted iterations
+time="2026-11-18T01:34:15-03:00" level=info msg="2026-11-18T04:34:15.829Z visita 16: v1.1.0 OK" source=console
+
+running (01m11.0s), 1/1 VUs, 15 complete and 0 interrupted iterations
+
+running (01m12.0s), 1/1 VUs, 16 complete and 0 interrupted iterations
+
+running (01m13.0s), 1/1 VUs, 16 complete and 0 interrupted iterations
+
+running (01m14.0s), 1/1 VUs, 16 complete and 0 interrupted iterations
+
+running (01m15.0s), 1/1 VUs, 16 complete and 0 interrupted iterations
+time="2026-11-18T01:34:20-03:00" level=info msg="2026-11-18T04:34:20.233Z visita 17: v1.0.0 OK" source=console
+
+running (01m16.0s), 1/1 VUs, 17 complete and 0 interrupted iterations
+
+running (01m17.0s), 1/1 VUs, 17 complete and 0 interrupted iterations
+
+running (01m18.0s), 1/1 VUs, 17 complete and 0 interrupted iterations
+
+running (01m19.0s), 1/1 VUs, 17 complete and 0 interrupted iterations
+
+running (01m20.0s), 1/1 VUs, 17 complete and 0 interrupted iterations
+time="2026-11-18T01:34:25-03:00" level=info msg="2026-11-18T04:34:25.014Z visita 18: v1.0.0 OK" source=console
+
+running (01m21.0s), 1/1 VUs, 18 complete and 0 interrupted iterations
+
+running (01m22.0s), 1/1 VUs, 18 complete and 0 interrupted iterations
+
+running (01m23.0s), 1/1 VUs, 18 complete and 0 interrupted iterations
+
+running (01m24.0s), 1/1 VUs, 18 complete and 0 interrupted iterations
+time="2026-11-18T01:34:29-03:00" level=info msg="2026-11-18T04:34:29.678Z visita 19: v1.0.0 OK" source=console
+
+running (01m25.0s), 1/1 VUs, 18 complete and 0 interrupted iterations
+
+running (01m26.0s), 1/1 VUs, 19 complete and 0 interrupted iterations
+
+running (01m27.0s), 1/1 VUs, 19 complete and 0 interrupted iterations
+
+running (01m28.0s), 1/1 VUs, 19 complete and 0 interrupted iterations
+time="2026-11-18T01:34:33-03:00" level=info msg="2026-11-18T04:34:33.799Z visita 20: v1.0.0 OK" source=console
+
+running (01m29.0s), 1/1 VUs, 19 complete and 0 interrupted iterations
+
+=== peso-25 (navegador): 20 visitas → canary 4, stable 16, pantallas en blanco 0 ===
+
+running (01m29.1s), 0/1 VUs, 20 complete and 0 interrupted iterations
+visitas ✓ [ 100% ] 1 VUs  01m29.1s/10m0s  20/20 shared iters
+... navegador terminado; esperando que termine el split (5m)
+
+=== peso-25: peso configurado 25% → canary observado 24.86% ===
+visitas: 6001 (canary 1492, stable 4509, sin versión 0)
+p95 HTML    canary 4.5 ms | stable 4.5 ms
+p95 página  canary 11.1 ms | stable 4.5 ms
+errores     canary 0.00% | stable 0.00%
+assets rotos: 0 (0.00%)
+thresholds: OK
+>>> ETAPA peso-25 OK: observado 24.86% | p95 canary 4.503803250000001 ms vs stable 4.457916199999998 ms | avanza
+

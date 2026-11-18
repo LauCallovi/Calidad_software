@@ -82,3 +82,6 @@ target/
 # IPython
 profile_default/
 ipython_config.py
+# TP final: intentos fallidos de evidencias (no se versionan)
+tp-final/evidencias/descartadas/
+!tp-final/evidencias/**/*.log

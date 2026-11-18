@@ -1,0 +1,18 @@
+mié 18 nov 2026 00:35:14 -03
+NAME                    READY   STATUS    RESTARTS        AGE
+back-58cd87b8d9-bs26b   1/1     Running   7 (4m15s ago)   60m
+back-58cd87b8d9-dxwhb   1/1     Running   7 (4m7s ago)    22m
+
+Name:             back-58cd87b8d9-bs26b
+    Restart Count:  7
+Name:             back-58cd87b8d9-dxwhb
+    Restart Count:  7
+    Last State:     Terminated
+      Reason:       OOMKilled
+      Exit Code:    137
+      Started:      Wed, 18 Nov 2026 00:30:52 -0300
+--
+    Last State:     Terminated
+      Reason:       OOMKilled
+      Exit Code:    137
+      Started:      Wed, 18 Nov 2026 00:31:00 -0300

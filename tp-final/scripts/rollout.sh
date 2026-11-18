@@ -25,6 +25,9 @@
 # Sin "set -e" a propósito: k6 devuelve código 99 cuando fallan los thresholds
 # y ese caso lo manejamos nosotros (rollback), no debe cortar el script.
 set -uo pipefail
+# Punto decimal siempre: con locale es_AR, awk imprime "5,21" y la coma
+# rompe las columnas de bitacora.csv.
+export LC_NUMERIC=C
 
 TP_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 cd "$TP_DIR"
@@ -81,20 +84,37 @@ registrar() {
   echo "$1,$2,$3,$4,$5,$6,$7,$8,$9,${10},${11},${12},${13},${motivo}" >> "$BITACORA"
 }
 
-# Rollback = peso 0. Medimos el tiempo hasta que 20 requests seguidos ya no
-# reciben la versión canary: ese es el tiempo real de "cortar la exposición".
+# Rollback = peso 0 + canary a 0 réplicas.
+# Solo peso 0 NO alcanza: con affinity-canary-behavior "sticky", un usuario que
+# ya tiene la cookie de afinidad del canary sigue en el canary aunque el peso
+# sea 0 (hasta que vence la cookie, 1 h). Sin pods en el canary, el Ingress
+# manda a esos usuarios a la stable (probado: ~1 s, sin errores).
+#
+# El tiempo se mide hasta que AMBOS reciben la stable:
+#   - 20 requests de usuarios nuevos (sin cookies),
+#   - un usuario "pegado": su cookie de afinidad del canary se obtiene justo
+#     antes del rollback, así medimos el peor caso real y no solo el optimista.
 rollback() {
-  local t0 t1 i en_canary
+  local t0 t1 i en_canary pegado jar ok=0
+  jar=$(mktemp)
+  curl -s -c "$jar" -b "canary=always" --max-time 2 "$FRONT/version.txt" >/dev/null || true
   t0=$(date +%s.%N)
   ./scripts/peso.sh 0
+  kubectl -n "$NS" scale deployment front-canary --replicas=0 >/dev/null
   for i in $(seq 1 60); do
     en_canary=$(for _ in $(seq 1 20); do curl -s --max-time 2 "$FRONT/version.txt"; echo; done | grep -c "^${VERSION_CANARY}$" || true)
-    [ "$en_canary" -eq 0 ] && break
+    pegado=$(curl -s -b "$jar" --max-time 2 "$FRONT/version.txt" || true)
+    if [ "$en_canary" -eq 0 ] && [ "$pegado" = "$VERSION_STABLE" ]; then ok=1; break; fi
     sleep 1
   done
   t1=$(date +%s.%N)
+  rm -f "$jar"
   DURACION_ROLLBACK=$(awk -v a="$t0" -v b="$t1" 'BEGIN { printf "%.1f", b - a }')
-  echo ">>> ROLLBACK completo: tráfico 100% en stable en ${DURACION_ROLLBACK} s"
+  if [ "$ok" -eq 1 ]; then
+    echo ">>> ROLLBACK completo: tráfico 100% en stable (usuarios nuevos y pegados al canary) en ${DURACION_ROLLBACK} s"
+  else
+    echo ">>> ROLLBACK INCOMPLETO tras ${DURACION_ROLLBACK} s: nuevos en canary=${en_canary}/20, usuario pegado ve '${pegado}'"
+  fi
 }
 
 # Deja el Deployment canary con la imagen VERSION_CANARY y al menos 1 réplica.
@@ -207,8 +227,13 @@ for P in $PESOS; do
   visitas=$(jget "$S" visitas.total)
   vc=$(jget "$S" visitas.canary)
   vs=$(jget "$S" visitas.stable)
-  p95c=$(jget "$S" p95_ms.pagina_canary)
-  p95s=$(jget "$S" p95_ms.pagina_stable)
+  # Criterio de latencia sobre el p95 del HTML, no de la "página": la v1.0.0
+  # trae CSS/JS embebidos (1 request) y la v1.1.0 los pide aparte (3 requests),
+  # así que el p95 de página compara trabajos distintos. La primera corrida
+  # (evidencias/reportes/rollout-corrida1-falso-positivo/) hizo rollback por eso
+  # con el canary más rápido en HTML (4,69 vs 5,21 ms). Ver README, sección 2.1.
+  p95c=$(jget "$S" p95_ms.html_canary)
+  p95s=$(jget "$S" p95_ms.html_stable)
   errc=$(jget "$S" tasa_error.canary)
   assets=$(jget "$S" assets_rotos.cantidad)
   blancas=$(jget "$B" pantallas_blancas)

@@ -1,0 +1,9 @@
+inicio,fin,etapa,version,peso,pct_observado,visitas,p95_canary_ms,p95_stable_ms,err_canary,assets_rotos,pantallas_blancas,decision,motivo
+2026-11-18T01:27:33-03:00,2026-11-18T01:27:52-03:00,etapa-0,1.1.0,0,,3,,,,,0,AVANZA,3/3 visitas forzadas OK
+2026-11-18T01:27:52-03:00,2026-11-18T01:32:58-03:00,peso-10,1.1.0,10,10.31,6001,5.088360700000002,4.2316759,0,0,0,AVANZA,criterios cumplidos
+2026-11-18T01:32:59-03:00,2026-11-18T01:38:05-03:00,peso-25,1.1.0,25,24.86,6001,4.503803250000001,4.457916199999998,0,0,0,AVANZA,criterios cumplidos
+2026-11-18T01:38:05-03:00,2026-11-18T01:43:11-03:00,peso-50,1.1.0,50,49.93,6001,5.66616725,5.582387199999995,0,0,0,AVANZA,criterios cumplidos
+2026-11-18T01:43:12-03:00,2026-11-18T01:48:18-03:00,peso-100,1.1.0,100,100,6001,5.506102,5.582387199999995,0,0,0,AVANZA,criterios cumplidos
+2026-11-18T02:14:13-03:00,2026-11-18T02:14:36-03:00,etapa-0,1.2.0,0,,3,,,,,3,ROLLBACK,3 de 3 visitas con pantalla en blanco
+2026-11-18T02:26:49-03:00,2026-11-18T02:29:01-03:00,peso-25,1.2.0,25,23.03,2401,4.163095399999998,3.83462749999999,0,0,3,ROLLBACK,3 pantallas en blanco; rollback en 6.1 s
+2026-11-18T02:30:57-03:00,2026-11-18T02:31:13-03:00,promocion,1.1.0,0,,,,,,,,PROMOCION,stable ahora sirve 1.1.0; canary a 0 replicas
