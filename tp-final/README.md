@@ -166,7 +166,8 @@ Generada por `rollout.sh` en `evidencias/reportes/bitacora.csv`. Cambios de peso
 | 00:50:11 | 00:55:19 | peso-50 | 1.1.0 | 50 | 49,61 | 6001 | 2,38 | 1,60 | 0 | 0 | 0 | AVANZA | criterios cumplidos |
 | 00:55:19 | 01:00:25 | peso-100 | 1.1.0 | 100 | 100 | 6001 | 2,44 | 1,60 (ref. etapa 50) | 0 | 0 | 0 | AVANZA | criterios cumplidos |
 | 01:28:13 | 01:28:30 | etapa-0 | 1.2.0 | 0 | — | 3 | — | — | — | — | 3 | ROLLBACK (esperado) | 3 de 3 visitas con pantalla en blanco; ningún usuario expuesto |
-| | | peso-25 | 1.2.0 | 25 | | | | | | | | ROLLBACK (esperado) | tiempo de rollback: _completar_ s |
+| 17:38:24 | 17:40:31 | peso-25 (ensayo) | 1.2.0 | 25 | 25,91 | 2401 | 2,58 | 1,61 | 0 | 0 | 5 | ROLLBACK (esperado) | 5 de 20 visitas en blanco; rollback en 1,7 s |
+| 17:41:55 | 17:44:02 | peso-25 (grabada) | 1.2.0 | 25 | 22,99 | 2401 | 2,42 | 1,63 | 0 | 0 | 5 | ROLLBACK (esperado) | 5 de 20 visitas en blanco; rollback en 1,7 s |
 | | | promocion | 1.1.0 | 0 | — | — | — | — | — | — | — | PROMOCION | |
 
 **Verificación independiente del reparto** (`conteo-curl.sh`, 100 requests por etapa):
@@ -360,12 +361,12 @@ inlinear el CSS o servir con compresión) y, para la próxima hipótesis, combin
 | Etapas 10 / 25 / 50 / 100 | Thresholds del split OK, 0 pantallas en blanco, p95 ≤ stable + 10% (o < 5 ms) | ✅ las 4 etapas AVANZA: 0 errores, 0 assets rotos, 0 pantallas en blanco en 80 visitas; p95 de página +0,8 ms (dentro de la tolerancia de 5 ms) |
 | % observado vs peso | ± 3 puntos | ✅ 10,50 / 25,38 / 49,61 / 100 % (desvío máximo 0,5 puntos) |
 | Hipótesis de estrés | No rechazada en el escalón 200 | ⚠️ capacidad confirmada (800 cargas/s, 0 errores); rendimiento relativo **rechazado** (+16 % de p95, +0,2 ms absolutos). Ver 3.5 |
-| Control negativo: v1.2.0 detenida | Rollback automático | _completar_ (tiempo: ___ s) |
+| Control negativo: v1.2.0 detenida | Rollback automático | ✅ demo A: frenada en la etapa 0 (3/3 en blanco, nadie expuesto). Demo B (peso 25): split HTTP **OK** (0 errores, 0 assets rotos) pero 5/20 visitas en blanco → rollback automático, tráfico 100 % en stable en **1,7 s** (dos corridas) |
 
 **Veredicto v1.1.0: GO, con una observación.** Cumple todos los criterios de release salvo la parte relativa
 de la hipótesis de estrés: la v1.1.0 es un 16 % más lenta por pesar un 72 % más, pero son 0,2 ms y la capacidad
 no cambia (ambas versiones sostienen 4× la carga objetivo). Se promueve y se registra como deuda técnica la
-reducción del peso de la página. _(Pendiente: completar el control negativo con la demo B.)_
+reducción del peso de la página.
 
 ### 6.2 Capacidad para 10.000 sensores
 

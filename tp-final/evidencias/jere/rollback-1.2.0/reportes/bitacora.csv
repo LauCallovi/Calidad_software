@@ -1,0 +1,2 @@
+inicio,fin,etapa,version,peso,pct_observado,visitas,p95_canary_ms,p95_stable_ms,err_canary,assets_rotos,pantallas_blancas,decision,motivo
+2026-11-18T17:41:55-03:00,2026-11-18T17:44:02-03:00,peso-25,1.2.0,25,22.99,2401,2.424732899999999,1.6292377999999996,0,0,5,ROLLBACK,5 pantallas en blanco; rollback en 1.7 s
