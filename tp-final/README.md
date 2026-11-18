@@ -236,23 +236,43 @@ Fuente: `evidencias/reportes/estres-front-stable.json` y `estres-front-canary.js
 
 | Escalón (cargas/s) | p95 v1.0.0 (ms) | p95 v1.1.0 (ms) | Δ % | Errores v1.0.0 | Errores v1.1.0 |
 |---|---|---|---|---|---|
-| 50 | _completar_ | | | | |
-| 100 | | | | | |
-| **200** | | | | | |
-| 400 | | | | | |
-| 800 | | | | | |
+| 50 | 1,53 | 2,31 | +52 % | 0 % | 0 % |
+| 100 | 1,50 | 2,23 | +48 % | 0 % | 0 % |
+| **200** | **1,39** | **1,60** | **+16 %** | **0 %** | **0 %** |
+| 400 | 0,81 | 1,36 | +68 % | 0 % | 0 % |
+| 800 | 0,73 | 1,47 | +101 % | 0 % | 0 % |
 
 | Dato | v1.0.0 | v1.1.0 |
 |---|---|---|
-| Bytes por página (promedio) | _completar_ | |
-| Iteraciones descartadas | | |
-| Thresholds (escalón 200) | | |
+| Bytes por página (promedio) | 2.713 | 4.668 (+72 %) |
+| Iteraciones descartadas | 0 | 0 |
+| Thresholds (escalón 200) | OK | OK |
+
+Corridas de Jere el 18/11, 01:04 y 01:15 (Argentina), consecutivas, con front-canary escalado a 2 réplicas y
+peso 0. Evidencia: `evidencias/jere/reportes/estres-front-{stable,canary}.{json,txt}`,
+`evidencias/jere/capturas/04-estres-{stable,canary}.png`.
 
 ### 3.5 Conclusión
 
-_completar_: ¿se rechaza H? ¿En qué escalón aparece el punto de quiebre de cada versión? ¿La diferencia
-se explica por los bytes o los requests extra de la v1.1.0? ¿El límite lo puso la app o el generador
-(iteraciones descartadas)?
+**H se rechaza en su parte relativa y se confirma en su parte de capacidad.**
+
+- **Rendimiento relativo (rechazado):** en el escalón de referencia (200 cargas/s) el p95 de la v1.1.0 es un
+  **16 % mayor** que el de la v1.0.0 (1,60 vs 1,39 ms), por encima del +10 % que fijamos. En todos los escalones la
+  v1.1.0 es más lenta. La diferencia se explica por el tamaño: la v1.1.0 pesa **+72 % de bytes por página**
+  (4.668 vs 2.713) y pide un asset más (el CSS), así que cada carga de página hace un request extra.
+- **Capacidad (confirmada):** ninguna versión tiene punto de quiebre dentro del rango probado. Las dos sostienen
+  **800 cargas/s (4× el objetivo de 200) con 0 % de errores**, 0 versiones inesperadas y 0 iteraciones
+  descartadas: el límite no lo puso ni la app ni el generador.
+- **Magnitud:** la regresión es de **0,2 ms** en términos absolutos. Un +10 % sobre tiempos de 1–2 ms es menor que
+  el ruido de la medición: el p95 *baja* al subir la carga en las dos versiones (efecto de calentamiento de
+  NGINX y del escalado de frecuencia de la CPU de la notebook), algo que no esperaríamos en producción.
+
+**Implicancia para la promoción.** La regresión es real pero no bloquea: la hipótesis estaba formulada en
+términos relativos, y para tiempos tan chicos el criterio relativo es demasiado estricto. Es la misma razón
+por la que el plan de rollout (fijado antes de ejecutar) acepta una diferencia de hasta 5 ms. La v1.1.0 queda
+**apta para promover**, con una deuda técnica registrada: reducir el peso de la página (minificar CSS/JS,
+inlinear el CSS o servir con compresión) y, para la próxima hipótesis, combinar umbral relativo y absoluto
+(«+10 % o +5 ms, lo que sea mayor»).
 
 ---
 
