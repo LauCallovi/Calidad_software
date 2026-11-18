@@ -255,25 +255,9 @@ peso 0. Evidencia: `evidencias/jere/reportes/estres-front-{stable,canary}.{json,
 
 ### 3.5 Conclusión
 
-**H se rechaza en su parte relativa y se confirma en su parte de capacidad.**
-
-- **Rendimiento relativo (rechazado):** en el escalón de referencia (200 cargas/s) el p95 de la v1.1.0 es un
-  **16 % mayor** que el de la v1.0.0 (1,60 vs 1,39 ms), por encima del +10 % que fijamos. En todos los escalones la
-  v1.1.0 es más lenta. La diferencia se explica por el tamaño: la v1.1.0 pesa **+72 % de bytes por página**
-  (4.668 vs 2.713) y pide un asset más (el CSS), así que cada carga de página hace un request extra.
-- **Capacidad (confirmada):** ninguna versión tiene punto de quiebre dentro del rango probado. Las dos sostienen
-  **800 cargas/s (4× el objetivo de 200) con 0 % de errores**, 0 versiones inesperadas y 0 iteraciones
-  descartadas: el límite no lo puso ni la app ni el generador.
-- **Magnitud:** la regresión es de **0,2 ms** en términos absolutos. Un +10 % sobre tiempos de 1–2 ms es menor que
-  el ruido de la medición: el p95 *baja* al subir la carga en las dos versiones (efecto de calentamiento de
-  NGINX y del escalado de frecuencia de la CPU de la notebook), algo que no esperaríamos en producción.
-
-**Implicancia para la promoción.** La regresión es real pero no bloquea: la hipótesis estaba formulada en
-términos relativos, y para tiempos tan chicos el criterio relativo es demasiado estricto. Es la misma razón
-por la que el plan de rollout (fijado antes de ejecutar) acepta una diferencia de hasta 5 ms. La v1.1.0 queda
-**apta para promover**, con una deuda técnica registrada: reducir el peso de la página (minificar CSS/JS,
-inlinear el CSS o servir con compresión) y, para la próxima hipótesis, combinar umbral relativo y absoluto
-(«+10 % o +5 ms, lo que sea mayor»).
+_completar_: ¿se rechaza H? ¿En qué escalón aparece el punto de quiebre de cada versión? ¿La diferencia
+se explica por los bytes o los requests extra de la v1.1.0? ¿El límite lo puso la app o el generador
+(iteraciones descartadas)?
 
 ---
 
@@ -363,10 +347,7 @@ inlinear el CSS o servir con compresión) y, para la próxima hipótesis, combin
 | Hipótesis de estrés | No rechazada en el escalón 200 | ⚠️ capacidad confirmada (800 cargas/s, 0 errores); rendimiento relativo **rechazado** (+16 % de p95, +0,2 ms absolutos). Ver 3.5 |
 | Control negativo: v1.2.0 detenida | Rollback automático | ✅ demo A: frenada en la etapa 0 (3/3 en blanco, nadie expuesto). Demo B (peso 25): split HTTP **OK** (0 errores, 0 assets rotos) pero 5/20 visitas en blanco → rollback automático, tráfico 100 % en stable en **1,7 s** (dos corridas) |
 
-**Veredicto v1.1.0: GO, con una observación.** Cumple todos los criterios de release salvo la parte relativa
-de la hipótesis de estrés: la v1.1.0 es un 16 % más lenta por pesar un 72 % más, pero son 0,2 ms y la capacidad
-no cambia (ambas versiones sostienen 4× la carga objetivo). Se promueve y se registra como deuda técnica la
-reducción del peso de la página.
+**Veredicto v1.1.0:** _completar_ (GO si se cumplen todos los criterios).
 
 ### 6.2 Capacidad para 10.000 sensores
 
@@ -391,17 +372,10 @@ Una primera corrida del stress (misma configuración) dio p95 = 14,69 ms, 40 err
 iteraciones descartadas: el generador y el cluster comparten la notebook, y la variación entre corridas
 es del mismo orden que la diferencia. No se encontró el punto de quiebre del back dentro de 1200 req/s.
 
-**Veredicto 10.000 sensores: GO condicionado.** La carga nominal de 10.000 sensores (333 req/s) se atiende con
-holgura: p95 de 4 ms, 0 % de errores y ~5 de las 8 réplicas posibles. Lo que no está resuelto es la
-**resistencia a picos**: el HPA llega a 8 réplicas a ~700 req/s (2× la carga nominal) y ante un pico vertical
-con requests costosos el back colapsa antes de que el HPA reaccione. Condiciones para ampliar:
-
-1. Más margen de escalado: subir `maxReplicas` y los recursos del nodo (el tope de 8 lo pone la notebook).
-2. Liveness más tolerante y separada de la readiness, para no reiniciar pods que solo están saturados.
-3. HPA más agresivo al subir (`behavior.scaleUp`) o un umbral de CPU menor que 60 %.
-4. Repetir el stress y el spike en el entorno productivo: estos números valen para una notebook donde el
-   cluster y el generador de carga comparten CPU (la misma prueba dio p95 de 4, 15 y 53 ms según la corrida
-   y la máquina).
+**Veredicto 10.000 sensores:** _completar_. Si no se cumple, indicar el cuello de botella observado
+(CPU del back con HPA al máximo, conexiones de PostgreSQL, recursos del nodo de Minikube) y la
+acción propuesta (más recursos para el nodo, pool de conexiones, cola de ingesta, réplicas de lectura).
+Aclaración: el resultado vale para este entorno; en producción hay que repetir la prueba allí.
 
 ---
 
