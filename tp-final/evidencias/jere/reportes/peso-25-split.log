@@ -1,0 +1,8 @@
+
+=== peso-25: peso configurado 25% → canary observado 25.38% ===
+visitas: 6000 (canary 1523, stable 4477, sin versión 0)
+p95 HTML    canary 1.6 ms | stable 1.6 ms
+p95 página  canary 2.4 ms | stable 1.6 ms
+errores     canary 0.00% | stable 0.00%
+assets rotos: 0 (0.00%)
+thresholds: OK

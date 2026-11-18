@@ -82,3 +82,5 @@ target/
 # IPython
 profile_default/
 ipython_config.py
+# Logs de las corridas del TP final: son evidencia (bitácora de pesos, salida de k6)
+!tp-final/evidencias/**/*.log
