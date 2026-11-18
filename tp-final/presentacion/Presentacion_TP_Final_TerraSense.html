@@ -2,538 +2,688 @@
 <html lang="es">
 <head>
 <meta charset="utf-8">
-<title>TerraSense S.A. - TP Final Gestión de la Calidad del Software</title>
+<title>TerraSense S.A. - TP Final Calidad del Software</title>
 <style>
+  @font-face {
+    font-family: 'BodoniModa';
+    src: url('./assets/fonts/BodoniModa-Italic.ttf') format('truetype');
+    font-style: italic;
+    font-weight: 400 700;
+  }
+  @font-face {
+    font-family: 'DMSans';
+    src: url('./assets/fonts/DMSans.ttf') format('truetype');
+    font-weight: 300 700;
+  }
   @page { size: 1920px 1080px; margin: 0; }
   * { box-sizing: border-box; margin: 0; padding: 0; }
   body {
-    background: #0b0f19;
-    color: #f1f5f9;
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Ubuntu, sans-serif;
+    background: #ffffff;
+    color: #1e293b;
+    font-family: 'DMSans', 'Helvetica Neue', Arial, sans-serif;
+    font-weight: 400;
     -webkit-print-color-adjust: exact;
     print-color-adjust: exact;
   }
   .slide {
     width: 1920px;
     height: 1080px;
-    padding: 56px 76px;
-    background: linear-gradient(145deg, #0f172a 0%, #111827 65%, #0b1324 100%);
+    background: #ffffff;
     position: relative;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
+    overflow: hidden;
     page-break-after: always;
     break-after: page;
+  }
+  /* Subtle architectural hairlines matching Presentation.pdf */
+  .lines-svg {
+    position: absolute;
+    inset: 0;
+    width: 1920px;
+    height: 1080px;
+    pointer-events: none;
+    z-index: 3;
+  }
+  .bg-poly-left {
+    position: absolute;
+    inset: 0;
+    background: #f2eeee;
+    clip-path: polygon(0 0, 60.5% 0, 44.5% 100%, 0 100%);
+    z-index: 1;
+  }
+  .bg-poly-agenda {
+    position: absolute;
+    inset: 0;
+    background: #f2eeee;
+    clip-path: polygon(0 0, 38% 0, 22% 100%, 0 100%);
+    z-index: 1;
+  }
+  .bg-poly-divider {
+    position: absolute;
+    inset: 0;
+    background: #f2eeee;
+    clip-path: polygon(0 0, 61% 0, 46% 100%, 0 100%);
+    z-index: 1;
+  }
+  .photo-cover {
+    position: absolute;
+    top: 0; right: 0; bottom: 0;
+    width: 56%;
+    clip-path: polygon(28% 0, 100% 0, 100% 100%, 0% 100%);
+    z-index: 2;
     overflow: hidden;
-    border-bottom: 4px solid #1e293b;
   }
-  .header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    border-bottom: 2px solid #1e293b;
-    padding-bottom: 18px;
-    margin-bottom: 26px;
+  .photo-cover img {
+    width: 100%; height: 100%; object-fit: cover;
   }
-  .tag {
-    background: #0ea5e922;
-    color: #38bdf8;
-    border: 1px solid #38bdf866;
-    padding: 6px 16px;
-    border-radius: 999px;
-    font-size: 20px;
-    font-weight: 700;
-    letter-spacing: 0.4px;
+  .photo-right-strip {
+    position: absolute;
+    top: 0; right: 0; bottom: 0;
+    width: 22%;
+    z-index: 2;
+    overflow: hidden;
   }
-  .slide-num { color: #94a3b8; font-size: 20px; font-weight: 600; }
-  h1 { font-size: 64px; line-height: 1.12; color: #f8fafc; margin-bottom: 20px; }
-  h2 { font-size: 44px; line-height: 1.18; color: #f8fafc; margin-bottom: 18px; }
-  h3 { font-size: 28px; color: #38bdf8; margin-bottom: 12px; }
-  p, li { font-size: 25px; line-height: 1.45; color: #cbd5e1; }
-  ul { padding-left: 30px; display: flex; flex-direction: column; gap: 12px; }
-  strong { color: #f8fafc; }
-  code {
-    background: #1e293b;
-    color: #7dd3fc;
-    padding: 3px 9px;
-    border-radius: 6px;
-    font-family: "DejaVu Sans Mono", ui-monospace, monospace;
-    font-size: 22px;
+  .photo-right-strip img {
+    width: 100%; height: 100%; object-fit: cover;
   }
-  .grid-2 { display: grid; grid-template-columns: 1fr 1.15fr; gap: 40px; flex: 1; align-items: center; }
-  .grid-equal { display: grid; grid-template-columns: 1fr 1fr; gap: 36px; flex: 1; align-items: stretch; }
-  .card {
-    background: #1e293b88;
-    border: 1px solid #334155;
-    border-radius: 16px;
-    padding: 26px 30px;
+  .photo-left-strip {
+    position: absolute;
+    top: 0; left: 0; bottom: 0;
+    width: 26%;
+    z-index: 2;
+    overflow: hidden;
   }
-  .card-green { border-color: #22c55e88; background: #052e1666; }
-  .card-red { border-color: #ef444488; background: #450a0a66; }
-  .card-amber { border-color: #f59e0b88; background: #451a0366; }
-  .fig {
-    background: #090d16;
-    border: 1px solid #334155;
-    border-radius: 14px;
-    padding: 14px;
+  .photo-left-strip img {
+    width: 100%; height: 100%; object-fit: cover;
+  }
+  .photo-bottom-strip {
+    position: absolute;
+    left: 0; right: 0; bottom: 0;
+    height: 31%;
+    z-index: 2;
+    overflow: hidden;
+  }
+  .photo-bottom-strip img {
+    width: 100%; height: 100%; object-fit: cover; object-position: center 65%;
+  }
+  .content {
+    position: relative;
+    z-index: 4;
+    width: 100%;
+    height: 100%;
+    padding: 96px 110px 60px 110px;
     display: flex;
     flex-direction: column;
-    align-items: center;
-    gap: 10px;
   }
-  .fig img, .fig video {
-    max-width: 100%;
-    max-height: 600px;
-    object-fit: contain;
-    border-radius: 8px;
-    border: 1px solid #1e293b;
+  h1.serif-title {
+    font-family: 'BodoniModa', 'Didot', Georgia, serif;
+    font-style: italic;
+    font-weight: 400;
+    text-transform: uppercase;
+    color: #0c2231;
+    font-size: 76px;
+    line-height: 1.06;
+    letter-spacing: 0.02em;
   }
-  .fig-sm img { max-height: 360px; }
-  .caption {
-    font-size: 19px;
-    line-height: 1.35;
-    color: #94a3b8;
-    text-align: left;
-    width: 100%;
-    background: #0f172a;
-    padding: 10px 14px;
-    border-left: 4px solid #38bdf8;
-    border-radius: 6px;
+  h2.serif-head {
+    font-family: 'BodoniModa', 'Didot', Georgia, serif;
+    font-style: italic;
+    font-weight: 400;
+    text-transform: uppercase;
+    color: #0c2231;
+    font-size: 56px;
+    line-height: 1.1;
+    letter-spacing: 0.02em;
+    margin-bottom: 10px;
   }
-  table { width: 100%; border-collapse: collapse; font-size: 21px; }
-  th { background: #1e293b; color: #38bdf8; text-align: left; padding: 12px 16px; border-bottom: 2px solid #475569; }
-  td { padding: 11px 16px; border-bottom: 1px solid #334155; color: #e2e8f0; vertical-align: top; }
-  .kpi-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 22px; margin-bottom: 20px; }
-  .kpi { background: #1e293b99; border: 1px solid #334155; border-radius: 14px; padding: 18px 22px; }
-  .kpi .val { font-size: 40px; font-weight: 800; color: #38bdf8; margin-top: 4px; }
-  .kpi .lbl { font-size: 19px; color: #94a3b8; }
-  .footer {
+  .sub-teal {
+    font-size: 22px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: #145369;
+    margin-bottom: 28px;
+  }
+  .bullets {
+    list-style: disc;
+    padding-left: 34px;
     display: flex;
-    justify-content: space-between;
+    flex-direction: column;
+    gap: 20px;
+  }
+  .bullets li {
+    font-size: 27px;
+    line-height: 1.38;
+    color: #1e293b;
+    font-weight: 300;
+  }
+  .bullets li strong {
+    font-weight: 600;
+    color: #0c2231;
+  }
+  code {
+    font-family: 'DejaVu Sans Mono', ui-monospace, monospace;
+    font-size: 22px;
+    background: #eef2f4;
+    color: #145369;
+    padding: 2px 8px;
+    border-radius: 4px;
+  }
+  .split-2col {
+    display: grid;
+    grid-template-columns: 0.82fr 1.35fr;
+    gap: 54px;
+    flex: 1;
+    align-items: center;
+  }
+  .equal-2col {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 44px;
+    flex: 1;
+    align-items: center;
+  }
+  .img-box {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    align-items: center;
+    justify-content: center;
+  }
+  .img-box img {
+    max-width: 100%;
+    max-height: 670px;
+    object-fit: contain;
+    border: 1px solid #cbd5e1;
+    border-radius: 6px;
+    box-shadow: 0 10px 28px rgba(12, 34, 49, 0.08);
+    background: #ffffff;
+  }
+  .img-box-tall img {
+    max-height: 700px;
+  }
+  .cap {
+    width: 100%;
+    font-size: 20px;
+    line-height: 1.35;
+    color: #334155;
+    border-left: 3px solid #145369;
+    padding-left: 14px;
+    font-weight: 400;
+  }
+  .cap strong { color: #0c2231; font-weight: 600; }
+  table.tpl {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 22px;
+    border: 1.5px solid #145369;
+  }
+  table.tpl th {
+    background: #145369;
+    color: #ffffff;
+    font-weight: 500;
+    padding: 15px 18px;
+    text-align: left;
+    border: 1px solid #145369;
+  }
+  table.tpl td {
+    padding: 13px 18px;
+    border: 1px solid #145369;
+    color: #0c2231;
+    background: #ffffff;
+  }
+  table.tpl tr:nth-child(odd) td {
+    background: #e9eff1;
+  }
+  .pill-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 28px;
+    margin-top: 22px;
+  }
+  .note-panel {
+    background: #f2eeee;
+    border-left: 4px solid #145369;
+    padding: 18px 24px;
+    font-size: 22px;
+    line-height: 1.4;
+    color: #0c2231;
+  }
+  .footer-num {
+    position: absolute;
+    bottom: 26px;
+    right: 48px;
     font-size: 18px;
     color: #64748b;
-    padding-top: 12px;
-    border-top: 1px solid #1e293b;
+    z-index: 5;
   }
-  @media screen {
-    body.deck-mode .slide { display: none; margin: 0 auto; }
-    body.deck-mode .slide.active { display: flex; }
+  .footer-left {
+    position: absolute;
+    bottom: 26px;
+    left: 110px;
+    font-size: 18px;
+    color: #64748b;
+    z-index: 5;
   }
 </style>
 </head>
 <body>
 
-<!-- SLIDE 1 -->
+<!-- SVG corner hairlines macro helper repeated cleanly per slide -->
+<!-- SLIDE 1: COVER (matches Presentation.pdf p. 1) -->
 <section class="slide">
-  <div class="header">
-    <span class="tag">FCEFyN UNC - Gestión de la Calidad del Software (2026)</span>
-    <span class="slide-num">1 / 16</span>
-  </div>
-  <div style="my:auto; max-width: 1500px;">
-    <p style="color:#38bdf8; font-size:28px; font-weight:700; margin-bottom:16px;">Presentación técnica para el directorio y la Cooperativa Agropecuaria del Centro</p>
-    <h1>TerraSense S.A.: Del pipeline en GitHub Actions al Canary en Minikube</h1>
-    <p style="font-size:30px; color:#cbd5e1; margin-top:24px; max-width:1350px;">
-      Qué probamos y grabamos durante el cuatrimestre: linters estáticos, Horusec con Trivy, cluster Kubernetes con HPA, caídas provocadas (E1 y E2), salida gradual en NGINX Ingress mirada con Chromium y cruce contra ISO/IEC 25000.
+  <div class="bg-poly-left"></div>
+  <svg class="lines-svg" viewBox="0 0 1920 1080">
+    <line x1="0" y1="115" x2="490" y2="0" stroke="#b8a3a6" stroke-width="1.3"/>
+    <line x1="145" y1="0" x2="0" y2="950" stroke="#b8a3a6" stroke-width="1.3"/>
+  </svg>
+  <div class="photo-cover"><img src="./assets/cover_photo.jpg" alt=""></div>
+  <div class="content" style="justify-content:center; width:54%; padding-left:130px;">
+    <div class="sub-teal" style="margin-bottom:18px;">FCEFyN UNC · Gestión de la Calidad del Software</div>
+    <h1 class="serif-title">TerraSense<br>Canary &amp; QA</h1>
+    <p style="font-size:26px; color:#334155; margin-top:26px; font-weight:300; max-width:650px;">
+      Del pipeline de CI al despliegue progresivo en Minikube con evidencia en navegador real.
     </p>
-    <div class="kpi-row" style="margin-top:48px;">
-      <div class="kpi"><div class="lbl">Sensores en campo / meta</div><div class="val">2.000 -&gt; 10.000</div></div>
-      <div class="kpi"><div class="lbl">Alertas SAST tratadas</div><div class="val" style="color:#4ade80;">22 -&gt; 0 bloqueos</div></div>
-      <div class="kpi"><div class="lbl">Tiempo de rollback v1.2.0</div><div class="val" style="color:#facc15;">3.5 s</div></div>
-      <div class="kpi"><div class="lbl">Formato Aula 102</div><div class="val">Capturas + Videos</div></div>
-    </div>
-    <p style="margin-top:28px; font-size:24px; color:#94a3b8;">
-      <strong>Grupo QA / SRE:</strong> Pilar Sabena, Lautaro Callovi, Baltasar, Jeremías Vivas y Skander Zouhir
+    <p style="font-size:21px; color:#145369; margin-top:46px; font-weight:500;">
+      Pilar Sabena · Lautaro Callovi · Baltasar · Jeremías Vivas · Skander Zouhir
     </p>
   </div>
-  <div class="footer"><span>TerraSense S.A. - Trabajo Práctico Final</span><span>Aula 102 - Jueves 19/11/2026</span></div>
+  <div class="footer-left">Aula 102 · Jueves 19/11/2026</div>
 </section>
 
-<!-- SLIDE 2 -->
+<!-- SLIDE 2: AGENDA (matches Presentation.pdf p. 2) -->
 <section class="slide">
-  <div class="header"><span class="tag">Bloque 1 - Apertura y contexto</span><span class="slide-num">2 / 16</span></div>
-  <h2>Qué nos pasó en la helada y qué vinimos a responder hoy</h2>
-  <div class="grid-equal">
-    <div class="card card-red">
-      <h3>40 minutos a ciegas con el servidor en verde</h3>
-      <ul>
-        <li>Las <strong>2.000 placas ESP32</strong> mandan lecturas de los lotes cada 30 segundos (~<strong>67 req/s</strong>).</li>
-        <li>Hasta ahora actualizábamos pisando todos los pods del front juntos: en una madrugada de helada un error de JS dejó <strong>40 minutos la página vacía</strong>.</li>
-        <li>Los productores no podían ver la temperatura del campo, pero nginx seguía devolviendo <code>200 OK</code> en cada chequeo.</li>
-      </ul>
-    </div>
-    <div class="card card-green">
-      <h3>Las dos preguntas que traemos medidas</h3>
-      <ul>
-        <li><strong>Cómo sacar la v1.1.0 sin arriesgar a todos:</strong> armamos un canary en NGINX Ingress que arranca en 0% con cookie de QA y valida con un navegador real antes de subir peso.</li>
-        <li><strong>Si banca pasar a 10.000 sensores (~333 req/s):</strong> estresamos <code>POST /api/sensores</code> para ver hasta dónde tira el HPA y dónde frena PostgreSQL.</li>
-        <li><strong>Cruce entre máquinas del grupo:</strong> comparamos una notebook de 2 CPUs / 3 GB contra una VM de 4 CPUs / 6 GB.</li>
-      </ul>
+  <div class="bg-poly-agenda"></div>
+  <svg class="lines-svg" viewBox="0 0 1920 1080">
+    <line x1="0" y1="115" x2="490" y2="0" stroke="#b8a3a6" stroke-width="1.3"/>
+    <line x1="145" y1="0" x2="0" y2="950" stroke="#b8a3a6" stroke-width="1.3"/>
+    <line x1="0" y1="860" x2="990" y2="1080" stroke="#b8a3a6" stroke-width="1.3"/>
+  </svg>
+  <div class="photo-right-strip"><img src="./assets/agro_aerial.jpg" alt=""></div>
+  <div class="content" style="display:grid; grid-template-columns:0.8fr 1.2fr; align-items:center; padding-right:26%;">
+    <h2 class="serif-head" style="font-size:66px;">Agenda</h2>
+    <div style="display:flex; flex-direction:column; gap:36px; font-size:32px; color:#0c2231; font-weight:300;">
+      <div>1. Incidente y arquitectura base</div>
+      <div>2. Compuerta CI y línea base TP3</div>
+      <div>3. Canary v1.1.0 y rollback v1.2.0</div>
+      <div>4. Estrés A/B y 10.000 sensores</div>
+      <div>5. ISO/IEC 25000 y veredicto final</div>
     </div>
   </div>
-  <div class="footer"><span>Rol: Equipo SRE y QA de TerraSense S.A.</span><span>Todo grabado en evidencias/ del repositorio</span></div>
+  <div class="footer-num" style="right:24%;">2 / 16</div>
 </section>
 
-<!-- SLIDE 3 -->
+<!-- SLIDE 3: PROBLEM & GOALS (matches Presentation.pdf p. 5) -->
 <section class="slide">
-  <div class="header"><span class="tag">Bloque 2 · Arquitectura de Referencia</span><span class="slide-num">3 / 16</span></div>
-  <h2>Flujo de aseguramiento y topología Canary en Minikube</h2>
-  <div class="grid-2">
-    <div style="display:flex; flex-direction:column; gap:20px;">
-      <div class="card">
-        <h3>Dos compuertas antes del 100%</h3>
-        <ul>
-          <li><strong>Gate 1 (CI):</strong> <code>htmlhint</code> + <code>ESLint</code> + <code>hadolint</code> en paralelo con <strong>Horusec + Trivy</strong>. Recién si ambos pasan se compilan las 4 imágenes versionadas (nunca <code>latest</code>).</li>
-          <li><strong>Gate 2 (Cluster):</strong> <code>front-stable</code> (<code>1.0.0</code>) y <code>front-canary</code> (<code>1.1.0</code>) con Services separados por <code>track</code>.</li>
-          <li><strong>Separación clave de Ingress:</strong> <code>terrasense.local</code> lleva afinidad por cookie (<code>terrasense-front</code>) para no cruzar CSS/JS; <code>api.terrasense.local</code> va en otro Ingress <strong>sin cookies</strong> para no clavar el tráfico sobre un solo pod del <code>back</code>.</li>
+  <svg class="lines-svg" viewBox="0 0 1920 1080">
+    <line x1="510" y1="920" x2="1020" y2="1080" stroke="#b8a3a6" stroke-width="1.2"/>
+    <line x1="1865" y1="0" x2="1730" y2="1080" stroke="#b8a3a6" stroke-width="1.2"/>
+  </svg>
+  <div class="photo-left-strip"><img src="./assets/cover_photo.jpg" alt=""></div>
+  <div class="content" style="padding-left:32%; justify-content:center;">
+    <h2 class="serif-head">Contexto y objetivos</h2>
+    <div class="sub-teal">Por qué 200 OK no evita un apagón</div>
+    <ul class="bullets" style="max-width:1050px;">
+      <li><strong>Flota actual:</strong> 2.000 sensores ESP32 mandan lecturas cada 30 s (~67 req/s).</li>
+      <li><strong>Incidente de la helada:</strong> un release directo dejó 40 min la pantalla vacía mientras nginx respondía <code>200 OK</code>.</li>
+      <li><strong>Pedido 1 (Panel v1.1.0):</strong> liberar por etapas con validación visual antes del 100%.</li>
+      <li><strong>Pedido 2 (10.000 sensores):</strong> medir si el sistema sostiene 333 req/s con p95 &lt; 300 ms.</li>
+      <li><strong>Doble entorno medido:</strong> comparamos 2 CPU / 3 GB frente a 4 CPU / 6 GB.</li>
+    </ul>
+  </div>
+  <div class="footer-num">3 / 16</div>
+</section>
+
+<!-- SLIDE 4: ARCHITECTURE & DEPLOY -->
+<section class="slide">
+  <svg class="lines-svg" viewBox="0 0 1920 1080">
+    <line x1="0" y1="70" x2="310" y2="0" stroke="#b8a3a6" stroke-width="1.2"/>
+    <line x1="82" y1="0" x2="0" y2="620" stroke="#b8a3a6" stroke-width="1.2"/>
+    <line x1="1760" y1="0" x2="1920" y2="700" stroke="#b8a3a6" stroke-width="1.2"/>
+  </svg>
+  <div class="content">
+    <h2 class="serif-head">Topología en Minikube</h2>
+    <div class="sub-teal">Dos compuertas antes de producción</div>
+    <div class="split-2col">
+      <div style="display:flex; flex-direction:column; gap:20px;">
+        <ul class="bullets">
+          <li><strong>Gate 1 (CI):</strong> linters y Horusec/Trivy bloquean el build si hay hallazgos.</li>
+          <li><strong>Gate 2 (Cluster):</strong> <code>front-stable</code> (1.0.0) y <code>front-canary</code> (1.1.0) en Services separados.</li>
+          <li><strong>Afinidad controlada:</strong> cookie <code>terrasense-front</code> en el front; <code>api</code> sin cookies.</li>
+        </ul>
+        <div class="img-box">
+          <img src="./assets/01-deploy-navegador-card.png" alt="Panel v1.0.0" style="max-height:240px;">
+        </div>
+      </div>
+      <div class="img-box">
+        <img src="../evidencias/capturas/01-deploy-kubectl.png" alt="Deploy kubectl">
+        <div class="cap"><strong>Despliegue limpio:</strong> pods, Services, 3 Ingress y HPA activos con <code>canary-weight=0</code>.</div>
+      </div>
+    </div>
+  </div>
+  <div class="footer-left">scripts/deploy.sh</div>
+  <div class="footer-num">4 / 16</div>
+</section>
+
+<!-- SLIDE 5: CI QUALITY GATE -->
+<section class="slide">
+  <svg class="lines-svg" viewBox="0 0 1920 1080">
+    <line x1="0" y1="105" x2="460" y2="0" stroke="#b8a3a6" stroke-width="1.2"/>
+    <line x1="1780" y1="1080" x2="1920" y2="420" stroke="#b8a3a6" stroke-width="1.2"/>
+  </svg>
+  <div class="content">
+    <h2 class="serif-head">Primera Quality Gate: CI</h2>
+    <div class="sub-teal">Linters (TP1) + Horusec y Trivy (TP2) en GitHub Actions</div>
+    <div class="equal-2col" style="align-items:start;">
+      <div class="img-box">
+        <img src="../evidencias/capturas/07-ci-rojo.png" alt="CI Rojo">
+        <div class="cap"><strong>Run #43995990963:</strong> 22 alertas frenan <code>build</code> en rojo (contenedores y <code>Math.random()</code>).</div>
+      </div>
+      <div class="img-box">
+        <img src="../evidencias/capturas/07-ci-verde.png" alt="CI Verde">
+        <div class="cap"><strong>Run #44008882096:</strong> todo verde tras corregir 14 y registrar hashes por motivo.</div>
+      </div>
+    </div>
+    <div class="note-panel" style="margin-top:16px;">
+      <strong>Cierre en PR #6:</strong> al editar <code>k6/spike.js</code> cambió la línea del hash y Horusec volvió a saltar. Reemplazamos <code>Math.random()</code> por <code>iterationInTest % 2 === 0</code>.
+    </div>
+  </div>
+  <div class="footer-left">ci/HALLAZGOS-HORUSEC.md</div>
+  <div class="footer-num">5 / 16</div>
+</section>
+
+<!-- SLIDE 6: TP3 BASELINE & HPA STRESS -->
+<section class="slide">
+  <svg class="lines-svg" viewBox="0 0 1920 1080">
+    <line x1="135" y1="0" x2="0" y2="960" stroke="#b8a3a6" stroke-width="1.2"/>
+    <line x1="1700" y1="0" x2="1920" y2="850" stroke="#b8a3a6" stroke-width="1.2"/>
+  </svg>
+  <div class="content">
+    <h2 class="serif-head">Línea base y escalado HPA</h2>
+    <div class="sub-teal">Rendimiento del backend en VM 4 CPU / 6 GB</div>
+    <div class="split-2col">
+      <div>
+        <table class="tpl">
+          <thead><tr><th>Prueba k6</th><th>Carga</th><th>p95</th><th>Errores</th></tr></thead>
+          <tbody>
+            <tr><td>Smoke</td><td>1 VU · 30 s</td><td>OK</td><td>0.00%</td></tr>
+            <tr><td>Load nominal</td><td>67 req/s</td><td>11.24ms</td><td>0.00%</td></tr>
+            <tr><td>10.000 sensores</td><td>333 req/s</td><td>2.44ms</td><td>0.00%</td></tr>
+            <tr><td>Stress HPA</td><td>100 -&gt; 1200/s</td><td>3.47 ms</td><td>0.00%</td></tr>
+          </tbody>
+        </table>
+        <ul class="bullets" style="margin-top:26px;">
+          <li>HPA regula de <strong>2 a 8 pods</strong> al cruzar 60% de CPU (sobre request <code>100m</code>).</li>
+          <li>Probes <code>/readyz</code> (SQL) y <code>/healthz</code> protegen el Service.</li>
         </ul>
       </div>
-    </div>
-    <div class="fig">
-      <img src="../evidencias/capturas/01-deploy-kubectl-navegador.png" alt="Deploy Kubectl + Navegador">
-      <div class="caption">
-        <strong>Qué muestra:</strong> salida de <code>kubectl get pods,svc,ingress,hpa -L track,version</code> tras correr <code>./scripts/deploy.sh</code> junto al panel <code>v1.0.0</code>.<br>
-        <strong>Qué concluimos:</strong> las dos versiones conviven sanas desde el arranque con <code>canary-weight=0</code>, probes listas y 0% de exposición inicial.
+      <div class="img-box">
+        <img src="../evidencias/capturas/02-stress.png" alt="Stress HPA">
+        <div class="cap"><strong>Video <code>02-stress-hpa.mp4</code>:</strong> 286.070 pedidos mientras el HPA llega a 8/8 réplicas activas.</div>
       </div>
     </div>
   </div>
-  <div class="footer"><span>Namespace: terrasense · Addons: ingress + metrics-server</span><span>evidencias/capturas/01-deploy-kubectl-navegador.png</span></div>
+  <div class="footer-left">evidencias/reportes/tp3-load.txt · tp3-stress.txt</div>
+  <div class="footer-num">6 / 16</div>
 </section>
 
-<!-- SLIDE 4 -->
+<!-- SLIDE 7: FAILURE INJECTION E1 & E2 -->
 <section class="slide">
-  <div class="header"><span class="tag">Bloque 3 · Pipeline de Calidad (TP1 + TP2)</span><span class="slide-num">4 / 16</span></div>
-  <h2>Primera Quality Gate: Linters + Horusec / Trivy en GitHub Actions</h2>
-  <div class="grid-equal">
-    <div class="fig fig-sm">
-      <img src="../evidencias/capturas/07-ci-rojo.png" alt="CI Rojo">
-      <div class="caption">
-        <strong>Run #43995990963 (Rojo):</strong> Horusec/Trivy detectó <strong>22 hallazgos</strong> (contenedores sin <code>securityContext</code> y <code>Math.random()</code>) y dejó <code>build</code> en <em>skipped</em>. En el 2do run incluso marcó un comentario plano.
+  <svg class="lines-svg" viewBox="0 0 1920 1080">
+    <line x1="0" y1="105" x2="460" y2="0" stroke="#b8a3a6" stroke-width="1.2"/>
+    <line x1="1200" y1="1080" x2="1920" y2="900" stroke="#b8a3a6" stroke-width="1.2"/>
+  </svg>
+  <div class="content">
+    <h2 class="serif-head">Inyección de fallas (E1 y E2)</h2>
+    <div class="sub-teal">Recuperabilidad del cluster sin intervención manual</div>
+    <div class="equal-2col" style="align-items:start;">
+      <div class="img-box">
+        <img src="../evidencias/capturas/03-e1.png" alt="E1 Pod borrado">
+        <div class="cap"><strong>E1 (pod borrado a 40 req/s):</strong> solo <strong>2 errores</strong> en ventana <code>< 1 s (20:09:08 UTC)</code>; el panel siguió mostrando lecturas.</div>
       </div>
-      <div class="card" style="width:100%; margin-top:8px; padding:16px 20px;">
-        <p style="font-size:21px;"><strong>Tratamiento de las 22 alertas:</strong> <strong>14 corregidas</strong> (UID/GID &gt; 10000, <code>runAsNonRoot</code>, drop <code>ALL</code>, <code>emptyDir</code> en nginx, cálculo fijo en <code>/burn</code>), <strong>5 falsos positivos</strong> en datos sintéticos de <code>k6</code> y <strong>3 riesgos aceptados</strong> en el arranque de Postgres.</p>
-      </div>
-    </div>
-    <div class="fig fig-sm">
-      <img src="../evidencias/capturas/07-ci-verde.png" alt="CI Verde">
-      <div class="caption">
-        <strong>Run #44008882096 (Verde):</strong> superados <code>lint</code> y <code>horusec</code>, el job <code>build</code> compila las 4 imágenes y verifica que levanten con UID no-root.
-      </div>
-      <div class="card card-amber" style="width:100%; margin-top:8px; padding:16px 20px;">
-        <p style="font-size:21px;"><strong>Hallazgo real en PR #6:</strong> al agregar líneas en <code>k6/spike.js</code> cambió el hash de <code>Math.random()</code> y Horusec volvió a ponerse rojo. Lo reemplazamos por <code>iterationInTest % 2 === 0</code>, probando que el control por hash obliga a revalidar cada edición.</p>
+      <div class="img-box">
+        <img src="../evidencias/capturas/04-oomkilled.png" alt="E2 OOMKilled">
+        <div class="cap"><strong>E2 (fuga de RAM en <code>/leak</code>):</strong> kernel mata con <code>OOMKilled</code> (exit 137) y Kubernetes recupera <code>1/1 Ready</code>.</div>
       </div>
     </div>
   </div>
-  <div class="footer"><span>Workflow: .github/workflows/tp-final-ci.yml · Detalle en ci/HALLAZGOS-HORUSEC.md</span><span>Capturas 07-ci-rojo.png y 07-ci-verde.png</span></div>
+  <div class="footer-left">Videos: 03-e1-pod-eliminado.mp4 · 04-e2-oom.mp4</div>
+  <div class="footer-num">7 / 16</div>
 </section>
 
-<!-- SLIDE 5 -->
+<!-- SLIDE 8: SECTION DIVIDER (matches Presentation.pdf p. 3) -->
 <section class="slide">
-  <div class="header"><span class="tag">Bloque 4 · Migración a K8s y Línea Base (TP3)</span><span class="slide-num">5 / 16</span></div>
-  <h2>Salud de base del Backend bajo carga nominal (2.000 sensores = 67 req/s)</h2>
-  <div class="grid-2">
-    <div class="card">
-      <h3>Configuración base y SLOs</h3>
-      <ul>
-        <li><strong>PostgreSQL:</strong> <code>StatefulSet</code> con PVC de 1 GiB y clave aleatoria en <code>db-secret</code> creada fuera del repo.</li>
-        <li><strong>Probes del back:</strong> <code>/healthz</code> reinicia procesos colgados y <code>/readyz</code> hace <code>SELECT 1</code> a Postgres para sacar el pod del Service si pierde conexión.</li>
-        <li><strong>Carga nominal (<code>load.js</code>, modelo abierto):</strong> 67 req/s constantes independientemente de la latencia del servidor.</li>
-        <li><strong>Resultado medido:</strong> <code>p95 = 11.24ms</code> (SLO <code>&lt; 300 ms</code>) y fallos <code>0.00%</code> (SLO <code>&lt; 1%</code>).</li>
+  <svg class="lines-svg" viewBox="0 0 1920 1080">
+    <line x1="0" y1="115" x2="490" y2="0" stroke="#b8a3a6" stroke-width="1.3"/>
+    <line x1="145" y1="0" x2="0" y2="750" stroke="#b8a3a6" stroke-width="1.3"/>
+    <line x1="1700" y1="0" x2="1920" y2="720" stroke="#b8a3a6" stroke-width="1.3"/>
+  </svg>
+  <div class="photo-bottom-strip"><img src="./assets/agro_aerial.jpg" alt=""></div>
+  <div class="content" style="justify-content:center; align-items:center; text-align:center; padding-bottom:280px;">
+    <div class="sub-teal">Actividad 1 · Entrega Progresiva en NGINX Ingress</div>
+    <h1 class="serif-title" style="font-size:68px;">Despliegue Canary y<br>Rollback Automático</h1>
+  </div>
+  <div class="footer-num" style="color:#ffffff;">8 / 16</div>
+</section>
+
+<!-- SLIDE 9: CANARY DESIGN & STAGE 0 -->
+<section class="slide">
+  <svg class="lines-svg" viewBox="0 0 1920 1080">
+    <line x1="135" y1="0" x2="0" y2="960" stroke="#b8a3a6" stroke-width="1.2"/>
+    <line x1="0" y1="900" x2="960" y2="1080" stroke="#b8a3a6" stroke-width="1.2"/>
+  </svg>
+  <div class="content">
+    <h2 class="serif-head">Etapa 0 y marcas de versión</h2>
+    <div class="sub-teal">Validación visual con peso cero</div>
+    <div class="split-2col">
+      <ul class="bullets">
+        <li><strong>Tres imágenes:</strong> <code>1.0.0</code> (inline), <code>1.1.0</code> (verde + assets externos) y <code>1.2.0</code> (bug JS).</li>
+        <li><strong>Triple trazabilidad:</strong> header <code>X-App-Version</code>, DOM <code>&lt;meta&gt;</code> y <code>/version.txt</code>.</li>
+        <li><strong>Precedencia Ingress:</strong> <code>X-Canary</code> -&gt; cookie <code>canary</code> -&gt; <code>canary-weight</code>.</li>
+        <li><strong>Cero riesgo inicial:</strong> QA prueba en Chromium con <code>canary=always</code> antes de abrir tráfico.</li>
       </ul>
-    </div>
-    <div class="fig">
-      <img src="../evidencias/capturas/02-load.png" alt="k6 Load 67 req/s">
-      <div class="caption">
-        <strong>Qué muestra:</strong> cierre de <code>k6 run k6/load.js</code> a 67 req/s sostenidos con todos los thresholds en verde.<br>
-        <strong>Qué concluimos:</strong> la plataforma actual atiende a los 2.000 sensores con amplio margen antes de tocar el frontend.
+      <div class="img-box">
+        <img src="../evidencias/capturas/03-etapa0-cookie.png" alt="Etapa 0">
+        <div class="cap"><strong>Izquierda:</strong> usuario común (<code>v1.0.0</code>). <strong>Derecha:</strong> QA con cookie <code>canary=always</code> (<code>v1.1.0</code>), peso público 0%.</div>
       </div>
     </div>
   </div>
-  <div class="footer"><span>evidencias/reportes/tp3-smoke.txt y tp3-load.txt</span><span>evidencias/capturas/02-load.png</span></div>
+  <div class="footer-left">k8s/canary/ingress-canary.yaml</div>
+  <div class="footer-num">9 / 16</div>
 </section>
 
-<!-- SLIDE 6 -->
+<!-- SLIDE 10: AUTOMATED ROLLOUT 1.1.0 -->
 <section class="slide">
-  <div class="header"><span class="tag">Bloque 5 · Rendimiento y Autoescalado HPA</span><span class="slide-num">6 / 16</span></div>
-  <h2>Respuesta del HPA (2 a 8 réplicas) y búsqueda del punto de quiebre</h2>
-  <div class="grid-2">
-    <div class="card">
-      <h3>Cómo escala y dónde satura</h3>
-      <ul>
-        <li>Cada pod <code>back</code> declara <code>requests.cpu: 100m</code> y <code>limits: 500m</code>; el HPA dispara nuevas réplicas cuando el promedio pasa del <strong>60%</strong>.</li>
-        <li>En <code>stress.js</code> subimos en escalones de <strong>100 a 1.200 req/s</strong> hasta cruzar el corte automático de 10% de error.</li>
-        <li>En la notebook de 2 CPUs el quiebre apareció en ~<strong>600-650 req/s</strong> con el HPA clavado en <code>8/8</code>; en la VM de 4 CPUs vemos el mismo despliegue de 2 a 8 pods con mayor techo antes de saturar Postgres.</li>
+  <svg class="lines-svg" viewBox="0 0 1920 1080">
+    <line x1="0" y1="105" x2="460" y2="0" stroke="#b8a3a6" stroke-width="1.2"/>
+    <line x1="1760" y1="0" x2="1920" y2="780" stroke="#b8a3a6" stroke-width="1.2"/>
+  </svg>
+  <div class="content">
+    <h2 class="serif-head">Rollout 0 -&gt; 10 -&gt; 25 -&gt; 50 -&gt; 100%</h2>
+    <div class="sub-teal">Reparto verificado en k6 HTTP, Chromium e IPs de NGINX</div>
+    <div class="equal-2col" style="align-items:start;">
+      <div class="img-box">
+        <img src="../evidencias/capturas/05-grilla-20-visitas-peso-25.png" alt="Grilla 20 visitas">
+        <div class="cap"><strong>20 perfiles limpios al 25%:</strong> 5 paneles canary y 15 estables, todos con datos completos y 0 assets rotos.</div>
+      </div>
+      <div class="img-box">
+        <img src="../evidencias/capturas/05-bitacora.png" alt="Bitacora CSV">
+        <div class="cap"><strong>Bitácora auditable (<code>9% / 25.61% / 50.48% / 100%</code>):</strong> avance automático con <code>0</code> pantallas blancas (video <code>05-rollout-1.1.0.mp4</code>).</div>
+      </div>
+    </div>
+  </div>
+  <div class="footer-left">scripts/rollout.sh · scripts/conteo-curl.sh</div>
+  <div class="footer-num">10 / 16</div>
+</section>
+
+<!-- SLIDE 11: BROKEN v1.2.0 ANATOMY -->
+<section class="slide">
+  <svg class="lines-svg" viewBox="0 0 1920 1080">
+    <line x1="135" y1="0" x2="0" y2="960" stroke="#b8a3a6" stroke-width="1.2"/>
+    <line x1="1400" y1="1080" x2="1920" y2="880" stroke="#b8a3a6" stroke-width="1.2"/>
+  </svg>
+  <div class="content">
+    <h2 class="serif-head">Por qué falla el chequeo HTTP</h2>
+    <div class="sub-teal">Control negativo v1.2.0: todo en 200 OK con pantalla blanca</div>
+    <div class="equal-2col" style="align-items:start;">
+      <div class="img-box">
+        <img src="../evidencias/capturas/06-network-200.png" alt="Network 200">
+        <div class="cap"><strong>Red en 200 OK:</strong> HTML y JS responden bien; probes de Kubernetes y <code>k6</code> HTTP no ven el fallo.</div>
+      </div>
+      <div class="img-box">
+        <img src="../evidencias/capturas/06-consola-typeerror.png" alt="Console TypeError">
+        <div class="cap"><strong>Consola Chromium:</strong> <code>TypeError</code> al leer <code>config.api</code> deja <code>body.innerText = ""</code> ante el usuario.</div>
+      </div>
+    </div>
+  </div>
+  <div class="footer-left">app/front/v1.2.0/assets/app-1.2.0.js</div>
+  <div class="footer-num">11 / 16</div>
+</section>
+
+<!-- SLIDE 12: AUTOMATIC ROLLBACK IN 3.5s -->
+<section class="slide">
+  <svg class="lines-svg" viewBox="0 0 1920 1080">
+    <line x1="0" y1="105" x2="460" y2="0" stroke="#b8a3a6" stroke-width="1.2"/>
+    <line x1="1750" y1="0" x2="1920" y2="750" stroke="#b8a3a6" stroke-width="1.2"/>
+  </svg>
+  <div class="content">
+    <h2 class="serif-head">Freno y rollback en 3.5 s</h2>
+    <div class="sub-teal">Demo A (peso 0) y Demo B (25% de tráfico)</div>
+    <div class="split-2col">
+      <ul class="bullets">
+        <li><strong>Demo A (flujo normal):</strong> Etapa 0 frena 3/3 pantallas blancas con 0 usuarios expuestos.</li>
+        <li><strong>Demo B (forzando 25%):</strong> split HTTP da OK, pero Chromium dispara <code>rollback()</code>.</li>
+        <li><strong>Cookie sticky resuelta:</strong> además de peso 0, bajamos <code>front-canary</code> a 0 réplicas.</li>
+        <li><strong>Tiempo medido:</strong> 100% en <code>v1.0.0</code> en <strong>3.5 s</strong> (incluidos usuarios con cookie).</li>
       </ul>
-    </div>
-    <div class="fig">
-      <img src="../evidencias/capturas/02-stress.png" alt="Stress HPA">
-      <div class="caption">
-        <strong>Qué muestra:</strong> pantalla dividida con <code>k6/stress.js</code> a la izquierda y <code>kubectl get hpa / pods</code> a la derecha (video completo acelerado x4 en <code>videos/02-stress-hpa.mp4</code>).<br>
-        <strong>Qué concluimos:</strong> el HPA absorbe los primeros escalones multiplicando pods de Node, hasta que el límite pasa a los núcleos del nodo y la única base PostgreSQL.
+      <div class="img-box">
+        <img src="../evidencias/capturas/06-rollback-demo-b.png" alt="Rollback Demo B">
+        <div class="cap"><strong>Video <code>06-rollback-1.2.0.mp4</code>:</strong> detección en vivo de 5 pantallas blancas y corte inmediato.</div>
       </div>
     </div>
   </div>
-  <div class="footer"><span>Video embebido / local: evidencias/videos/02-stress-hpa.mp4</span><span>evidencias/capturas/02-stress.png</span></div>
+  <div class="footer-left">evidencias/reportes/demo-a-1.2.0 · demo-b-1.2.0</div>
+  <div class="footer-num">12 / 16</div>
 </section>
 
-<!-- SLIDE 7 -->
+<!-- SLIDE 13: STRESS A/B & 10,000 SENSORS (matches Presentation.pdf p. 10) -->
 <section class="slide">
-  <div class="header"><span class="tag">Bloque 6 · Pruebas de Fallas (E1 y E2)</span><span class="slide-num">7 / 16</span></div>
-  <h2>Tolerancia a caída de pod vivo (E1) y agotamiento de memoria OOMKilled (E2)</h2>
-  <div class="grid-equal">
-    <div class="fig fig-sm">
-      <img src="../evidencias/capturas/03-e1.png" alt="Escenario E1">
-      <div class="caption">
-        <strong>E1 (pod eliminado a mano bajo 40 req/s):</strong> se registraron solo <strong>2 errores</strong> en ventana <code>< 1 s (20:09:08 UTC)</code> mientras Kubernetes retiraba los endpoints. Las capturas de <code>browser-ux.js</code> muestran que el panel del productor nunca quedó sin datos.
+  <svg class="lines-svg" viewBox="0 0 1920 1080">
+    <line x1="0" y1="70" x2="310" y2="0" stroke="#b8a3a6" stroke-width="1.2"/>
+    <line x1="0" y1="900" x2="960" y2="1080" stroke="#b8a3a6" stroke-width="1.2"/>
+    <line x1="1760" y1="0" x2="1920" y2="850" stroke="#b8a3a6" stroke-width="1.2"/>
+  </svg>
+  <div class="content">
+    <h2 class="serif-head">Estrés A/B y 10.000 sensores</h2>
+    <div class="sub-teal">Comparación entre hardware de 2 CPU vs 4 CPU</div>
+    <div class="equal-2col" style="align-items:start;">
+      <div>
+        <table class="tpl">
+          <thead><tr><th>Experimento</th><th>2 CPU / 3 GB</th><th>4 CPU / 6 GB</th></tr></thead>
+          <tbody>
+            <tr><td>A/B Front (200/s)</td><td>2.60 vs 3.16 ms (+21.5%)</td><td>2.86 vs 3.94 ms (+37.8%)</td></tr>
+            <tr><td>Errores A/B</td><td>0.00%</td><td>0.00% (2713B vs 4668B)</td></tr>
+            <tr><td>10.000 sens. (333/s)</td><td>p95 1.150 ms (HPA 8/8)</td><td>p95 <strong>2.44ms</strong> (0.00% err)</td></tr>
+            <tr><td>Cuello de botella</td><td>CPU del host compartida</td><td>Pod único de PostgreSQL</td></tr>
+          </tbody>
+        </table>
+        <div class="note-panel" style="margin-top:22px;">
+          <strong>Lectura técnica:</strong> en latencias sub-5 ms el salto porcentual de <code>v1.1.0</code> refleja bajar 3 archivos vs 1, sin errores reales; y 4 vCPUs despejan la saturación del back vista en 2 vCPUs.
+        </div>
       </div>
-    </div>
-    <div class="fig fig-sm">
-      <img src="../evidencias/capturas/04-oomkilled.png" alt="Escenario E2 OOMKilled">
-      <div class="caption">
-        <strong>E2 (fuga de memoria en <code>/api/debug/leak</code>):</strong> al superar el límite de <code>256Mi</code>, el kernel termina el contenedor con <code>Reason: OOMKilled</code> (exit 137), sube <code>RESTARTS</code> y el pod vuelve solo a <code>1/1 Ready</code> (grabado en <code>04-e2-oom.mp4</code>).
+      <div style="display:flex; flex-direction:column; gap:18px;">
+        <div class="img-box">
+          <img src="./assets/04-estres-canary-summary.png" alt="Estres Canary" style="max-height:285px;">
+          <div class="cap"><strong>A/B Canary (50 a 800 cargas/s):</strong> threshold 200/s en OK.</div>
+        </div>
+        <div class="img-box">
+          <img src="./assets/02-capacidad-333-summary.png" alt="Capacidad 333" style="max-height:310px;">
+          <div class="cap"><strong>333 req/s sostenidos:</strong> 49.948 requests con 0.00% de errores.</div>
+        </div>
       </div>
     </div>
   </div>
-  <div class="footer"><span>Videos: 03-e1-pod-eliminado.mp4 y 04-e2-oom.mp4</span><span>Evaluación de recuperabilidad (ISO/IEC 25045)</span></div>
+  <div class="footer-left">k6/front-stress.js · k6/load.js</div>
+  <div class="footer-num">13 / 16</div>
 </section>
 
-<!-- SLIDE 8 -->
+<!-- SLIDE 14: ISO/IEC 25000 MAP (matches Presentation.pdf p. 12) -->
 <section class="slide">
-  <div class="header"><span class="tag">Bloque 7 · Diseño del Canary en el Frontend</span><span class="slide-num">8 / 16</span></div>
-  <h2>Tres versiones trazables y Etapa 0 con peso cero</h2>
-  <div class="grid-2">
-    <div class="card">
-      <h3>Un Dockerfile, tres versiones</h3>
-      <ul>
-        <li><code>v1.0.0</code>: versión estable oscura (1 GET inline).</li>
-        <li><code>v1.1.0</code>: candidata con fondo verde flúo, banner fijo y 2 assets externos (<code>.css</code> y <code>.js</code>).</li>
-        <li><code>v1.2.0</code>: control negativo con bug JS que reproduce la pantalla blanca con <code>200 OK</code>.</li>
-        <li><strong>Triple marca:</strong> header <code>X-App-Version</code>, DOM <code>&lt;meta name="app-version"&gt;</code> y <code>/version.txt</code>.</li>
-        <li><strong>Precedencia NGINX:</strong> <code>X-Canary</code> header -&gt; cookie <code>canary=always</code> -&gt; <code>canary-weight</code>.</li>
-      </ul>
-    </div>
-    <div class="fig">
-      <img src="../evidencias/capturas/03-etapa0-cookie.png" alt="Etapa 0 Cookie">
-      <div class="caption">
-        <strong>Qué muestra:</strong> con <code>canary-weight=0</code>, un usuario común ve la <code>v1.0.0</code> (izq.) mientras QA entra con cookie <code>canary=always</code> y valida la <code>v1.1.0</code> (der.).<br>
-        <strong>Qué concluimos:</strong> podemos verificar el renderizado real dentro del cluster sin exponer ni a un solo productor rural.
-      </div>
-    </div>
-  </div>
-  <div class="footer"><span>Afinidad sticky por cookie terrasense-front evita mezclar CSS/JS entre pods</span><span>03-etapa0-cookie.png</span></div>
-</section>
-
-<!-- SLIDE 9 -->
-<section class="slide">
-  <div class="header"><span class="tag">Bloque 7 · Rollout Progresivo Automatizado</span><span class="slide-num">9 / 16</span></div>
-  <h2>Ejecución del plan 0 -&gt; 10 -&gt; 25 -&gt; 50 -&gt; 100% sobre la v1.1.0</h2>
-  <div class="grid-equal">
-    <div class="fig fig-sm">
-      <img src="../evidencias/capturas/05-grilla-20-visitas-peso-25.png" alt="Grilla 20 visitas">
-      <div class="caption">
-        <strong>Grilla de 20 usuarios nuevos en Chromium (peso 25%):</strong> cada celda abre un perfil sin cookies previas. La proporción de paneles verdes coincide con el peso y las 20 páginas dibujan datos completos.
-      </div>
-    </div>
-    <div class="fig fig-sm">
-      <img src="../evidencias/capturas/05-bitacora.png" alt="Bitacora CSV">
-      <div class="caption">
-        <strong>Bitácora auditable (<code>bitacora.csv</code>) y logs de NGINX:</strong> reparto real medido por k6 en <strong>9%, 25.61%, 50.48%, 100%</strong>, validado además por fuera contando la IP de cada pod en los logs del Ingress Controller.
-      </div>
-    </div>
-  </div>
-  <div class="footer"><span>Video completo acelerado: evidencias/videos/05-rollout-1.1.0.mp4</span><span>0 errores · 0 assets rotos · 0 pantallas blancas</span></div>
-</section>
-
-<!-- SLIDE 10 -->
-<section class="slide">
-  <div class="header"><span class="tag">Bloque 7 · Por qué fallan los chequeos HTTP clásicos</span><span class="slide-num">10 / 16</span></div>
-  <h2>Anatomía de la v1.2.0: Todo en 200 OK pero pantalla vacía</h2>
-  <div class="grid-equal">
-    <div class="fig fig-sm">
-      <img src="../evidencias/capturas/06-network-200.png" alt="Network 200 OK">
-      <div class="caption">
-        <strong>Pestaña Network en v1.2.0:</strong> tanto <code>/</code> como <code>/assets/app-1.2.0.js</code> responden <code>200 OK</code> con header <code>X-App-Version: 1.2.0</code>. Para las probes de K8s y para k6 HTTP, el release está "perfecto".
-      </div>
-    </div>
-    <div class="fig fig-sm">
-      <img src="../evidencias/capturas/06-consola-typeerror.png" alt="Consola TypeError">
-      <div class="caption">
-        <strong>Pestaña Console en v1.2.0:</strong> <code>Uncaught TypeError: Cannot read properties of undefined (reading 'api')</code> corta la ejecución antes de montar <code>#app</code> y deja <code>body.innerText = ""</code>.
-      </div>
-    </div>
-  </div>
-  <div class="footer"><span>Réplica exacta del apagón de la helada</span><span>06-network-200.png y 06-consola-typeerror.png</span></div>
-</section>
-
-<!-- SLIDE 11 -->
-<section class="slide">
-  <div class="header"><span class="tag">Bloque 7 · Detección y Rollback Automático</span><span class="slide-num">11 / 16</span></div>
-  <h2>Freno en Etapa 0 (Demo A) y Rollback en 3.5 s con tráfico al 25% (Demo B)</h2>
-  <div class="grid-2">
-    <div class="card card-amber">
-      <h3>Dos barreras verificadas</h3>
-      <ul>
-        <li><strong>Demo A (flujo normal):</strong> en <code>etapa-0</code> (peso 0), <code>k6/browser</code> detecta 3/3 pantallas en blanco y aborta antes de abrir tráfico. <strong>0 productores afectados.</strong></li>
-        <li><strong>Demo B (forzando exposición al 25%):</strong> <code>front-canary-split.js</code> aprueba los umbrales HTTP, pero Chromium detecta las vistas vacías y dispara <code>rollback()</code>.</li>
-        <li><strong>Hallazgo crítico de afinidad:</strong> bajar solo <code>canary-weight=0</code> dejaba pegados por 1 h a quienes ya tenían cookie sticky. Al escalar también <code>front-canary --replicas=0</code>, NGINX redirige a todos a <code>1.0.0</code> en <strong>3.5 s</strong>.</li>
-      </ul>
-    </div>
-    <div class="fig">
-      <img src="../evidencias/capturas/06-rollback-demo-b.png" alt="Rollback Demo B">
-      <div class="caption">
-        <strong>Qué muestra:</strong> ejecución de Demo B cortando automáticamente la exposición al detectar pantallas blancas y midiendo la vuelta al 100% en <code>stable</code>.<br>
-        <strong>Qué concluimos:</strong> la combinación de peso + navegador real convierte un apagón de 40 min en una reversión automática de 3.5 segundos.
-      </div>
-    </div>
-  </div>
-  <div class="footer"><span>Video central del TP: evidencias/videos/06-rollback-1.2.0.mp4</span><span>06-rollback-demo-b.png</span></div>
-</section>
-
-<!-- SLIDE 12 -->
-<section class="slide">
-  <div class="header"><span class="tag">Bloque 8 · Prueba de Estrés con Hipótesis</span><span class="slide-num">12 / 16</span></div>
-  <h2>Estrés A/B del Frontend (v1.0.0 vs v1.1.0 en condiciones iguales)</h2>
-  <div class="grid-equal">
-    <div class="card">
-      <h3>Diseño experimental e Hipótesis H</h3>
-      <ul>
-        <li><strong>Hipótesis H:</strong> a 200 cargas completas/s, <code>v1.1.0</code> tiene <code>&lt; 1%</code> de error y no empeora el <code>p95</code> más de <code>+10%</code> frente a <code>v1.0.0</code>.</li>
-        <li><strong>Igualdad estricta:</strong> <code>front-canary</code> escalado a <strong>2 réplicas</strong> igual que <code>stable</code>, peso 0, ruteo aislado por header <code>X-Canary</code> y cookies limpias en cada iteración.</li>
-        <li><strong>Escalón 200 cargas/s (VM 4 CPU):</strong> <code>2.86 ms</code> vs <code>3.94 ms</code> (<code>+37.8%</code>), <code>0.00%</code> errores.</li>
-        <li><strong>Cruce con notebook 2 CPU:</strong> dio <code>2.60 ms</code> vs <code>3.16 ms</code> (<code>+21.5%</code> = apenas <code>+0.56 ms</code>) porque <code>v1.1.0</code> baja 3 archivos (4668 B) contra 1 (2713 B).</li>
-      </ul>
-    </div>
-    <div class="fig fig-sm">
-      <img src="../evidencias/capturas/04-estres-canary.png" alt="Estres Canary">
-      <div class="caption">
-        <strong>Qué muestra:</strong> resumen por escalón (50 a 800 cargas/s) de <code>TARGET=canary k6 run k6/front-stress.js</code>.<br>
-        <strong>Qué concluimos:</strong> el front estático en nginx resiste cientos de cargas/s en pocos ms; en latencias sub-5 ms todo umbral porcentual requiere una tolerancia fija en ms.
-      </div>
-    </div>
-  </div>
-  <div class="footer"><span>evidencias/reportes/estres-front-stable.json y estres-front-canary.json</span><span>04-estres-stable.png y 04-estres-canary.png</span></div>
-</section>
-
-<!-- SLIDE 13 -->
-<section class="slide">
-  <div class="header"><span class="tag">Bloque 8 · Escalabilidad de Negocio</span><span class="slide-num">13 / 16</span></div>
-  <h2>¿Aguanta ampliar el contrato a 10.000 sensores (~333 req/s)?</h2>
-  <div class="grid-2">
-    <div class="card">
-      <h3>Comparativa entre máquinas del equipo</h3>
-      <table>
-        <thead><tr><th>Entorno de prueba</th><th>HPA Réplicas</th><th>p95 POST /sensores</th><th>Lectura técnica</th></tr></thead>
-        <tbody>
-          <tr><td>Notebook 2 CPU / 3 GB (sin rampa)</td><td>8 / 8 (tope)</td><td>Colapso en frío</td><td>El burst entra antes de que el HPA levante pods</td></tr>
-          <tr><td>Notebook 2 CPU / 3 GB (con rampa)</td><td>8 / 8 (tope)</td><td>1.150 ms (&gt; 300 ms)</td><td>Falta CPU en el nodo y satura conexiones a DB</td></tr>
-          <tr><td>VM 4 CPU / 6 GB (rampa 1m, 333/s)</td><td>Escala con margen</td><td><strong>2.44ms</strong> (0.00% err)</td><td>4 vCPUs despejan el cuello de CPU local</td></tr>
-        </tbody>
-      </table>
-      <p style="margin-top:18px; font-size:22px;"><strong>Cuello de botella estructural:</strong> aunque más CPU baja drásticamente la latencia, las 8 réplicas de Node abren pools contra <strong>un único pod PostgreSQL</strong> sin cola intermedia.</p>
-    </div>
-    <div class="fig">
-      <img src="../evidencias/capturas/02-capacidad-333.png" alt="Capacidad 333 req/s">
-      <div class="caption">
-        <strong>Qué muestra:</strong> prueba sostenida a <code>RATE=333 RAMP=1m</code> en la VM de 4 CPUs / 6 GB.<br>
-        <strong>Qué concluimos:</strong> comparar terminales de distintos integrantes permitió separar la saturación de una PC chica del límite arquitectónico de la base de datos única.
-      </div>
-    </div>
-  </div>
-  <div class="footer"><span>evidencias/reportes/capacidad-333-estable.txt</span><span>02-capacidad-333.png</span></div>
-</section>
-
-<!-- SLIDE 14 -->
-<section class="slide">
-  <div class="header"><span class="tag">Bloque 9 · Familia de Normas ISO/IEC 25000 (SQuaRE)</span><span class="slide-num">14 / 16</span></div>
-  <h2>Trazabilidad del cuatrimestre contra ISO/IEC 25010, 25019 y SQuaRE</h2>
-  <div style="flex:1; display:flex; flex-direction:column; justify-content:space-between;">
-    <table>
-      <thead><tr><th>Etapa</th><th>ISO/IEC 25010:2023</th><th>Evidencia concreta</th><th>Límite actual</th></tr></thead>
+  <svg class="lines-svg" viewBox="0 0 1920 1080">
+    <line x1="0" y1="70" x2="310" y2="0" stroke="#b8a3a6" stroke-width="1.2"/>
+    <line x1="1780" y1="0" x2="1920" y2="850" stroke="#b8a3a6" stroke-width="1.2"/>
+  </svg>
+  <div class="content">
+    <h2 class="serif-head">Mapa ISO/IEC 25000 (SQuaRE)</h2>
+    <div class="sub-teal">De métricas técnicas (25010) a calidad en uso (25019)</div>
+    <table class="tpl" style="font-size:21px;">
+      <thead><tr><th>Etapa</th><th>ISO/IEC 25010:2023</th><th>Evidencia</th><th>Qué no cubre</th></tr></thead>
       <tbody>
-        <tr><td><strong>TP1 · Linters CI</strong></td><td>Mantenibilidad (analizabilidad, modificabilidad)</td><td>Job <code>lint</code> en 0 errores</td><td>Solo reglas estáticas; no evalúa arquitectura</td></tr>
-        <tr><td><strong>TP2 · Horusec + Trivy</strong></td><td>Seguridad (confidencialidad, integridad, resistencia)</td><td>22 alertas -&gt; 0 bloqueantes</td><td>Sin DAST en vivo ni SCA (falta lockfile)</td></tr>
-        <tr><td><strong>TP3 · K8s + Probes + HPA</strong></td><td>Fiabilidad (disponibilidad) y Flexibilidad (escalabilidad)</td><td>Probes <code>Ready</code>, HPA 2 -&gt; 8 pods</td><td>Un solo nodo Minikube; Postgres no escala</td></tr>
-        <tr><td><strong>TP3 · k6 + Fallas E1/E2</strong></td><td>Eficiencia temporal y Recuperabilidad (<strong>25045</strong>)</td><td><code>p95</code>, ventana E1 (< 1 s (20:09:08 UTC)), OOM</td><td>Generador y cluster en la misma máquina</td></tr>
-        <tr><td><strong>Final · Canary + Browser</strong></td><td>Ausencia de fallos, Corrección funcional, Coexistencia</td><td>Reparto exacto y rollback en 3.5 s</td><td>Usuarios simulados; no evalúa accesibilidad</td></tr>
+        <tr><td><strong>Linters CI</strong></td><td>Mantenibilidad (analizabilidad)</td><td>Job <code>lint</code> en 0</td><td>Diseño modular ni JS embebido</td></tr>
+        <tr><td><strong>Horusec + Trivy</strong></td><td>Seguridad (confidencialidad, resistencia)</td><td>22 -&gt; 0 bloqueos</td><td>DAST en vivo y SCA (sin lockfile)</td></tr>
+        <tr><td><strong>K8s + Probes + HPA</strong></td><td>Fiabilidad y Flexibilidad</td><td><code>Ready</code> · HPA 2 -&gt; 8</td><td>Un solo nodo; Postgres no escala</td></tr>
+        <tr><td><strong>k6 + Fallas E1/E2</strong></td><td>Eficiencia y Recuperabilidad (<strong>25045</strong>)</td><td>p95, E1 (2 err), OOM</td><td>Caída total de DB o red real</td></tr>
+        <tr><td><strong>Canary + Browser</strong></td><td>Ausencia de fallos, Corrección, Coexistencia</td><td>Bitácora y rollback 3.5 s</td><td>Accesibilidad y usuarios reales</td></tr>
       </tbody>
     </table>
-    <div class="grid-equal" style="margin-top:18px; flex:0;">
-      <div class="card" style="padding:16px 24px;"><p style="font-size:21px;"><strong>Divisiones SQuaRE:</strong> <code>25030</code> en nuestros umbrales/SLOs escritos antes de medir · <code>25022/25023</code> en los JSON/CSV de k6 · <code>25040/25045</code> en la decisión automática de <code>rollout.sh</code>.</p></div>
-      <div class="card card-green" style="padding:16px 24px;"><p style="font-size:21px;"><strong>Producto (25010) vs Calidad en uso (25019):</strong> en <code>v1.2.0</code> el servidor cumple 25010 (<code>200 OK</code> en 4 ms), pero la calidad en uso (25019) es nula. <code>k6/browser</code> y el canary al 10% cubren esa brecha.</p></div>
+    <div class="pill-row">
+      <div class="note-panel"><strong>SQuaRE:</strong> <code>25030</code> en SLOs previos · <code>25022/23</code> en reportes JSON · <code>25040/45</code> en cortes de <code>rollout.sh</code> · <code>25019</code> al validar en Chromium.</div>
+      <div class="note-panel"><strong>Sin cubrir (propuesta):</strong> Accesibilidad (<code>axe</code>/Lighthouse &gt;= 90) · Contratos API (Pact) · DAST (OWASP ZAP) + lockfile · Gateway API (<code>HTTPRoute</code>).</div>
     </div>
   </div>
-  <div class="footer"><span>Actividad 3 · Mapa completo en README.md §4</span><span>ISO/IEC 25000 SQuaRE</span></div>
+  <div class="footer-num">14 / 16</div>
 </section>
 
-<!-- SLIDE 15 -->
+<!-- SLIDE 15: PROMOTION & GO / NO-GO VERDICT -->
 <section class="slide">
-  <div class="header"><span class="tag">Bloque 9 y 10 · Límites y Deuda Técnica</span><span class="slide-num">15 / 16</span></div>
-  <h2>Características sin cubrir y plan de evolución hacia producción</h2>
-  <div class="grid-equal">
-    <div class="card">
-      <h3>Huecos detectados en ISO 25010 y cómo cerrarlos</h3>
-      <ul>
-        <li><strong>Capacidad de interacción (Accesibilidad):</strong> el verde flúo <code>#39ff14</code> de <code>v1.1.0</code> no pasó auditoría visual. <em>Propuesta:</em> <strong>axe-core + Lighthouse CI</strong> con score &gt;= 90 en el PR.</li>
-        <li><strong>Compatibilidad (Interoperabilidad):</strong> si cambia el JSON de <code>/api/stats</code>, el front rompe sin aviso en build. <em>Propuesta:</em> pruebas de contrato con <strong>Pact</strong> o JSON Schema en CI.</li>
-        <li><strong>Seguridad dinámica y SCA:</strong> versionar <code>package-lock.json</code> para activar <code>NpmAudit</code>, apagar <code>/api/debug/*</code> en prod y sumar un baseline scan de <strong>OWASP ZAP</strong>.</li>
-      </ul>
-    </div>
-    <div class="card card-amber">
-      <h3>Modernización de infraestructura</h3>
-      <ul>
-        <li><strong>Retiro de <code>ingress-nginx</code> (marzo de 2026):</strong> válido en Minikube didáctico, pero archivado aguas arriba. En producción migraríamos las reglas canary a <strong>Kubernetes Gateway API</strong> (<code>HTTPRoute</code> con <code>backendRefs.weight</code> traducible con <code>ingress2gateway</code>).</li>
-        <li><strong>Base de datos para 10.000 sensores:</strong> sumar <strong>PgBouncer</strong>, cola desacoplada de ingesta (MQTT/Kafka/Redis) y backups automatizados con <strong>CloudNativePG</strong> sin root.</li>
-      </ul>
-    </div>
-  </div>
-  <div class="footer"><span>Actividad 3 y 4 · Propuestas concretas de mejora</span><span>Deuda técnica registrada</span></div>
-</section>
-
-<!-- SLIDE 16 -->
-<section class="slide">
-  <div class="header"><span class="tag">Bloque 10 · Cierre y Veredicto Final</span><span class="slide-num">16 / 16</span></div>
-  <h2>Promoción sin corte y Dictamen Go / No-Go</h2>
-  <div class="grid-2">
-    <div style="display:flex; flex-direction:column; gap:20px;">
-      <div class="card card-green">
-        <h3>Panel Web v1.1.0: NO-GO estricto A/B (+37.8% = +1.08 ms) / GO con margen 5 ms</h3>
-        <p style="font-size:22px;">CI en verde, 0 pantallas blancas en todas las etapas del rollout, 0 assets rotos y freno/rollback probado en <strong>3.5 s</strong> ante la falla de la helada. Promoción ejecutada en orden seguro: <code>front-stable -&gt; 1.1.0</code>, <code>rollout status</code>, peso <code>0</code> y canary a <code>0</code> réplicas.</p>
+  <svg class="lines-svg" viewBox="0 0 1920 1080">
+    <line x1="135" y1="0" x2="0" y2="960" stroke="#b8a3a6" stroke-width="1.2"/>
+    <line x1="0" y1="900" x2="960" y2="1080" stroke="#b8a3a6" stroke-width="1.2"/>
+  </svg>
+  <div class="content">
+    <h2 class="serif-head">Promoción y veredicto Go / No-Go</h2>
+    <div class="sub-teal">Cierre técnico basado en mediciones</div>
+    <div class="split-2col">
+      <div style="display:flex; flex-direction:column; gap:24px;">
+        <div class="note-panel">
+          <strong style="font-size:24px;">Panel v1.1.0: GO técnico (con nota sobre +10% en sub-5ms)</strong><br>
+          0 pantallas blancas, 0 errores, CI en verde y rollback validado en 3.5 s. Promoción ejecutada en orden seguro: <code>front-stable -&gt; 1.1.0</code> antes de apagar <code>front-canary</code>.
+        </div>
+        <div class="note-panel" style="border-left-color:#0c2231;">
+          <strong style="font-size:24px;">10.000 sensores (333 req/s): GO &gt;= 4 vCPU + mejoras DB</strong><br>
+          En 2 vCPUs satura en 1.150 ms; en 4 vCPUs responde en 2.44ms sin fallos. Para producción hace falta PgBouncer, cola de ingesta y migrar de <code>ingress-nginx</code> a Gateway API.
+        </div>
       </div>
-      <div class="card card-amber">
-        <h3>Ampliación a 10.000 sensores: GO con 4 vCPU + rampa (NO-GO en 2 vCPU)</h3>
-        <p style="font-size:22px;">En 2 vCPUs satura en <code>1.15 s</code>; en 4 vCPUs / 6 GB con rampa sostiene 333 req/s en <strong>2.44ms</strong>. Recomendamos dimensionar nodos &gt;= 4 vCPUs y colocar PgBouncer + cola antes de conectar los 8.000 sensores nuevos.</p>
-      </div>
-    </div>
-    <div class="fig">
-      <img src="../evidencias/capturas/07-promocion.png" alt="Promocion final">
-      <div class="caption">
-        <strong>Qué muestra:</strong> estado final tras correr <code>SOLO_PROMOVER=1</code> con los 2 pods de <code>front-stable</code> sirviendo <code>1.1.0</code> y <code>front-canary</code> apagado en 0 réplicas.<br>
-        <strong>Cierre:</strong> pasamos de despliegues a ciegas a un flujo medido desde el commit hasta el cluster. ¡Muchas gracias! ¿Preguntas?
+      <div class="img-box">
+        <img src="../evidencias/capturas/07-promocion.png" alt="Promocion">
+        <div class="cap"><strong><code>SOLO_PROMOVER=1</code>:</strong> pods de <code>front-stable</code> ya sirven <code>1.1.0</code> y canary en 0 réplicas.</div>
       </div>
     </div>
   </div>
-  <div class="footer"><span>TerraSense S.A. · FCEFyN UNC 2026</span><span>evidencias/capturas/07-promocion.png</span></div>
+  <div class="footer-left">evidencias/reportes/promocion.log</div>
+  <div class="footer-num">15 / 16</div>
 </section>
 
-<script>
-  // Interactive keyboard navigation when opened directly in a browser (Print/PDF renders all 16 pages cleanly)
-  if (window.location.hash === '#present') {
-    document.body.classList.add('deck-mode');
-  }
-  const slides = Array.from(document.querySelectorAll('.slide'));
-  let idx = 0;
-  function show(n) {
-    idx = Math.max(0, Math.min(slides.length - 1, n));
-    slides.forEach((s, i) => s.classList.toggle('active', i === idx));
-  }
-  document.addEventListener('keydown', (e) => {
-    if (e.key === 'f' || e.key === 'F') {
-      document.body.classList.toggle('deck-mode');
-      show(idx);
-    } else if (document.body.classList.contains('deck-mode')) {
-      if (e.key === 'ArrowRight' || e.key === ' ') show(idx + 1);
-      if (e.key === 'ArrowLeft') show(idx - 1);
-    }
-  });
-</script>
+<!-- SLIDE 16: CLOSING (matches Presentation.pdf p. 13) -->
+<section class="slide" style="background:#f2eeee;">
+  <svg class="lines-svg" viewBox="0 0 1920 1080">
+    <line x1="1200" y1="0" x2="1920" y2="160" stroke="#b8a3a6" stroke-width="1.3"/>
+    <line x1="1840" y1="0" x2="1730" y2="1080" stroke="#b8a3a6" stroke-width="1.3"/>
+    <line x1="1220" y1="1080" x2="1920" y2="890" stroke="#b8a3a6" stroke-width="1.3"/>
+  </svg>
+  <!-- Faceted angled photo matching p. 13 of Presentation.pdf -->
+  <div style="position:absolute; inset:0; z-index:2; clip-path:polygon(0 0, 64% 0, 23% 54%, 46% 100%, 9% 100%, 23% 54%, 0 36%); overflow:hidden;">
+    <img src="./assets/cover_photo.jpg" alt="" style="width:100%; height:100%; object-fit:cover;">
+  </div>
+  <div class="content" style="padding-left:50%; justify-content:center;">
+    <h1 class="serif-title" style="font-size:66px; margin-bottom:26px;">Muchas gracias</h1>
+    <div style="font-size:25px; line-height:1.7; color:#0c2231; font-weight:300;">
+      <div><strong>TerraSense S.A.</strong> · Gestión de la Calidad del Software</div>
+      <div>Pilar Sabena · Lautaro Callovi · Baltasar · Jeremías Vivas · Skander Zouhir</div>
+      <div style="color:#145369; margin-top:12px; font-weight:500;">github.com/LauCallovi/Calidad_software</div>
+    </div>
+  </div>
+  <div class="footer-num">16 / 16</div>
+</section>
+
 </body>
 </html>
