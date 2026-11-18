@@ -1,0 +1,21 @@
+mié 18 nov 2026 00:28:55 -03
+NAME                    READY   STATUS    RESTARTS        AGE
+back-7b7f4978fd-jjfk5   1/1     Running   6 (3m21s ago)   8m9s
+back-7b7f4978fd-slr48   1/1     Running   6 (3m28s ago)   8m13s
+
+Name:             back-7b7f4978fd-jjfk5
+      Started:      Wed, 18 Nov 2026 00:28:25 -0300
+    Last State:     Terminated
+      Reason:       OOMKilled
+      Exit Code:    137
+      Started:      Wed, 18 Nov 2026 00:25:26 -0300
+      Finished:     Wed, 18 Nov 2026 00:25:35 -0300
+    Restart Count:  6
+Name:             back-7b7f4978fd-slr48
+      Started:      Wed, 18 Nov 2026 00:28:18 -0300
+    Last State:     Terminated
+      Reason:       OOMKilled
+      Exit Code:    137
+      Started:      Wed, 18 Nov 2026 00:25:21 -0300
+      Finished:     Wed, 18 Nov 2026 00:25:28 -0300
+    Restart Count:  6
