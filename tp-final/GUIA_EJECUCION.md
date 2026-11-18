@@ -21,7 +21,8 @@ Orden para correr el TP completo y qué capturar en cada paso. Todos los comando
 
 - **Hora visible en cada captura y video.** Al abrir cada terminal:
   ```bash
-  export PS1='[\D{%H:%M:%S}] \w\$ '     # la hora aparece en cada prompt
+  export PS1='[\D{%H:%M:%S}] \w\$ '     # bash: la hora aparece en cada prompt
+  PROMPT='[%D{%H:%M:%S}] %~ %# '           # zsh (oh-my-zsh): equivalente
   ```
   En los videos, dejar además una terminal chica con `watch -n1 date`.
 - **Videos con pantalla partida:** terminal con k6 o el script + terminal con `kubectl ... -w` o el navegador.

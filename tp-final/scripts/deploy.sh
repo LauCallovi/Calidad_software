@@ -23,11 +23,20 @@ for cmd in minikube kubectl docker; do
 done
 
 # 1) Cluster. Driver docker: Minikube corre como contenedor, no necesita VM.
-paso "Iniciando Minikube (driver docker, ${CPUS} CPU, ${MEM} MB)"
+# Runtime docker explícito: desde minikube 1.39 el default es containerd, y con
+# containerd `minikube docker-env` no expone un daemon Docker donde construir.
+paso "Iniciando Minikube (driver docker, runtime docker, ${CPUS} CPU, ${MEM} MB)"
 if [ "$(minikube status --format '{{.Host}}' 2>/dev/null || true)" = "Running" ]; then
+  RUNTIME="$(minikube profile list -o json 2>/dev/null \
+    | python3 -c 'import json,sys; print(json.load(sys.stdin)["valid"][0]["Config"]["KubernetesConfig"]["ContainerRuntime"])' 2>/dev/null || echo desconocido)"
+  if [ "$RUNTIME" != "docker" ]; then
+    echo "Minikube está corriendo con runtime '$RUNTIME'. Borrarlo y volver a correr:"
+    echo "  minikube delete && ./scripts/deploy.sh"
+    exit 1
+  fi
   echo "Minikube ya está corriendo; se reutiliza."
 else
-  minikube start --driver=docker --cpus="$CPUS" --memory="$MEM"
+  minikube start --driver=docker --container-runtime=docker --cpus="$CPUS" --memory="$MEM"
 fi
 
 # ingress: instala ingress-nginx (el que implementa el canary).
