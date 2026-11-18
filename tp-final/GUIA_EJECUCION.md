@@ -169,6 +169,11 @@ Antes de seguir, verificar que el back quedó sano:
    ```
    → aparece la v1.1.0 (verde, banner "ESTÁS VIENDO LA VERSIÓN CANARY 1.1.0").
 
+   ⚠️ Si sigue apareciendo la v1.0.0: la primera visita dejó la cookie de afinidad de sesión
+   `terrasense-front` atada a la stable, y esa afinidad **le gana** a `canary=always`. Borrarla:
+   F12 → Application → Storage → Cookies → `http://terrasense.local` → fila `terrasense-front` →
+   Supr → recargar. (Hallazgo documentado en el informe: afinidad sticky vs. canary por cookie.)
+
 📸 `capturas/03-etapa0-cookie.png`: las dos ventanas lado a lado, con peso 0.
 
 ### 3.2 Rollout automático
@@ -248,7 +253,8 @@ curl -s http://terrasense.local/version.txt        # → 1.1.0 (ahora desde la s
 📸 `capturas/07-promocion.png`: pods stable en 1.1.0, canary con 0 réplicas.
 
 > Después de promover, la stable es la 1.1.0: para cualquier corrida posterior usar `VERSION_STABLE=1.1.0`.
-> `k8s/stable/deployment.yaml` quedó modificado por la promoción: commitearlo junto con las evidencias.
+> `k8s/stable/deployment.yaml` queda modificado por la promoción: **no commitearlo** (`git checkout -- k8s/stable/deployment.yaml`).
+> El repo describe el estado inicial (stable 1.0.0 + canary 1.1.0) para que cualquiera pueda repetir el rollout desde cero.
 
 ---
 

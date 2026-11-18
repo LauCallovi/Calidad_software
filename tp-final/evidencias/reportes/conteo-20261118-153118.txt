@@ -1,0 +1,7 @@
+Conteo 2026-11-18T15:31:19-03:00 | peso configurado: 25% | 100 requests
+--- Lado cliente (curl sin cookies: cada request se sortea de nuevo) ---
+     70 1.0.0
+     30 1.1.0
+--- Lado servidor (logs del Ingress controller desde 2026-11-18T18:31:18Z) ---
+requests a front-canary: 93
+requests a front-stable: 236

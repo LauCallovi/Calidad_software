@@ -158,25 +158,45 @@ incluye un request más.
 Generada por `rollout.sh` en `evidencias/reportes/bitacora.csv`. Cambios de peso con hora en
 `evidencias/reportes/cambios-de-peso.log`.
 
+Ejecución del 18/11/2026 (Ubuntu, Minikube con driver Docker). Horas en ART (UTC−3).
+
 | Inicio | Fin | Etapa | Versión | Peso | % observado | Visitas | p95 canary (ms) | p95 stable (ms) | Err. canary | Assets rotos | Pant. blancas | Decisión | Motivo |
 |---|---|---|---|---|---|---|---|---|---|---|---|---|---|
-| _completar_ | | etapa-0 | 1.1.0 | 0 | — | 3 | — | — | — | — | | | |
-| | | peso-10 | 1.1.0 | 10 | | | | | | | | | |
-| | | peso-25 | 1.1.0 | 25 | | | | | | | | | |
-| | | peso-50 | 1.1.0 | 50 | | | | | | | | | |
-| | | peso-100 | 1.1.0 | 100 | | | | | | | | | |
-| | | etapa-0 | 1.2.0 | 0 | — | 3 | — | — | — | — | | ROLLBACK (esperado) | |
-| | | peso-25 | 1.2.0 | 25 | | | | | | | | ROLLBACK (esperado) | tiempo de rollback: _completar_ s |
-| | | promocion | 1.1.0 | 0 | — | — | — | — | — | — | — | PROMOCION | |
+| 15:24:48 | 15:25:04 | etapa-0 | 1.1.0 | 0 | — | 3 | — | — | — | — | 0 | AVANZA | 3/3 visitas forzadas OK |
+| 15:25:04 | 15:30:10 | peso-10 | 1.1.0 | 10 | 9,42 | 6001 | 2,54 | 1,39 | 0 % | 0 | 0 | AVANZA | criterios cumplidos |
+| 15:30:10 | 15:35:16 | peso-25 | 1.1.0 | 25 | 25,58 | 6001 | 2,45 | 1,39 | 0 % | 0 | 0 | AVANZA | criterios cumplidos |
+| 15:35:17 | 15:40:23 | peso-50 | 1.1.0 | 50 | 50,82 | 6001 | 2,49 | 1,41 | 0 % | 0 | 0 | AVANZA | criterios cumplidos |
+| 15:40:23 | 15:45:29 | peso-100 | 1.1.0 | 100 | 100 | 6000 | 2,47 | 1,41 | 0 % | 0 | 0 | AVANZA | criterios cumplidos |
+| 17:53:47 | 17:54:03 | etapa-0 | 1.2.0 | 0 | — | 3 | — | — | — | — | 3 | ROLLBACK (esperado) | 3 de 3 visitas con pantalla en blanco; ningún usuario real expuesto |
+| 18:20:44 | 18:22:52 | peso-25 | 1.2.0 | 25 | 25,5 | 2400 | 2,54 | 1,46 | 0 % | 0 | 6 | ROLLBACK (esperado) | 6 pantallas en blanco con thresholds HTTP OK; tiempo de rollback: **1,9 s** |
+| 18:45:40 | 18:45:53 | promocion | 1.1.0 | 0 | — | — | — | — | — | — | — | PROMOCION | stable → 1.1.0 (2/2 pods), canary a 0 réplicas, `version.txt` = 1.1.0 |
+
+En las etapas de la 1.1.0 el p95 de página del canary supera en más de un 10 % al de la stable
+(≈ +80 %), pero la diferencia absoluta es de ≈ 1,1 ms, por debajo de la tolerancia de 5 ms: por eso
+avanza. La diferencia es el request extra de los assets externos (ver 3.5).
+
+> En `bitacora.csv` el tiempo de la demo B figura como `1;9 s`: con locale `es_AR`, `awk` imprimió
+> `1,9` y la coma se reemplazó para no romper el CSV. Se corrigió en `rollout.sh` (`LC_ALL=C`).
 
 **Verificación independiente del reparto** (`conteo-curl.sh`, 100 requests por etapa):
 
 | Peso | curl → 1.0.0 | curl → 1.1.0 | Logs Ingress → front-canary | k6 % observado |
 |---|---|---|---|---|
-| 10 | _completar_ | | | |
-| 25 | | | | |
-| 50 | | | | |
-| 100 | | | | |
+| 10 | 90 | 10 | 34 (de 193 líneas) | 9,42 % |
+| 25 | 70 | 30 | 93 (de 236) | 25,58 % |
+| 50 | 53 | 47 | 176 (de 266) | 50,82 % |
+| 100 | 0 | 100 | 313 (de 313, stable 0) | 100 % |
+
+- curl (100 requests sin cookies) cae dentro del error de muestreo esperable con n = 100
+  (±6 puntos aprox. para p = 25 %).
+- Los logs del Ingress cuentan **todos** los requests al front en ese período, incluido el tráfico
+  de k6 que corre en paralelo y los assets: una página de la 1.1.0 son 3 requests (HTML + CSS + JS) y
+  una de la 1.0.0 es 1. Por eso el % del lado servidor no coincide con el peso; sirve para confirmar
+  que el upstream canary efectivamente recibe tráfico (y que con peso 100 la stable recibe 0).
+- **Corrección durante la ejecución:** en una línea atendida por el canary, el log de ingress-nginx
+  trae los dos upstreams (`[front-stable-8080] [front-canary-8080]`), así que el `grep` original
+  contaba esas líneas también como stable. El total "de N líneas" de las primeras 3 filas es
+  stable + canary. Se corrigió `conteo-curl.sh`; la fila de peso 100 ya usa el conteo corregido.
 
 ---
 
@@ -221,23 +241,33 @@ Fuente: `evidencias/reportes/estres-front-stable.json` y `estres-front-canary.js
 
 | Escalón (cargas/s) | p95 v1.0.0 (ms) | p95 v1.1.0 (ms) | Δ % | Errores v1.0.0 | Errores v1.1.0 |
 |---|---|---|---|---|---|
-| 50 | _completar_ | | | | |
-| 100 | | | | | |
-| **200** | | | | | |
-| 400 | | | | | |
-| 800 | | | | | |
+| 50 | 1,29 | 2,12 | +64 % | 0 % | 0 % |
+| 100 | 1,13 | 1,77 | +57 % | 0 % | 0 % |
+| **200** | **0,91** | **1,54** | **+70 %** | **0 %** | **0 %** |
+| 400 | 0,68 | 1,34 | +96 % | 0 % | 0 % |
+| 800 | 0,64 | 1,48 | +131 % | 0 % | 0 % |
 
 | Dato | v1.0.0 | v1.1.0 |
 |---|---|---|
-| Bytes por página (promedio) | _completar_ | |
-| Iteraciones descartadas | | |
-| Thresholds (escalón 200) | | |
+| Bytes por página (promedio) | 2713 | 4668 (+72 %) |
+| Iteraciones descartadas | 0 | 0 |
+| Thresholds (escalón 200) | OK | OK |
 
 ### 3.5 Conclusión
 
-_completar_: ¿se rechaza H? ¿En qué escalón aparece el punto de quiebre de cada versión? ¿La diferencia
-se explica por los bytes o los requests extra de la v1.1.0? ¿El límite lo puso la app o el generador
-(iteraciones descartadas)?
+- **H se rechaza en su parte relativa y se cumple en la de capacidad.** En la meseta de 200 cargas/s,
+  p95(v1.1.0) = 1,54 ms > 1,10 × 0,91 ms = 1,00 ms (+70 %). Las dos versiones sostienen 200 cargas/s
+  (y hasta 800) con 0 % de errores.
+- **No hay punto de quiebre** en ninguna de las dos versiones hasta 800 cargas/s: 0 errores en todos
+  los escalones y el p95 se mantiene por debajo de 2,2 ms. El p95 de la stable incluso baja al subir
+  la carga (conexiones reutilizadas y nginx en régimen).
+- **La diferencia es constante en valor absoluto** (+0,6 a +0,8 ms en todos los escalones), no crece
+  con la carga: se explica por el diseño de la v1.1.0 (2 requests extra por página para CSS y JS, y
+  +72 % de bytes), no por una degradación bajo estrés. Con tiempos base menores a 1 ms, un umbral
+  solo relativo (+10 %) es más estricto que el ruido de medición; la lección es fijar H con una
+  tolerancia absoluta, como la de 5 ms que ya usa el plan de rollout.
+- **El límite no lo puso el generador:** 0 iteraciones descartadas en las dos corridas, así que k6
+  entregó la carga pedida en cada escalón.
 
 ---
 
@@ -297,19 +327,20 @@ se explica por los bytes o los requests extra de la v1.1.0? ¿El límite lo puso
 | Archivo | Qué demuestra |
 |---|---|
 | `evidencias/reportes/tp3-smoke.txt`, `tp3-load.txt` | El back cumple los SLOs a carga nominal (67 req/s) |
-| `evidencias/reportes/tp3-stress.txt` + `videos/02-stress-hpa.mp4` | Punto de quiebre del back y reacción del HPA |
-| `evidencias/reportes/tp3-e1.txt` + `videos/03-e1-pod-eliminado.mp4` + `capturas/e1-ux-*.png` | Ventana de errores y recuperación al eliminar un pod; lo que ve el usuario |
-| `evidencias/reportes/tp3-spike-cpu.txt`, `tp3-spike-oom.txt` + `videos/04-e2-oom.mp4` | Recuperación ante pico de CPU y OOMKilled |
+| `evidencias/reportes/tp3-stress.txt` + `capturas/02-stresss-pilar.png` | Punto de quiebre del back y reacción del HPA |
+| `evidencias/reportes/tp3-e1.txt` + `capturas/03-e1.png` + `capturas/e1-ux-*.png` | Ventana de errores y recuperación al eliminar un pod; lo que ve el usuario |
+| `evidencias/reportes/tp3-spike-cpu.txt`, `tp3-spike-oom.txt` + `capturas/04-spike-cpu-pilar.png`, `04-e2-oom-*.png` | Recuperación ante pico de CPU y OOMKilled |
 | `evidencias/capturas/01-deploy-*.png` | Despliegue completo: stable y canary conviviendo |
 | `evidencias/capturas/etapa-0-visita-*.png`, `evidencias/reportes/etapa-0-browser.json` | El canary se valida con peso 0, sin exponer usuarios |
 | `evidencias/reportes/peso-*-split.json`, `peso-*-browser.json`, `capturas/peso-*-visita-*.png` | Reparto observado, latencia, errores y UI en cada etapa |
 | `evidencias/reportes/conteo-*.txt` | Verificación independiente del reparto (curl + logs del Ingress) |
 | `evidencias/reportes/cambios-de-peso.log` | Hora exacta de cada cambio de peso |
 | `evidencias/reportes/bitacora.csv` | Decisión y motivo de cada etapa, tiempo de rollback |
-| `evidencias/videos/05-rollout-1.1.0.mp4` | Rollout completo avanzando por criterios |
-| `evidencias/videos/06-rollback-1.2.0.mp4` + `capturas/*-v1.2.0-BLANCA.png` + `capturas/06-consola-typeerror.png` | La v1.2.0 (HTTP 200, pantalla en blanco) se detecta y se revierte |
+| `evidencias/capturas/03-etapa0-cookie.png`, `05-conteo-peso-*.png`, `05-rollout-fin.png`, `05-bitacora.png` | Etapa 0 con cookie y rollout completo avanzando por criterios |
+| `evidencias/capturas/06-demoA-etapa0-falla.png`, `06-demoB-peso25-falla.png`, `06-rollback-1.2.0.png`, `06-network-200.png` + `capturas/*-v1.2.0-BLANCA.png` + `capturas/06-consola-typeerror.png` | La v1.2.0 (HTTP 200, pantalla en blanco) se detecta y se revierte |
 | `evidencias/reportes/estres-front-stable.json`, `estres-front-canary.json` | Contraste de la hipótesis de estrés |
-| `evidencias/capturas/07-ci-rojo.png`, `07-ci-verde.png` + reportes de Horusec | La quality gate de CI bloquea y después habilita el build |
+| `evidencias/capturas/07-ci-rojo.png`, `07-ci-rojo-2.png`, `07-ci-verde.png` (tomadas por Jeremías) + reportes de Horusec | La quality gate de CI bloquea y después habilita el build |
+| `evidencias/capturas/07-promocion.png`, `07-ci-lista.png` | Promoción de la 1.1.0 (stable 2/2 en 1.1.0, canary a 0) y lista de runs de CI |
 | `ci/HALLAZGOS-HORUSEC.md` | Análisis y decisión de cada hallazgo de SAST |
 
 ---
@@ -321,13 +352,17 @@ se explica por los bytes o los requests extra de la v1.1.0? ¿El límite lo puso
 | Criterio | Umbral | Resultado |
 |---|---|---|
 | CI (lint + horusec + build) | verde | ✅ run #44008882096 |
-| Etapa 0 (navegador, peso 0) | 0 pantallas en blanco, 3/3 en canary | _completar_ |
-| Etapas 10 / 25 / 50 / 100 | Thresholds del split OK, 0 pantallas en blanco, p95 ≤ stable + 10% (o < 5 ms) | _completar_ |
-| % observado vs peso | ± 3 puntos | _completar_ |
-| Hipótesis de estrés | No rechazada en el escalón 200 | _completar_ |
-| Control negativo: v1.2.0 detenida | Rollback automático | _completar_ (tiempo: ___ s) |
+| Etapa 0 (navegador, peso 0) | 0 pantallas en blanco, 3/3 en canary | ✅ 3/3 en canary, 0 en blanco |
+| Etapas 10 / 25 / 50 / 100 | Thresholds del split OK, 0 pantallas en blanco, p95 ≤ stable + 10% (o < 5 ms) | ✅ las 4 AVANZA; 0 errores, 0 assets rotos, 0 en blanco; p95 +≈1,1 ms (< 5 ms) |
+| % observado vs peso | ± 3 puntos | ✅ 9,42 / 25,58 / 50,82 / 100 (máx. desvío 0,82 puntos) |
+| Hipótesis de estrés | No rechazada en el escalón 200 | ⚠️ rechazada en lo relativo (+70 %, +0,63 ms); capacidad y errores OK (ver 3.5) |
+| Control negativo: v1.2.0 detenida | Rollback automático | ✅ etapa 0 la frena; con tráfico real (peso 25) rollback automático (tiempo: 1,9 s) |
 
-**Veredicto v1.1.0:** _completar_ (GO si se cumplen todos los criterios).
+**Veredicto v1.1.0: GO con observación.** Se cumplen todos los criterios salvo la parte relativa de
+la hipótesis de estrés (+70 % de p95 a 200 cargas/s). Se acepta el desvío porque es de 0,63 ms en valor
+absoluto, constante en todos los escalones (no crece con la carga), explicado por el diseño de la
+v1.1.0 (2 requests más y +72 % de bytes por página) y sin errores hasta 800 cargas/s. Observación para
+el próximo ciclo: formular la hipótesis con una tolerancia absoluta, como los 5 ms del plan de rollout.
 
 ### 6.2 Capacidad para 10.000 sensores
 
@@ -335,15 +370,21 @@ se explica por los bytes o los requests extra de la v1.1.0? ¿El límite lo puso
 
 | Criterio | Umbral | Dato (stress del back, escalones 200 y 400 req/s) |
 |---|---|---|
-| p95 `POST /api/sensores` | < 300 ms a ≥ 333 req/s | _completar_ |
-| Tasa de errores | < 1% a ≥ 333 req/s | _completar_ |
-| Réplicas del HPA a esa carga | < 8 (margen para picos) | _completar_ |
-| Recuperación ante pico (E2) | Vuelve a SLO sin intervención manual | _completar_ |
+| p95 `POST /api/sensores` | < 300 ms a ≥ 333 req/s | ✅ 53 ms en toda la corrida (rampa hasta 1200 req/s, media 477 req/s) |
+| Tasa de errores | < 1% a ≥ 333 req/s | ✅ 0,05 % (157 de 286.499) en toda la corrida |
+| Réplicas del HPA a esa carga | < 8 (margen para picos) | ⚠️ no medido por escalón: el HPA escaló 2 → 4 → 6 → 7 → 8 durante la rampa y llegó al máximo (8) en los escalones altos (800–1200 req/s) |
+| Recuperación ante pico (E2) | Vuelve a SLO sin intervención manual | ✅ tras el spike de CPU y el OOMKilled el back volvió solo a 2/2 Running (reinicio por kubelet + HPA) |
 
-**Veredicto 10.000 sensores:** _completar_. Si no se cumple, indicar el cuello de botella observado
-(CPU del back con HPA al máximo, conexiones de PostgreSQL, recursos del nodo de Minikube) y la
-acción propuesta (más recursos para el nodo, pool de conexiones, cola de ingesta, réplicas de lectura).
-Aclaración: el resultado vale para este entorno; en producción hay que repetir la prueba allí.
+Notas de la ejecución: el spike de CPU de E2 se bajó de 1500 a 600 req/s porque a 1500 el generador
+saturó la máquina (miles de warnings de k6 y la terminal colgada); los warnings se mandan a archivo
+con `--log-output`.
+
+**Veredicto 10.000 sensores: GO en este entorno.** El back sostuvo la rampa hasta 1200 req/s
+(3,6 × los 333 req/s necesarios) con p95 de 53 ms y 0,05 % de errores, y se recuperó solo del pico de
+CPU y del OOMKilled. Salvedades: el HPA llegó a su máximo (8 réplicas) en los escalones altos, así que el
+margen para picos mayores depende de los recursos del nodo; y no se midió la cantidad de réplicas
+exactamente a 333 req/s (próximo paso: un escalón fijo de 333 req/s registrando `kubectl get hpa -w`).
+El resultado vale para este entorno (Minikube); en producción hay que repetir la prueba allí.
 
 ---
 
@@ -357,6 +398,10 @@ Aclaración: el resultado vale para este entorno; en producción hay que repetir
 | **Selector inmutable** | `spec.selector` de un Deployment no se puede cambiar | Selector solo con `app` + `track`; `version` como label informativo |
 | **200 OK ≠ página funcionando** | Probes y k6 HTTP no ejecutan JavaScript | k6/browser con detección de `body.innerText` vacío y tolerancia cero |
 | **k6 reutiliza cookies por VU** | Con afinidad, un VU quedaba pegado a la primera versión y el % observado no reflejaba el peso | Borrar el cookie jar al inicio de cada iteración (visitante nuevo); la cookie sí se mantiene entre HTML y assets |
+| **La afinidad le gana a `canary=always`** | La primera visita deja la cookie de afinidad `terrasense-front` atada a la stable, y el Ingress la respeta antes que la cookie de canary | Para la etapa 0 manual, borrar `terrasense-front` (DevTools → Application → Cookies) antes de recargar; k6 no lo sufre porque arranca cada iteración sin cookies |
+| **Conteo del lado servidor duplicado** | En los logs de ingress-nginx, una línea atendida por el canary trae los dos upstreams (`[stable] [canary]`) | `conteo-curl.sh` cuenta por posición del upstream, no por nombre suelto |
+| **Decimales con coma en la bitácora** | Con locale `es_AR`, `awk printf "%.1f"` imprime `1,9` y rompe el CSV | `LC_ALL=C` en el cálculo del tiempo de rollback |
+| **El generador colgaba la máquina** | Spike de E2 a 1500 req/s: k6 saturaba la CPU local y la terminal con warnings | Pico bajado a 600 req/s y warnings a archivo (`--log-output=file=...`) |
 | **Contraseña en el repo** | Default en `server.js` y Secret versionado | Sin default (fail fast); Secret generado por `deploy.sh`, que no se regenera porque PostgreSQL fija la contraseña al inicializar el volumen |
 | **SAST: contenedores sin restricciones** | Las imágenes no corren como root, pero los manifiestos no lo exigían | `securityContext` en los manifiestos; `emptyDir` para nginx; prueba de arranque con UID no root en el CI |
 | **SAST por patrones marca comentarios** | La regla de Horusec es una regex sobre el texto | Reescribir el comentario; revisión humana de cada hallazgo; falsos positivos y riesgos aceptados registrados por hash |

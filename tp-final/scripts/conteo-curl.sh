@@ -30,8 +30,11 @@ PESO="$(kubectl -n terrasense get ingress terrasense-ingress-canary \
   sleep 2
   echo "--- Lado servidor (logs del Ingress controller desde ${DESDE}) ---"
   LOGS="$(kubectl -n ingress-nginx logs deploy/ingress-nginx-controller --since-time="$DESDE" 2>/dev/null || true)"
-  echo "requests a front-canary: $(grep -c 'front-canary' <<<"$LOGS" || true)"
-  echo "requests a front-stable: $(grep -c 'front-stable' <<<"$LOGS" || true)"
+  # Formato del log: "[upstream] [upstream_alternativo]". Cuando atiende el
+  # canary, la línea trae los DOS nombres ("[...-stable-8080] [...-canary-8080]"),
+  # así que contar con un grep simple de 'front-stable' duplicaría el canary.
+  echo "requests a front-canary: $(grep -c '\] \[terrasense-front-canary-8080\]' <<<"$LOGS" || true)"
+  echo "requests a front-stable: $(grep -c '\[terrasense-front-stable-8080\] \[\]' <<<"$LOGS" || true)"
 } | tee "$SALIDA"
 
 echo "(guardado en $SALIDA)"
