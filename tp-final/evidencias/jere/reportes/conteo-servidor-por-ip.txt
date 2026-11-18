@@ -1,0 +1,14 @@
+Recuento del lado servidor por IP de pod (logs del Ingress controller, solo requests de curl a /version.txt).
+Corrige conteo-*.txt: el log muestra siempre [front-stable] [front-canary] (upstream principal y alternativo),
+por eso el recuento por nombre de upstream de esos archivos no es valido. Canary = 10.244.0.12; stable = 10.244.0.10/.11.
+
+archivo                        peso curl 1.1.0 srv canary srv stable
+conteo-20261118-003958.txt       10         11         11         89
+conteo-20261118-004109.txt       10          9          9         91
+conteo-20261118-004149.txt       10         10         10         90
+conteo-20261118-004519.txt       25         28         28         72
+conteo-20261118-004620.txt       25         27         27         73
+conteo-20261118-005014.txt       50         56         56         44
+conteo-20261118-005124.txt       50         44         44         56
+conteo-20261118-005525.txt      100        100        100          0
+conteo-20261118-005633.txt      100        100        100          0

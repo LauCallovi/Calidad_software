@@ -31,9 +31,18 @@ PESO="$(kubectl -n terrasense get ingress terrasense-ingress-canary \
   # Pausa corta para que el controller termine de escribir los logs.
   sleep 2
   echo "--- Lado servidor (logs del Ingress controller desde ${DESDE}) ---"
-  LOGS="$(kubectl -n ingress-nginx logs deploy/ingress-nginx-controller --since-time="$DESDE" 2>/dev/null || true)"
-  echo "requests a front-canary: $(grep -c 'front-canary' <<<"$LOGS" || true)"
-  echo "requests a front-stable: $(grep -c 'front-stable' <<<"$LOGS" || true)"
+  # Solo los requests de este curl (user agent curl + /version.txt). El nombre
+  # de upstream del log NO sirve: con canary, el log siempre muestra
+  # [front-stable] [front-canary] (upstream principal y alternativo), vaya
+  # adonde vaya el request. Lo que dice adónde fue es la IP del pod
+  # (upstream_addr), que se traduce a track con los labels de los pods.
+  LOGS="$(kubectl -n ingress-nginx logs deploy/ingress-nginx-controller --since-time="$DESDE" 2>/dev/null \
+    | grep '"GET /version.txt' | grep '"curl/' || true)"
+  IPS_CANARY="$(kubectl -n terrasense get pods -l app=front,track=canary -o jsonpath='{range .items[*]}{.status.podIP}{"\n"}{end}')"
+  IPS_STABLE="$(kubectl -n terrasense get pods -l app=front,track=stable -o jsonpath='{range .items[*]}{.status.podIP}{"\n"}{end}')"
+  contar() { local n=0 ip; for ip in $1; do n=$((n + $(grep -c " ${ip}:8080 " <<<"$LOGS" || true))); done; echo "$n"; }
+  echo "requests a front-canary (por IP de pod): $(contar "$IPS_CANARY")"
+  echo "requests a front-stable (por IP de pod): $(contar "$IPS_STABLE")"
 } | tee "$SALIDA"
 
 echo "(guardado en $SALIDA)"

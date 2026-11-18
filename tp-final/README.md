@@ -160,11 +160,11 @@ Generada por `rollout.sh` en `evidencias/reportes/bitacora.csv`. Cambios de peso
 
 | Inicio | Fin | Etapa | Versión | Peso | % observado | Visitas | p95 canary (ms) | p95 stable (ms) | Err. canary | Assets rotos | Pant. blancas | Decisión | Motivo |
 |---|---|---|---|---|---|---|---|---|---|---|---|---|---|
-| _completar_ | | etapa-0 | 1.1.0 | 0 | — | 3 | — | — | — | — | | | |
-| | | peso-10 | 1.1.0 | 10 | | | | | | | | | |
-| | | peso-25 | 1.1.0 | 25 | | | | | | | | | |
-| | | peso-50 | 1.1.0 | 50 | | | | | | | | | |
-| | | peso-100 | 1.1.0 | 100 | | | | | | | | | |
+| 00:39:42 | 00:39:58 | etapa-0 | 1.1.0 | 0 | — | 3 | — | — | — | — | 0 | AVANZA | 3/3 visitas forzadas OK |
+| 00:39:58 | 00:45:04 | peso-10 | 1.1.0 | 10 | 10,50 | 6000 | 2,44 | 1,58 | 0 | 0 | 0 | AVANZA | criterios cumplidos |
+| 00:45:04 | 00:50:11 | peso-25 | 1.1.0 | 25 | 25,38 | 6000 | 2,41 | 1,60 | 0 | 0 | 0 | AVANZA | criterios cumplidos |
+| 00:50:11 | 00:55:19 | peso-50 | 1.1.0 | 50 | 49,61 | 6001 | 2,38 | 1,60 | 0 | 0 | 0 | AVANZA | criterios cumplidos |
+| 00:55:19 | 01:00:25 | peso-100 | 1.1.0 | 100 | 100 | 6001 | 2,44 | 1,60 (ref. etapa 50) | 0 | 0 | 0 | AVANZA | criterios cumplidos |
 | | | etapa-0 | 1.2.0 | 0 | — | 3 | — | — | — | — | | ROLLBACK (esperado) | |
 | | | peso-25 | 1.2.0 | 25 | | | | | | | | ROLLBACK (esperado) | tiempo de rollback: _completar_ s |
 | | | promocion | 1.1.0 | 0 | — | — | — | — | — | — | — | PROMOCION | |
@@ -173,10 +173,25 @@ Generada por `rollout.sh` en `evidencias/reportes/bitacora.csv`. Cambios de peso
 
 | Peso | curl → 1.0.0 | curl → 1.1.0 | Logs Ingress → front-canary | k6 % observado |
 |---|---|---|---|---|
-| 10 | _completar_ | | | |
-| 25 | | | | |
-| 50 | | | | |
-| 100 | | | | |
+| 10 | 89 / 91 / 90 | 11 / 9 / 10 | 11 / 9 / 10 | 10,50 % |
+| 25 | 72 / 73 | 28 / 27 | 28 / 27 | 25,38 % |
+| 50 | 44 / 56 | 56 / 44 | 56 / 44 | 49,61 % |
+| 100 | 0 / 0 | 100 / 100 | 100 / 100 | 100 % |
+
+Rollout de la v1.1.0 ejecutado por Jere el 18/11 (hora de Argentina), evidencias en `evidencias/jere/`:
+`reportes/bitacora.csv`, `reportes/cambios-de-peso.log`, `reportes/peso-*-split.json`, `reportes/peso-*-browser.json`,
+`reportes/conteo-*.txt`, `capturas/peso-*-visita-*.png` (20 screenshots por etapa), `capturas/03-etapa0-cookie.png`,
+`capturas/05-bitacora.png` y `videos/05-rollout-1.1.0.mp4` (x8).
+
+- El **% observado** por k6 (6000 visitas por etapa) quedó a menos de 0,5 puntos del peso en todas las etapas.
+- Con 100 requests por conteo, curl da entre ±6 puntos del peso: con muestras chicas el reparto es ruidoso
+  (en la etapa 50, un conteo dio 56/44 y el siguiente 44/56).
+- El **lado servidor** se recalculó por IP del pod (`reportes/conteo-servidor-por-ip.txt`) y coincide uno a uno
+  con curl. Los totales por nombre de upstream de `conteo-*.txt` no son válidos (ver Aprendizaje).
+- La versión nueva es más lenta en términos relativos (p95 de página 2,4 ms vs 1,6 ms) porque pide un asset más,
+  pero la diferencia absoluta (< 1 ms) está dentro de la tolerancia de 5 ms definida antes de ejecutar.
+- Navegador: 0 pantallas en blanco en 83 visitas; el % de visitas del navegador (1/20, 8/20, 16/20, 20/20) es
+  orientativo por el tamaño de la muestra.
 
 ---
 
@@ -381,4 +396,5 @@ Aclaración: el resultado vale para este entorno; en producción hay que repetir
 | **La liveness probe reinicia pods sanos pero saturados** (E2 CPU: 1 a 3 reinicios por pod, evento `failed liveness probe`) | Con la CPU al 100% el back no contesta `/healthz` a tiempo y Kubernetes lo da por muerto: el reinicio saca capacidad justo en el pico y agrava el colapso (70% de errores) | Curiosidad documentada. Mejora propuesta: liveness más tolerante (`timeoutSeconds`/`failureThreshold` mayores), `/healthz` liviano y separado de la readiness, y que el HPA escale antes (umbral menor o `behavior.scaleUp` más agresivo) |
 | **RESTARTS parece que "sigue subiendo"** después de la prueba | La columna es un contador acumulado del pod (`3 (4m20s ago)` = último reinicio hace 4 min), no reinicios en curso | Mirar el `(… ago)`. Antes de grabar el OOM, `kubectl rollout restart deployment/back` para arrancar con contadores en 0 |
 | **La cookie `canary=always` no mostraba la v1.1.0 en el navegador** (sí con curl) | Con afinidad activa, si el navegador ya tiene la cookie de afinidad de la stable (`terrasense-front`, se otorga en la primera visita) ingress-nginx respeta esa afinidad y no evalúa la cookie del canary. Reproducido con curl: `canary=always` sola → 1.1.0; con `terrasense-front` → 1.0.0 | Para QA: setear la cookie del canary **antes** de la primera visita o borrar `terrasense-front` (es `HttpOnly`: DevTools → Aplicación → Cookies). `browser-canary.js` ya setea la cookie antes de navegar. Implica que la etapa 0 por cookie solo sirve a visitantes nuevos |
+| **El conteo "lado servidor" daba lo mismo para stable y canary** (ej. 348/348 con peso 100) | En el log de ingress-nginx cada request trae `[terrasense-front-stable-8080] [terrasense-front-canary-8080]`: upstream principal **y** alternativo, vaya adonde vaya. Además el conteo incluía el tráfico de k6 que corría en paralelo | `conteo-curl.sh` cuenta por IP de pod (`upstream_addr`) y solo requests de curl a `/version.txt`. Recalculado para la corrida en `reportes/conteo-servidor-por-ip.txt` |
 | _completar tras la ejecución_ | | |

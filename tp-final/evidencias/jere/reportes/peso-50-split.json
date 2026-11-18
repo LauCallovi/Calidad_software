@@ -1,0 +1,32 @@
+{
+  "etapa": "peso-50",
+  "peso_configurado": 50,
+  "porcentaje_canary_observado": 49.61,
+  "visitas": {
+    "total": 6001,
+    "canary": 2977,
+    "stable": 3024,
+    "sin_version": 0
+  },
+  "version_stable": "1.0.0",
+  "version_canary": "1.1.0",
+  "p95_ms": {
+    "html_canary": 1.5766355999999997,
+    "html_stable": 1.597097,
+    "pagina_canary": 2.378783,
+    "pagina_stable": 1.597097
+  },
+  "tasa_error": {
+    "http_total": 0,
+    "canary": 0,
+    "stable": 0
+  },
+  "assets_rotos": {
+    "tasa": 0,
+    "cantidad": 0
+  },
+  "thresholds_ok": true,
+  "rate_por_segundo": 20,
+  "duracion": "5m",
+  "generado": "2026-11-18T03:55:16.654Z"
+}
