@@ -1,0 +1,635 @@
+== 00:17:22
+back-hpa   Deployment/back   cpu: 3%/60%   2     8     2     164m
+back-58cd87b8d9-bs26b   1/1   Running   0     42m
+back-58cd87b8d9-dxwhb   1/1   Running   0     5m2s
+== 00:17:27
+back-hpa   Deployment/back   cpu: 3%/60%   2     8     2     164m
+back-58cd87b8d9-bs26b   1/1   Running   0     42m
+back-58cd87b8d9-dxwhb   1/1   Running   0     5m8s
+== 00:17:33
+back-hpa   Deployment/back   cpu: 3%/60%   2     8     2     164m
+back-58cd87b8d9-bs26b   1/1   Running   0     42m
+back-58cd87b8d9-dxwhb   1/1   Running   0     5m13s
+== 00:17:38
+back-hpa   Deployment/back   cpu: 3%/60%   2     8     2     164m
+back-58cd87b8d9-bs26b   1/1   Running   0     42m
+back-58cd87b8d9-dxwhb   1/1   Running   0     5m18s
+== 00:17:43
+back-hpa   Deployment/back   cpu: 3%/60%   2     8     2     165m
+back-58cd87b8d9-bs26b   1/1   Running   0     42m
+back-58cd87b8d9-dxwhb   1/1   Running   0     5m23s
+== 00:17:48
+back-hpa   Deployment/back   cpu: 3%/60%   2     8     2     165m
+back-58cd87b8d9-bs26b   1/1   Running   0     43m
+back-58cd87b8d9-dxwhb   1/1   Running   0     5m29s
+== 00:17:54
+back-hpa   Deployment/back   cpu: 31%/60%   2     8     2     165m
+back-58cd87b8d9-bs26b   1/1   Running   0     43m
+back-58cd87b8d9-dxwhb   1/1   Running   0     5m34s
+== 00:17:59
+back-hpa   Deployment/back   cpu: 31%/60%   2     8     2     165m
+back-58cd87b8d9-bs26b   0/1   Running   0     43m
+back-58cd87b8d9-dxwhb   1/1   Running   0     5m39s
+== 00:18:04
+back-hpa   Deployment/back   cpu: 31%/60%   2     8     2     165m
+back-58cd87b8d9-bs26b   0/1   Running   0     43m
+back-58cd87b8d9-dxwhb   0/1   Running   0     5m44s
+== 00:18:09
+back-hpa   Deployment/back   cpu: 31%/60%   2     8     2     165m
+back-58cd87b8d9-bs26b   0/1   Running   0     43m
+back-58cd87b8d9-dxwhb   0/1   Running   0     5m50s
+== 00:18:15
+back-hpa   Deployment/back   cpu: 31%/60%   2     8     2     165m
+back-58cd87b8d9-bs26b   0/1   Running   0     43m
+back-58cd87b8d9-dxwhb   0/1   Running   0     5m55s
+== 00:18:20
+back-hpa   Deployment/back   cpu: 31%/60%   2     8     2     165m
+back-58cd87b8d9-bs26b   0/1   Running   1 (3s ago)   43m
+back-58cd87b8d9-dxwhb   0/1   Running   0            6m
+== 00:18:25
+back-hpa   Deployment/back   cpu: 31%/60%   2     8     2     165m
+back-58cd87b8d9-bs26b   1/1   Running   1 (8s ago)   43m
+back-58cd87b8d9-dxwhb   0/1   Running   1 (3s ago)   6m5s
+== 00:18:30
+back-hpa   Deployment/back   cpu: 31%/60%   2     8     2     165m
+back-58cd87b8d9-bs26b   0/1   Running   1 (14s ago)   43m
+back-58cd87b8d9-dxwhb   1/1   Running   1 (9s ago)    6m11s
+== 00:18:36
+back-hpa   Deployment/back   cpu: 31%/60%   2     8     2     165m
+back-58cd87b8d9-bs26b   0/1   Running   1 (19s ago)   43m
+back-58cd87b8d9-dxwhb   0/1   Running   1 (14s ago)   6m16s
+== 00:18:41
+back-hpa   Deployment/back   cpu: 31%/60%   2     8     2     166m
+back-58cd87b8d9-bs26b   0/1   Running   1 (24s ago)   43m
+back-58cd87b8d9-dxwhb   0/1   Running   1 (19s ago)   6m21s
+== 00:18:46
+back-hpa   Deployment/back   cpu: 31%/60%   2     8     2     166m
+back-58cd87b8d9-bs26b   0/1   Running   1 (29s ago)   44m
+back-58cd87b8d9-dxwhb   0/1   Running   1 (24s ago)   6m26s
+== 00:18:51
+back-hpa   Deployment/back   cpu: 31%/60%   2     8     2     166m
+back-58cd87b8d9-bs26b   0/1   Running   1 (35s ago)   44m
+back-58cd87b8d9-dxwhb   0/1   Running   1 (30s ago)   6m32s
+== 00:18:57
+back-hpa   Deployment/back   cpu: 219%/60%   2     8     2     166m
+back-58cd87b8d9-25mzz   1/1   Running   0             5s
+back-58cd87b8d9-bs26b   0/1   Running   1 (40s ago)   44m
+back-58cd87b8d9-dx7n9   1/1   Running   0             4s
+back-58cd87b8d9-dxwhb   0/1   Running   1 (35s ago)   6m37s
+== 00:19:02
+back-hpa   Deployment/back   cpu: 219%/60%   2     8     2     166m
+back-58cd87b8d9-25mzz   1/1   Running   0             10s
+back-58cd87b8d9-bs26b   1/1   Running   2 (5s ago)    44m
+back-58cd87b8d9-dx7n9   1/1   Running   0             9s
+back-58cd87b8d9-dxwhb   0/1   Running   1 (40s ago)   6m42s
+== 00:19:07
+back-hpa   Deployment/back   cpu: 219%/60%   2     8     4     166m
+back-58cd87b8d9-25mzz   0/1   Running             0             16s
+back-58cd87b8d9-bs26b   1/1   Running             2 (11s ago)   44m
+back-58cd87b8d9-dx7n9   0/1   Running             0             15s
+back-58cd87b8d9-dxwhb   1/1   Running             2 (6s ago)    6m48s
+back-58cd87b8d9-hl4tq   0/1   ContainerCreating   0             0s
+back-58cd87b8d9-j89m6   0/1   ContainerCreating   0             0s
+== 00:19:13
+back-hpa   Deployment/back   cpu: 219%/60%   2     8     4     166m
+back-58cd87b8d9-25mzz   0/1   Running   0             21s
+back-58cd87b8d9-bs26b   0/1   Running   2 (16s ago)   44m
+back-58cd87b8d9-dx7n9   0/1   Running   0             20s
+back-58cd87b8d9-dxwhb   1/1   Running   2 (11s ago)   6m53s
+back-58cd87b8d9-hl4tq   1/1   Running   0             5s
+back-58cd87b8d9-j89m6   1/1   Running   0             5s
+== 00:19:18
+back-hpa   Deployment/back   cpu: 219%/60%   2     8     4     166m
+back-58cd87b8d9-25mzz   0/1   Running   0             26s
+back-58cd87b8d9-bs26b   0/1   Running   2 (21s ago)   44m
+back-58cd87b8d9-dx7n9   0/1   Running   0             25s
+back-58cd87b8d9-dxwhb   0/1   Running   2 (16s ago)   6m58s
+back-58cd87b8d9-hl4tq   1/1   Running   0             10s
+back-58cd87b8d9-j89m6   1/1   Running   0             10s
+== 00:19:23
+back-hpa   Deployment/back   cpu: 219%/60%   2     8     6     166m
+back-58cd87b8d9-25mzz   0/1   Running             0             32s
+back-58cd87b8d9-5hzkv   0/1   ContainerCreating   0             1s
+back-58cd87b8d9-7xmsk   0/1   ContainerCreating   0             1s
+back-58cd87b8d9-bs26b   0/1   Running             2 (27s ago)   44m
+back-58cd87b8d9-dx7n9   0/1   Running             0             31s
+back-58cd87b8d9-dxwhb   0/1   Running             2 (22s ago)   7m4s
+back-58cd87b8d9-hl4tq   0/1   Running             0             16s
+back-58cd87b8d9-j89m6   0/1   Running             0             16s
+== 00:19:29
+back-hpa   Deployment/back   cpu: 219%/60%   2     8     6     166m
+back-58cd87b8d9-25mzz   0/1   Running   1 (4s ago)    37s
+back-58cd87b8d9-5hzkv   1/1   Running   0             6s
+back-58cd87b8d9-7xmsk   1/1   Running   0             6s
+back-58cd87b8d9-bs26b   1/1   Running   2 (32s ago)   44m
+back-58cd87b8d9-dx7n9   1/1   Running   1 (4s ago)    36s
+back-58cd87b8d9-dxwhb   1/1   Running   2 (27s ago)   7m9s
+back-58cd87b8d9-hl4tq   0/1   Running   0             21s
+back-58cd87b8d9-j89m6   0/1   Running   0             21s
+== 00:19:34
+back-hpa   Deployment/back   cpu: 219%/60%   2     8     6     166m
+back-58cd87b8d9-25mzz   1/1   Running   1 (10s ago)   43s
+back-58cd87b8d9-5hzkv   1/1   Running   0             12s
+back-58cd87b8d9-7xmsk   1/1   Running   0             12s
+back-58cd87b8d9-bs26b   1/1   Running   2 (38s ago)   44m
+back-58cd87b8d9-dx7n9   1/1   Running   1 (10s ago)   42s
+back-58cd87b8d9-dxwhb   1/1   Running   2 (33s ago)   7m15s
+back-58cd87b8d9-hl4tq   1/1   Running   0             27s
+back-58cd87b8d9-j89m6   1/1   Running   0             27s
+== 00:19:40
+back-hpa   Deployment/back   cpu: 219%/60%   2     8     8     166m
+back-58cd87b8d9-25mzz   0/1   Running   1 (15s ago)   48s
+back-58cd87b8d9-5hzkv   0/1   Running   0             17s
+back-58cd87b8d9-7xmsk   0/1   Running   0             17s
+back-58cd87b8d9-bs26b   0/1   Running   3 (2s ago)    44m
+back-58cd87b8d9-dx7n9   0/1   Running   1 (15s ago)   47s
+back-58cd87b8d9-dxwhb   0/1   Running   2 (38s ago)   7m20s
+back-58cd87b8d9-hl4tq   1/1   Running   0             32s
+back-58cd87b8d9-j89m6   1/1   Running   0             32s
+== 00:19:45
+back-hpa   Deployment/back   cpu: 219%/60%   2     8     8     167m
+back-58cd87b8d9-25mzz   0/1   Running   1 (20s ago)   53s
+back-58cd87b8d9-5hzkv   0/1   Running   0             22s
+back-58cd87b8d9-7xmsk   0/1   Running   0             22s
+back-58cd87b8d9-bs26b   1/1   Running   3 (7s ago)    45m
+back-58cd87b8d9-dx7n9   0/1   Running   1 (20s ago)   52s
+back-58cd87b8d9-dxwhb   1/1   Running   2 (43s ago)   7m25s
+back-58cd87b8d9-hl4tq   0/1   Running   0             37s
+back-58cd87b8d9-j89m6   0/1   Running   0             37s
+== 00:19:50
+back-hpa   Deployment/back   cpu: 219%/60%   2     8     8     167m
+back-58cd87b8d9-25mzz   1/1   Running   1 (26s ago)   59s
+back-58cd87b8d9-5hzkv   0/1   Running   0             28s
+back-58cd87b8d9-7xmsk   0/1   Running   0             28s
+back-58cd87b8d9-bs26b   0/1   Running   3 (13s ago)   45m
+back-58cd87b8d9-dx7n9   1/1   Running   1 (26s ago)   58s
+back-58cd87b8d9-dxwhb   1/1   Running   2 (49s ago)   7m31s
+back-58cd87b8d9-hl4tq   0/1   Running   0             43s
+back-58cd87b8d9-j89m6   0/1   Running   0             43s
+== 00:19:56
+back-hpa   Deployment/back   cpu: 216%/60%   2     8     8     167m
+back-58cd87b8d9-25mzz   0/1   Running   1 (31s ago)   64s
+back-58cd87b8d9-5hzkv   1/1   Running   0             33s
+back-58cd87b8d9-7xmsk   1/1   Running   0             33s
+back-58cd87b8d9-bs26b   0/1   Running   3 (18s ago)   45m
+back-58cd87b8d9-dx7n9   0/1   Running   1 (31s ago)   63s
+back-58cd87b8d9-dxwhb   0/1   Running   2 (54s ago)   7m36s
+back-58cd87b8d9-hl4tq   1/1   Running   1 (6s ago)    48s
+back-58cd87b8d9-j89m6   0/1   Running   0             48s
+== 00:20:01
+back-hpa   Deployment/back   cpu: 216%/60%   2     8     8     167m
+back-58cd87b8d9-25mzz   0/1   Running   1 (36s ago)   69s
+back-58cd87b8d9-5hzkv   1/1   Running   0             38s
+back-58cd87b8d9-7xmsk   0/1   Running   0             38s
+back-58cd87b8d9-bs26b   0/1   Running   3 (23s ago)   45m
+back-58cd87b8d9-dx7n9   0/1   Running   1 (36s ago)   68s
+back-58cd87b8d9-dxwhb   0/1   Running   2 (59s ago)   7m41s
+back-58cd87b8d9-hl4tq   1/1   Running   1 (11s ago)   53s
+back-58cd87b8d9-j89m6   0/1   Running   0             53s
+== 00:20:06
+back-hpa   Deployment/back   cpu: 216%/60%   2     8     8     167m
+back-58cd87b8d9-25mzz   0/1   Running   2 (2s ago)    75s
+back-58cd87b8d9-5hzkv   0/1   Running   0             44s
+back-58cd87b8d9-7xmsk   0/1   Running   0             44s
+back-58cd87b8d9-bs26b   1/1   Running   3 (29s ago)   45m
+back-58cd87b8d9-dx7n9   0/1   Running   2 (2s ago)    74s
+back-58cd87b8d9-dxwhb   1/1   Running   3 (5s ago)    7m47s
+back-58cd87b8d9-hl4tq   0/1   Running   1 (17s ago)   59s
+back-58cd87b8d9-j89m6   1/1   Running   0             59s
+== 00:20:12
+back-hpa   Deployment/back   cpu: 216%/60%   2     8     8     167m
+back-58cd87b8d9-25mzz   1/1   Running   2 (7s ago)    80s
+back-58cd87b8d9-5hzkv   1/1   Running   1 (6s ago)    49s
+back-58cd87b8d9-7xmsk   1/1   Running   0             49s
+back-58cd87b8d9-bs26b   1/1   Running   3 (34s ago)   45m
+back-58cd87b8d9-dx7n9   1/1   Running   2 (7s ago)    79s
+back-58cd87b8d9-dxwhb   1/1   Running   3 (10s ago)   7m52s
+back-58cd87b8d9-hl4tq   0/1   Running   1 (22s ago)   64s
+back-58cd87b8d9-j89m6   0/1   Running   1 (2s ago)    64s
+== 00:20:17
+back-hpa   Deployment/back   cpu: 216%/60%   2     8     8     167m
+back-58cd87b8d9-25mzz   1/1   Running   2 (12s ago)   85s
+back-58cd87b8d9-5hzkv   1/1   Running   1 (11s ago)   54s
+back-58cd87b8d9-7xmsk   1/1   Running   0             54s
+back-58cd87b8d9-bs26b   0/1   Running   3 (39s ago)   45m
+back-58cd87b8d9-dx7n9   1/1   Running   2 (12s ago)   84s
+back-58cd87b8d9-dxwhb   0/1   Running   3 (15s ago)   7m57s
+back-58cd87b8d9-hl4tq   0/1   Running   1 (27s ago)   69s
+back-58cd87b8d9-j89m6   1/1   Running   1 (7s ago)    69s
+== 00:20:22
+back-hpa   Deployment/back   cpu: 216%/60%   2     8     8     167m
+back-58cd87b8d9-25mzz   1/1   Running   2 (17s ago)   90s
+back-58cd87b8d9-5hzkv   1/1   Running   1 (16s ago)   59s
+back-58cd87b8d9-7xmsk   1/1   Running   0             59s
+back-58cd87b8d9-bs26b   0/1   Running   3 (44s ago)   45m
+back-58cd87b8d9-dx7n9   1/1   Running   2 (17s ago)   89s
+back-58cd87b8d9-dxwhb   0/1   Running   3 (20s ago)   8m2s
+back-58cd87b8d9-hl4tq   0/1   Running   1 (32s ago)   74s
+back-58cd87b8d9-j89m6   1/1   Running   1 (12s ago)   74s
+== 00:20:27
+back-hpa   Deployment/back   cpu: 216%/60%   2     8     8     167m
+back-58cd87b8d9-25mzz   1/1   Running   2 (23s ago)   96s
+back-58cd87b8d9-5hzkv   1/1   Running   1 (22s ago)   65s
+back-58cd87b8d9-7xmsk   1/1   Running   0             65s
+back-58cd87b8d9-bs26b   1/1   Running   3 (50s ago)   45m
+back-58cd87b8d9-dx7n9   1/1   Running   2 (23s ago)   95s
+back-58cd87b8d9-dxwhb   1/1   Running   3 (26s ago)   8m8s
+back-58cd87b8d9-hl4tq   0/1   Running   1 (38s ago)   80s
+back-58cd87b8d9-j89m6   1/1   Running   1 (18s ago)   80s
+== 00:20:33
+back-hpa   Deployment/back   cpu: 216%/60%   2     8     8     167m
+back-58cd87b8d9-25mzz   1/1   Running   2 (28s ago)   101s
+back-58cd87b8d9-5hzkv   1/1   Running   1 (27s ago)   70s
+back-58cd87b8d9-7xmsk   1/1   Running   0             70s
+back-58cd87b8d9-bs26b   1/1   Running   3 (55s ago)   45m
+back-58cd87b8d9-dx7n9   1/1   Running   2 (28s ago)   100s
+back-58cd87b8d9-dxwhb   1/1   Running   3 (31s ago)   8m13s
+back-58cd87b8d9-hl4tq   1/1   Running   1 (43s ago)   85s
+back-58cd87b8d9-j89m6   1/1   Running   1 (23s ago)   85s
+== 00:20:38
+back-hpa   Deployment/back   cpu: 216%/60%   2     8     8     167m
+back-58cd87b8d9-25mzz   1/1   Running   2 (33s ago)   106s
+back-58cd87b8d9-5hzkv   1/1   Running   1 (32s ago)   75s
+back-58cd87b8d9-7xmsk   1/1   Running   0             75s
+back-58cd87b8d9-bs26b   1/1   Running   3 (60s ago)   45m
+back-58cd87b8d9-dx7n9   1/1   Running   2 (33s ago)   105s
+back-58cd87b8d9-dxwhb   1/1   Running   3 (36s ago)   8m18s
+back-58cd87b8d9-hl4tq   1/1   Running   1 (48s ago)   90s
+back-58cd87b8d9-j89m6   1/1   Running   1 (28s ago)   90s
+== 00:20:43
+back-hpa   Deployment/back   cpu: 216%/60%   2     8     8     168m
+back-58cd87b8d9-25mzz   1/1   Running   2 (38s ago)   111s
+back-58cd87b8d9-5hzkv   1/1   Running   1 (37s ago)   80s
+back-58cd87b8d9-7xmsk   1/1   Running   0             80s
+back-58cd87b8d9-bs26b   1/1   Running   3 (65s ago)   45m
+back-58cd87b8d9-dx7n9   1/1   Running   2 (38s ago)   110s
+back-58cd87b8d9-dxwhb   1/1   Running   3 (41s ago)   8m23s
+back-58cd87b8d9-hl4tq   1/1   Running   1 (53s ago)   95s
+back-58cd87b8d9-j89m6   1/1   Running   1 (33s ago)   95s
+== 00:20:48
+back-hpa   Deployment/back   cpu: 216%/60%   2     8     8     168m
+back-58cd87b8d9-25mzz   1/1   Running   2 (43s ago)   116s
+back-58cd87b8d9-5hzkv   1/1   Running   1 (42s ago)   85s
+back-58cd87b8d9-7xmsk   1/1   Running   0             85s
+back-58cd87b8d9-bs26b   1/1   Running   3 (70s ago)   46m
+back-58cd87b8d9-dx7n9   1/1   Running   2 (43s ago)   115s
+back-58cd87b8d9-dxwhb   1/1   Running   3 (46s ago)   8m28s
+back-58cd87b8d9-hl4tq   1/1   Running   1 (58s ago)   100s
+back-58cd87b8d9-j89m6   1/1   Running   1 (38s ago)   100s
+== 00:20:53
+back-hpa   Deployment/back   cpu: 151%/60%   2     8     8     168m
+back-58cd87b8d9-25mzz   1/1   Running   2 (49s ago)   2m2s
+back-58cd87b8d9-5hzkv   1/1   Running   1 (48s ago)   91s
+back-58cd87b8d9-7xmsk   1/1   Running   0             91s
+back-58cd87b8d9-bs26b   1/1   Running   3 (76s ago)   46m
+back-58cd87b8d9-dx7n9   1/1   Running   2 (49s ago)   2m1s
+back-58cd87b8d9-dxwhb   1/1   Running   3 (52s ago)   8m34s
+back-58cd87b8d9-hl4tq   1/1   Running   1 (64s ago)   106s
+back-58cd87b8d9-j89m6   1/1   Running   1 (44s ago)   106s
+== 00:20:59
+back-hpa   Deployment/back   cpu: 151%/60%   2     8     8     168m
+back-58cd87b8d9-25mzz   1/1   Running   2 (54s ago)   2m7s
+back-58cd87b8d9-5hzkv   1/1   Running   1 (53s ago)   96s
+back-58cd87b8d9-7xmsk   1/1   Running   0             96s
+back-58cd87b8d9-bs26b   1/1   Running   3 (81s ago)   46m
+back-58cd87b8d9-dx7n9   1/1   Running   2 (54s ago)   2m6s
+back-58cd87b8d9-dxwhb   1/1   Running   3 (57s ago)   8m39s
+back-58cd87b8d9-hl4tq   1/1   Running   1 (69s ago)   111s
+back-58cd87b8d9-j89m6   1/1   Running   1 (49s ago)   111s
+== 00:21:04
+back-hpa   Deployment/back   cpu: 151%/60%   2     8     8     168m
+back-58cd87b8d9-25mzz   1/1   Running   2 (59s ago)   2m12s
+back-58cd87b8d9-5hzkv   1/1   Running   1 (58s ago)   101s
+back-58cd87b8d9-7xmsk   1/1   Running   0             101s
+back-58cd87b8d9-bs26b   1/1   Running   3 (86s ago)   46m
+back-58cd87b8d9-dx7n9   1/1   Running   2 (59s ago)   2m11s
+back-58cd87b8d9-dxwhb   1/1   Running   3 (62s ago)   8m44s
+back-58cd87b8d9-hl4tq   1/1   Running   1 (74s ago)   116s
+back-58cd87b8d9-j89m6   1/1   Running   1 (54s ago)   116s
+== 00:21:09
+back-hpa   Deployment/back   cpu: 151%/60%   2     8     8     168m
+back-58cd87b8d9-25mzz   1/1   Running   2 (64s ago)   2m17s
+back-58cd87b8d9-5hzkv   1/1   Running   1 (63s ago)   106s
+back-58cd87b8d9-7xmsk   1/1   Running   0             106s
+back-58cd87b8d9-bs26b   1/1   Running   3 (91s ago)   46m
+back-58cd87b8d9-dx7n9   1/1   Running   2 (64s ago)   2m16s
+back-58cd87b8d9-dxwhb   1/1   Running   3 (67s ago)   8m49s
+back-58cd87b8d9-hl4tq   1/1   Running   1 (79s ago)   2m1s
+back-58cd87b8d9-j89m6   1/1   Running   1 (59s ago)   2m1s
+== 00:21:14
+back-hpa   Deployment/back   cpu: 151%/60%   2     8     8     168m
+back-58cd87b8d9-25mzz   1/1   Running   2 (69s ago)   2m22s
+back-58cd87b8d9-5hzkv   1/1   Running   1 (68s ago)   111s
+back-58cd87b8d9-7xmsk   1/1   Running   0             111s
+back-58cd87b8d9-bs26b   1/1   Running   3 (96s ago)   46m
+back-58cd87b8d9-dx7n9   1/1   Running   2 (69s ago)   2m21s
+back-58cd87b8d9-dxwhb   1/1   Running   3 (72s ago)   8m54s
+back-58cd87b8d9-hl4tq   1/1   Running   1 (84s ago)   2m6s
+back-58cd87b8d9-j89m6   1/1   Running   1 (64s ago)   2m6s
+== 00:21:19
+back-hpa   Deployment/back   cpu: 151%/60%   2     8     8     168m
+back-58cd87b8d9-25mzz   1/1   Running   2 (75s ago)    2m28s
+back-58cd87b8d9-5hzkv   1/1   Running   1 (74s ago)    117s
+back-58cd87b8d9-7xmsk   1/1   Running   0              117s
+back-58cd87b8d9-bs26b   1/1   Running   3 (102s ago)   46m
+back-58cd87b8d9-dx7n9   1/1   Running   2 (75s ago)    2m27s
+back-58cd87b8d9-dxwhb   1/1   Running   3 (78s ago)    9m
+back-58cd87b8d9-hl4tq   1/1   Running   1 (90s ago)    2m12s
+back-58cd87b8d9-j89m6   1/1   Running   1 (70s ago)    2m12s
+== 00:21:25
+back-hpa   Deployment/back   cpu: 151%/60%   2     8     8     168m
+back-58cd87b8d9-25mzz   1/1   Running   2 (80s ago)    2m33s
+back-58cd87b8d9-5hzkv   1/1   Running   1 (79s ago)    2m2s
+back-58cd87b8d9-7xmsk   1/1   Running   0              2m2s
+back-58cd87b8d9-bs26b   1/1   Running   3 (107s ago)   46m
+back-58cd87b8d9-dx7n9   1/1   Running   2 (80s ago)    2m32s
+back-58cd87b8d9-dxwhb   1/1   Running   3 (83s ago)    9m5s
+back-58cd87b8d9-hl4tq   1/1   Running   1 (95s ago)    2m17s
+back-58cd87b8d9-j89m6   1/1   Running   1 (75s ago)    2m17s
+== 00:21:30
+back-hpa   Deployment/back   cpu: 151%/60%   2     8     8     168m
+back-58cd87b8d9-25mzz   1/1   Running   2 (85s ago)    2m38s
+back-58cd87b8d9-5hzkv   1/1   Running   1 (84s ago)    2m7s
+back-58cd87b8d9-7xmsk   1/1   Running   0              2m7s
+back-58cd87b8d9-bs26b   1/1   Running   3 (112s ago)   46m
+back-58cd87b8d9-dx7n9   1/1   Running   2 (85s ago)    2m37s
+back-58cd87b8d9-dxwhb   1/1   Running   3 (88s ago)    9m10s
+back-58cd87b8d9-hl4tq   1/1   Running   1 (100s ago)   2m22s
+back-58cd87b8d9-j89m6   1/1   Running   1 (80s ago)    2m22s
+== 00:21:35
+back-hpa   Deployment/back   cpu: 151%/60%   2     8     8     168m
+back-58cd87b8d9-25mzz   1/1   Running   2 (90s ago)    2m43s
+back-58cd87b8d9-5hzkv   1/1   Running   1 (89s ago)    2m12s
+back-58cd87b8d9-7xmsk   1/1   Running   0              2m12s
+back-58cd87b8d9-bs26b   1/1   Running   3 (117s ago)   46m
+back-58cd87b8d9-dx7n9   1/1   Running   2 (90s ago)    2m42s
+back-58cd87b8d9-dxwhb   1/1   Running   3 (93s ago)    9m15s
+back-58cd87b8d9-hl4tq   1/1   Running   1 (105s ago)   2m27s
+back-58cd87b8d9-j89m6   1/1   Running   1 (85s ago)    2m27s
+== 00:21:40
+back-hpa   Deployment/back   cpu: 151%/60%   2     8     8     168m
+back-58cd87b8d9-25mzz   1/1   Running   2 (96s ago)    2m49s
+back-58cd87b8d9-5hzkv   1/1   Running   1 (95s ago)    2m18s
+back-58cd87b8d9-7xmsk   1/1   Running   0              2m18s
+back-58cd87b8d9-bs26b   1/1   Running   3 (2m3s ago)   46m
+back-58cd87b8d9-dx7n9   1/1   Running   2 (96s ago)    2m48s
+back-58cd87b8d9-dxwhb   1/1   Running   3 (99s ago)    9m21s
+back-58cd87b8d9-hl4tq   1/1   Running   1 (111s ago)   2m33s
+back-58cd87b8d9-j89m6   1/1   Running   1 (91s ago)    2m33s
+== 00:21:46
+back-hpa   Deployment/back   cpu: 151%/60%   2     8     8     169m
+back-58cd87b8d9-25mzz   1/1   Running   2 (101s ago)   2m54s
+back-58cd87b8d9-5hzkv   1/1   Running   1 (100s ago)   2m23s
+back-58cd87b8d9-7xmsk   1/1   Running   0              2m23s
+back-58cd87b8d9-bs26b   1/1   Running   3 (2m8s ago)   47m
+back-58cd87b8d9-dx7n9   1/1   Running   2 (101s ago)   2m53s
+back-58cd87b8d9-dxwhb   1/1   Running   3 (104s ago)   9m26s
+back-58cd87b8d9-hl4tq   1/1   Running   1 (116s ago)   2m38s
+back-58cd87b8d9-j89m6   1/1   Running   1 (96s ago)    2m38s
+== 00:21:51
+back-hpa   Deployment/back   cpu: 151%/60%   2     8     8     169m
+back-58cd87b8d9-25mzz   1/1   Running   2 (106s ago)    2m59s
+back-58cd87b8d9-5hzkv   1/1   Running   1 (105s ago)    2m28s
+back-58cd87b8d9-7xmsk   1/1   Running   0               2m28s
+back-58cd87b8d9-bs26b   1/1   Running   3 (2m13s ago)   47m
+back-58cd87b8d9-dx7n9   1/1   Running   2 (106s ago)    2m58s
+back-58cd87b8d9-dxwhb   1/1   Running   3 (109s ago)    9m31s
+back-58cd87b8d9-hl4tq   1/1   Running   1 (2m1s ago)    2m43s
+back-58cd87b8d9-j89m6   1/1   Running   1 (101s ago)    2m43s
+== 00:21:56
+back-hpa   Deployment/back   cpu: 50%/60%   2     8     8     169m
+back-58cd87b8d9-25mzz   1/1   Running   2 (111s ago)    3m4s
+back-58cd87b8d9-5hzkv   1/1   Running   1 (110s ago)    2m33s
+back-58cd87b8d9-7xmsk   1/1   Running   0               2m33s
+back-58cd87b8d9-bs26b   1/1   Running   3 (2m18s ago)   47m
+back-58cd87b8d9-dx7n9   1/1   Running   2 (111s ago)    3m3s
+back-58cd87b8d9-dxwhb   1/1   Running   3 (114s ago)    9m36s
+back-58cd87b8d9-hl4tq   1/1   Running   1 (2m6s ago)    2m48s
+back-58cd87b8d9-j89m6   1/1   Running   1 (106s ago)    2m48s
+== 00:22:01
+back-hpa   Deployment/back   cpu: 50%/60%   2     8     8     169m
+back-58cd87b8d9-25mzz   1/1   Running   2 (116s ago)    3m9s
+back-58cd87b8d9-5hzkv   1/1   Running   1 (115s ago)    2m38s
+back-58cd87b8d9-7xmsk   1/1   Running   0               2m38s
+back-58cd87b8d9-bs26b   1/1   Running   3 (2m23s ago)   47m
+back-58cd87b8d9-dx7n9   1/1   Running   2 (116s ago)    3m8s
+back-58cd87b8d9-dxwhb   1/1   Running   3 (119s ago)    9m41s
+back-58cd87b8d9-hl4tq   1/1   Running   1 (2m11s ago)   2m53s
+back-58cd87b8d9-j89m6   1/1   Running   1 (111s ago)    2m53s
+== 00:22:06
+back-hpa   Deployment/back   cpu: 50%/60%   2     8     8     169m
+back-58cd87b8d9-25mzz   1/1   Running   2 (2m2s ago)    3m15s
+back-58cd87b8d9-5hzkv   1/1   Running   1 (2m1s ago)    2m44s
+back-58cd87b8d9-7xmsk   1/1   Running   0               2m44s
+back-58cd87b8d9-bs26b   1/1   Running   3 (2m29s ago)   47m
+back-58cd87b8d9-dx7n9   1/1   Running   2 (2m2s ago)    3m14s
+back-58cd87b8d9-dxwhb   1/1   Running   3 (2m5s ago)    9m47s
+back-58cd87b8d9-hl4tq   1/1   Running   1 (2m17s ago)   2m59s
+back-58cd87b8d9-j89m6   1/1   Running   1 (117s ago)    2m59s
+== 00:22:12
+back-hpa   Deployment/back   cpu: 50%/60%   2     8     8     169m
+back-58cd87b8d9-25mzz   1/1   Running   2 (2m7s ago)    3m20s
+back-58cd87b8d9-5hzkv   1/1   Running   1 (2m6s ago)    2m49s
+back-58cd87b8d9-7xmsk   1/1   Running   0               2m49s
+back-58cd87b8d9-bs26b   1/1   Running   3 (2m34s ago)   47m
+back-58cd87b8d9-dx7n9   1/1   Running   2 (2m7s ago)    3m19s
+back-58cd87b8d9-dxwhb   1/1   Running   3 (2m10s ago)   9m52s
+back-58cd87b8d9-hl4tq   1/1   Running   1 (2m22s ago)   3m4s
+back-58cd87b8d9-j89m6   1/1   Running   1 (2m2s ago)    3m4s
+== 00:22:17
+back-hpa   Deployment/back   cpu: 50%/60%   2     8     8     169m
+back-58cd87b8d9-25mzz   1/1   Running   2 (2m12s ago)   3m25s
+back-58cd87b8d9-5hzkv   1/1   Running   1 (2m11s ago)   2m54s
+back-58cd87b8d9-7xmsk   1/1   Running   0               2m54s
+back-58cd87b8d9-bs26b   1/1   Running   3 (2m39s ago)   47m
+back-58cd87b8d9-dx7n9   1/1   Running   2 (2m12s ago)   3m24s
+back-58cd87b8d9-dxwhb   1/1   Running   3 (2m15s ago)   9m57s
+back-58cd87b8d9-hl4tq   1/1   Running   1 (2m27s ago)   3m9s
+back-58cd87b8d9-j89m6   1/1   Running   1 (2m7s ago)    3m9s
+== 00:22:22
+back-hpa   Deployment/back   cpu: 50%/60%   2     8     8     169m
+back-58cd87b8d9-25mzz   1/1   Running   2 (2m17s ago)   3m30s
+back-58cd87b8d9-5hzkv   1/1   Running   1 (2m16s ago)   2m59s
+back-58cd87b8d9-7xmsk   1/1   Running   0               2m59s
+back-58cd87b8d9-bs26b   1/1   Running   3 (2m44s ago)   47m
+back-58cd87b8d9-dx7n9   1/1   Running   2 (2m17s ago)   3m29s
+back-58cd87b8d9-dxwhb   1/1   Running   3 (2m20s ago)   10m
+back-58cd87b8d9-hl4tq   1/1   Running   1 (2m32s ago)   3m14s
+back-58cd87b8d9-j89m6   1/1   Running   1 (2m12s ago)   3m14s
+== 00:22:27
+back-hpa   Deployment/back   cpu: 50%/60%   2     8     8     169m
+back-58cd87b8d9-25mzz   1/1   Running   2 (2m22s ago)   3m35s
+back-58cd87b8d9-5hzkv   1/1   Running   1 (2m21s ago)   3m4s
+back-58cd87b8d9-7xmsk   1/1   Running   0               3m4s
+back-58cd87b8d9-bs26b   1/1   Running   3 (2m49s ago)   47m
+back-58cd87b8d9-dx7n9   1/1   Running   2 (2m22s ago)   3m34s
+back-58cd87b8d9-dxwhb   1/1   Running   3 (2m25s ago)   10m
+back-58cd87b8d9-hl4tq   1/1   Running   1 (2m37s ago)   3m19s
+back-58cd87b8d9-j89m6   1/1   Running   1 (2m17s ago)   3m19s
+== 00:22:32
+back-hpa   Deployment/back   cpu: 50%/60%   2     8     8     169m
+back-58cd87b8d9-25mzz   1/1   Running   2 (2m28s ago)   3m41s
+back-58cd87b8d9-5hzkv   1/1   Running   1 (2m27s ago)   3m10s
+back-58cd87b8d9-7xmsk   1/1   Running   0               3m10s
+back-58cd87b8d9-bs26b   1/1   Running   3 (2m55s ago)   47m
+back-58cd87b8d9-dx7n9   1/1   Running   2 (2m28s ago)   3m40s
+back-58cd87b8d9-dxwhb   1/1   Running   3 (2m31s ago)   10m
+back-58cd87b8d9-hl4tq   1/1   Running   1 (2m43s ago)   3m25s
+back-58cd87b8d9-j89m6   1/1   Running   1 (2m23s ago)   3m25s
+== 00:22:38
+back-hpa   Deployment/back   cpu: 50%/60%   2     8     8     169m
+back-58cd87b8d9-25mzz   1/1   Running   2 (2m33s ago)   3m46s
+back-58cd87b8d9-5hzkv   1/1   Running   1 (2m32s ago)   3m15s
+back-58cd87b8d9-7xmsk   1/1   Running   0               3m15s
+back-58cd87b8d9-bs26b   1/1   Running   3 (3m ago)      47m
+back-58cd87b8d9-dx7n9   1/1   Running   2 (2m33s ago)   3m45s
+back-58cd87b8d9-dxwhb   1/1   Running   3 (2m36s ago)   10m
+back-58cd87b8d9-hl4tq   1/1   Running   1 (2m48s ago)   3m30s
+back-58cd87b8d9-j89m6   1/1   Running   1 (2m28s ago)   3m30s
+== 00:22:43
+back-hpa   Deployment/back   cpu: 50%/60%   2     8     8     170m
+back-58cd87b8d9-25mzz   1/1   Running   2 (2m38s ago)   3m51s
+back-58cd87b8d9-5hzkv   1/1   Running   1 (2m37s ago)   3m20s
+back-58cd87b8d9-7xmsk   1/1   Running   0               3m20s
+back-58cd87b8d9-bs26b   1/1   Running   3 (3m5s ago)    47m
+back-58cd87b8d9-dx7n9   1/1   Running   2 (2m38s ago)   3m50s
+back-58cd87b8d9-dxwhb   1/1   Running   3 (2m41s ago)   10m
+back-58cd87b8d9-j89m6   1/1   Running   1 (2m33s ago)   3m35s
+== 00:22:48
+back-hpa   Deployment/back   cpu: 50%/60%   2     8     8     170m
+back-58cd87b8d9-25mzz   1/1   Running   2 (2m43s ago)   3m56s
+back-58cd87b8d9-5hzkv   1/1   Running   1 (2m42s ago)   3m25s
+back-58cd87b8d9-7xmsk   1/1   Running   0               3m25s
+back-58cd87b8d9-bs26b   1/1   Running   3 (3m10s ago)   48m
+back-58cd87b8d9-dx7n9   1/1   Running   2 (2m43s ago)   3m55s
+back-58cd87b8d9-dxwhb   1/1   Running   3 (2m46s ago)   10m
+back-58cd87b8d9-j89m6   1/1   Running   1 (2m38s ago)   3m40s
+== 00:22:53
+back-hpa   Deployment/back   cpu: 30%/60%   2     8     7     170m
+back-58cd87b8d9-25mzz   1/1   Running   2 (2m48s ago)   4m1s
+back-58cd87b8d9-5hzkv   1/1   Running   1 (2m47s ago)   3m30s
+back-58cd87b8d9-7xmsk   1/1   Running   0               3m30s
+back-58cd87b8d9-bs26b   1/1   Running   3 (3m15s ago)   48m
+back-58cd87b8d9-dx7n9   1/1   Running   2 (2m48s ago)   4m
+back-58cd87b8d9-dxwhb   1/1   Running   3 (2m51s ago)   10m
+back-58cd87b8d9-j89m6   1/1   Running   1 (2m43s ago)   3m45s
+== 00:22:58
+back-hpa   Deployment/back   cpu: 30%/60%   2     8     7     170m
+back-58cd87b8d9-25mzz   1/1   Running   2 (2m54s ago)   4m7s
+back-58cd87b8d9-5hzkv   1/1   Running   1 (2m53s ago)   3m36s
+back-58cd87b8d9-7xmsk   1/1   Running   0               3m36s
+back-58cd87b8d9-bs26b   1/1   Running   3 (3m21s ago)   48m
+back-58cd87b8d9-dx7n9   1/1   Running   2 (2m54s ago)   4m6s
+back-58cd87b8d9-dxwhb   1/1   Running   3 (2m57s ago)   10m
+back-58cd87b8d9-j89m6   1/1   Running   1 (2m49s ago)   3m51s
+== 00:23:04
+back-hpa   Deployment/back   cpu: 30%/60%   2     8     7     170m
+back-58cd87b8d9-25mzz   1/1   Running   2 (2m59s ago)   4m12s
+back-58cd87b8d9-5hzkv   1/1   Running   1 (2m58s ago)   3m41s
+back-58cd87b8d9-7xmsk   1/1   Running   0               3m41s
+back-58cd87b8d9-bs26b   1/1   Running   3 (3m26s ago)   48m
+back-58cd87b8d9-dx7n9   1/1   Running   2 (2m59s ago)   4m11s
+back-58cd87b8d9-dxwhb   1/1   Running   3 (3m2s ago)    10m
+back-58cd87b8d9-j89m6   1/1   Running   1 (2m54s ago)   3m56s
+== 00:23:09
+back-hpa   Deployment/back   cpu: 30%/60%   2     8     7     170m
+back-58cd87b8d9-25mzz   1/1   Running   2 (3m4s ago)    4m17s
+back-58cd87b8d9-5hzkv   1/1   Running   1 (3m3s ago)    3m46s
+back-58cd87b8d9-7xmsk   1/1   Running   0               3m46s
+back-58cd87b8d9-bs26b   1/1   Running   3 (3m31s ago)   48m
+back-58cd87b8d9-dx7n9   1/1   Running   2 (3m4s ago)    4m16s
+back-58cd87b8d9-dxwhb   1/1   Running   3 (3m7s ago)    10m
+back-58cd87b8d9-j89m6   1/1   Running   1 (2m59s ago)   4m1s
+== 00:23:14
+back-hpa   Deployment/back   cpu: 30%/60%   2     8     7     170m
+back-58cd87b8d9-25mzz   1/1   Running   2 (3m9s ago)    4m22s
+back-58cd87b8d9-5hzkv   1/1   Running   1 (3m8s ago)    3m51s
+back-58cd87b8d9-7xmsk   1/1   Running   0               3m51s
+back-58cd87b8d9-bs26b   1/1   Running   3 (3m36s ago)   48m
+back-58cd87b8d9-dx7n9   1/1   Running   2 (3m9s ago)    4m21s
+back-58cd87b8d9-dxwhb   1/1   Running   3 (3m12s ago)   10m
+back-58cd87b8d9-j89m6   1/1   Running   1 (3m4s ago)    4m6s
+== 00:23:19
+back-hpa   Deployment/back   cpu: 30%/60%   2     8     7     170m
+back-58cd87b8d9-25mzz   1/1   Running   2 (3m14s ago)   4m27s
+back-58cd87b8d9-5hzkv   1/1   Running   1 (3m13s ago)   3m56s
+back-58cd87b8d9-7xmsk   1/1   Running   0               3m56s
+back-58cd87b8d9-bs26b   1/1   Running   3 (3m41s ago)   48m
+back-58cd87b8d9-dx7n9   1/1   Running   2 (3m14s ago)   4m26s
+back-58cd87b8d9-dxwhb   1/1   Running   3 (3m17s ago)   10m
+back-58cd87b8d9-j89m6   1/1   Running   1 (3m9s ago)    4m11s
+== 00:23:24
+back-hpa   Deployment/back   cpu: 30%/60%   2     8     7     170m
+back-58cd87b8d9-25mzz   1/1   Running   2 (3m20s ago)   4m33s
+back-58cd87b8d9-5hzkv   1/1   Running   1 (3m19s ago)   4m2s
+back-58cd87b8d9-7xmsk   1/1   Running   0               4m2s
+back-58cd87b8d9-bs26b   1/1   Running   3 (3m47s ago)   48m
+back-58cd87b8d9-dx7n9   1/1   Running   2 (3m20s ago)   4m32s
+back-58cd87b8d9-dxwhb   1/1   Running   3 (3m23s ago)   11m
+back-58cd87b8d9-j89m6   1/1   Running   1 (3m15s ago)   4m17s
+== 00:23:30
+back-hpa   Deployment/back   cpu: 30%/60%   2     8     7     170m
+back-58cd87b8d9-25mzz   1/1   Running   2 (3m25s ago)   4m38s
+back-58cd87b8d9-5hzkv   1/1   Running   1 (3m24s ago)   4m7s
+back-58cd87b8d9-7xmsk   1/1   Running   0               4m7s
+back-58cd87b8d9-bs26b   1/1   Running   3 (3m52s ago)   48m
+back-58cd87b8d9-dx7n9   1/1   Running   2 (3m25s ago)   4m37s
+back-58cd87b8d9-dxwhb   1/1   Running   3 (3m28s ago)   11m
+back-58cd87b8d9-j89m6   1/1   Running   1 (3m20s ago)   4m22s
+== 00:23:35
+back-hpa   Deployment/back   cpu: 30%/60%   2     8     7     170m
+back-58cd87b8d9-25mzz   1/1   Running   2 (3m30s ago)   4m43s
+back-58cd87b8d9-5hzkv   1/1   Running   1 (3m29s ago)   4m12s
+back-58cd87b8d9-7xmsk   1/1   Running   0               4m12s
+back-58cd87b8d9-bs26b   1/1   Running   3 (3m57s ago)   48m
+back-58cd87b8d9-dx7n9   1/1   Running   2 (3m30s ago)   4m42s
+back-58cd87b8d9-dxwhb   1/1   Running   3 (3m33s ago)   11m
+back-58cd87b8d9-j89m6   1/1   Running   1 (3m25s ago)   4m27s
+== 00:23:40
+back-hpa   Deployment/back   cpu: 30%/60%   2     8     7     170m
+back-58cd87b8d9-25mzz   1/1   Running   2 (3m35s ago)   4m48s
+back-58cd87b8d9-7xmsk   1/1   Running   0               4m17s
+back-58cd87b8d9-bs26b   1/1   Running   3 (4m2s ago)    48m
+back-58cd87b8d9-dxwhb   1/1   Running   3 (3m38s ago)   11m
+== 00:23:45
+back-hpa   Deployment/back   cpu: 30%/60%   2     8     7     171m
+back-58cd87b8d9-25mzz   1/1   Running   2 (3m40s ago)   4m53s
+back-58cd87b8d9-7xmsk   1/1   Running   0               4m22s
+back-58cd87b8d9-bs26b   1/1   Running   3 (4m7s ago)    49m
+back-58cd87b8d9-dxwhb   1/1   Running   3 (3m43s ago)   11m
+== 00:23:50
+back-hpa   Deployment/back   cpu: 30%/60%   2     8     7     171m
+back-58cd87b8d9-25mzz   1/1   Running   2 (3m46s ago)   4m59s
+back-58cd87b8d9-7xmsk   1/1   Running   0               4m28s
+back-58cd87b8d9-bs26b   1/1   Running   3 (4m13s ago)   49m
+back-58cd87b8d9-dxwhb   1/1   Running   3 (3m49s ago)   11m
+== 00:23:56
+back-hpa   Deployment/back   cpu: 6%/60%   2     8     4     171m
+back-58cd87b8d9-25mzz   1/1   Running   2 (3m51s ago)   5m4s
+back-58cd87b8d9-7xmsk   1/1   Running   0               4m33s
+back-58cd87b8d9-bs26b   1/1   Running   3 (4m18s ago)   49m
+back-58cd87b8d9-dxwhb   1/1   Running   3 (3m54s ago)   11m
+== 00:24:01
+back-hpa   Deployment/back   cpu: 6%/60%   2     8     4     171m
+back-58cd87b8d9-25mzz   1/1   Running   2 (3m56s ago)   5m9s
+back-58cd87b8d9-7xmsk   1/1   Running   0               4m38s
+back-58cd87b8d9-bs26b   1/1   Running   3 (4m23s ago)   49m
+back-58cd87b8d9-dxwhb   1/1   Running   3 (3m59s ago)   11m
+== 00:24:06
+back-hpa   Deployment/back   cpu: 6%/60%   2     8     4     171m
+back-58cd87b8d9-25mzz   1/1   Running   2 (4m1s ago)    5m14s
+back-58cd87b8d9-7xmsk   1/1   Running   0               4m43s
+back-58cd87b8d9-bs26b   1/1   Running   3 (4m28s ago)   49m
+back-58cd87b8d9-dxwhb   1/1   Running   3 (4m4s ago)    11m
+== 00:24:11
+back-hpa   Deployment/back   cpu: 6%/60%   2     8     4     171m
+back-58cd87b8d9-25mzz   1/1   Running   2 (4m6s ago)    5m19s
+back-58cd87b8d9-7xmsk   1/1   Running   0               4m48s
+back-58cd87b8d9-bs26b   1/1   Running   3 (4m33s ago)   49m
+back-58cd87b8d9-dxwhb   1/1   Running   3 (4m9s ago)    11m
+== 00:24:16
+back-hpa   Deployment/back   cpu: 6%/60%   2     8     4     171m
+back-58cd87b8d9-25mzz   1/1   Running   2 (4m12s ago)   5m25s
+back-58cd87b8d9-7xmsk   1/1   Running   0               4m54s
+back-58cd87b8d9-bs26b   1/1   Running   3 (4m39s ago)   49m
+back-58cd87b8d9-dxwhb   1/1   Running   3 (4m15s ago)   11m

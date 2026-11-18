@@ -25,7 +25,8 @@ Orden para correr el TP completo y qué capturar en cada paso. Todos los comando
   ```
   En los videos, dejar además una terminal chica con `watch -n1 date`.
 - **Videos con pantalla partida:** terminal con k6 o el script + terminal con `kubectl ... -w` o el navegador.
-- Grabar con **SimpleScreenRecorder** (`sudo apt install simplescreenrecorder`) o con el atajo de GNOME
+- Grabar en `.mkv` con **SimpleScreenRecorder** (`sudo apt install simplescreenrecorder`); revisar la ruta
+  de destino, que por defecto es `~/Videos`. En GNOME también sirve el atajo
   `Ctrl+Alt+Shift+R` (graba hasta 30 s por defecto; para videos largos usar SimpleScreenRecorder).
 - Guardar con los nombres de la tabla de evidencias del README (sección 5): `evidencias/capturas/...`,
   `evidencias/videos/...`. Los reportes JSON/CSV y los screenshots del navegador los generan los scripts.
@@ -112,7 +113,7 @@ Terminal 1:
 ```bash
 k6 run k6/stress.js 2>&1 | tee evidencias/reportes/tp3-stress.txt    # ~10 min, puede abortar al encontrar el quiebre
 ```
-🎥 `videos/02-stress-hpa.mp4`: k6 y el HPA escalando (réplicas 2 → N).
+🎥 `videos/02-stress-hpa.mkv`: k6 y el HPA escalando (réplicas 2 → N).
 Anotar: req/s y p95 en cada escalón, réplicas máximas, si abortó y en qué escalón.
 
 ### 2.3 E1: eliminar un pod con carga estable
@@ -128,19 +129,19 @@ k6 run -e DURATION_S=60 k6/browser-ux.js
 ```
 Terminal 3, unos **20 s después** de arrancar la carga:
 ```bash
-date; kubectl -n terrasense delete pod "$(kubectl -n terrasense get pods -l app=back -o name | head -1)"
+date; kubectl -n terrasense delete "$(kubectl -n terrasense get pods -l app=back -o name | head -1)"   # -o name ya trae "pod/"
 kubectl -n terrasense get pods -l app=back -w
 ```
-🎥 `videos/03-e1-pod-eliminado.mp4`. Los screenshots `capturas/e1-ux-NN.png` se generan solos.
+🎥 `videos/03-e1-pod-eliminado.mkv`. Los screenshots `capturas/e1-ux-NN.png` se generan solos.
 Anotar: cantidad de errores (`errores_e1`), hora del primero y del último (líneas `ERR` del log) → ventana de errores.
 
 ### 2.4 E2: spike de CPU y OOM
 ```bash
-k6 run -e MODE=cpu k6/spike.js 2>&1 | tee evidencias/reportes/tp3-spike-cpu.txt
+k6 run -e MODE=cpu -e PEAK=600 -e MAX_VUS=1000 k6/spike.js 2>&1 | tee evidencias/reportes/tp3-spike-cpu.txt
 ```
 Esperar a que se estabilice y después:
 ```bash
-k6 run -e MODE=oom k6/spike.js 2>&1 | tee evidencias/reportes/tp3-spike-oom.txt
+k6 run -e MODE=oom -e PEAK=600 -e MAX_VUS=1000 k6/spike.js 2>&1 | tee evidencias/reportes/tp3-spike-oom.txt
 ```
 En otra terminal, durante el OOM:
 ```bash
@@ -148,11 +149,11 @@ kubectl -n terrasense get pods -l app=back -w
 # después: confirmar el motivo del reinicio
 kubectl -n terrasense describe pods -l app=back | grep -A3 "Last State"     # → Reason: OOMKilled
 ```
-🎥 `videos/04-e2-oom.mp4`: pods pasando a `OOMKilled` y reiniciándose (RESTARTS sube).
+🎥 `videos/04-e2-oom.mkv`: pods pasando a `OOMKilled` y reiniciándose (RESTARTS sube).
 📸 `capturas/04-oomkilled.png`: el `describe` con `OOMKilled`.
 
-> 1500 req/s puede ser demasiado para una notebook. Si la PC se cuelga, bajar el `target` del pico
-> en `k6/spike.js` (por ejemplo a 600) y anotarlo en el informe.
+> 1500 req/s (el default de `spike.js`) es demasiado para una notebook de 4 GB de RAM: por eso se corre con
+> `-e PEAK=600 -e MAX_VUS=1000` (el quiebre medido en el stress fue ~600 req/s). Anotarlo en el informe.
 
 Antes de seguir, verificar que el back quedó sano:
 `kubectl -n terrasense get pods -l app=back` (todos `Running` y `READY 1/1`).
@@ -181,7 +182,7 @@ Terminal 2, **durante cada etapa** (cuando el script muestra "ETAPA peso-N"):
 ```bash
 ./scripts/conteo-curl.sh 100
 ```
-🎥 `videos/05-rollout-1.1.0.mp4`: el script avanzando de etapa (se puede grabar solo el principio y el final de cada etapa).
+🎥 `videos/05-rollout-1.1.0.mkv`: el script avanzando de etapa (se puede grabar solo el principio y el final de cada etapa).
 📸 `capturas/05-conteo-peso-NN.png` en cada peso; `capturas/05-bitacora.png` con:
 ```bash
 column -s, -t < evidencias/reportes/bitacora.csv
@@ -222,8 +223,13 @@ VERSION_CANARY=1.2.0 ./scripts/rollout.sh
 Resultado esperado: `ETAPA 0 FALLA: 3 de 3 visitas con pantalla en blanco`, y la fila ROLLBACK en la bitácora.
 Los screenshots `capturas/etapa-0-visita-0N-v1.2.0-BLANCA.png` se generan solos.
 
-Mientras el canary tiene la 1.2.0 (peso 0), abrir el navegador con la cookie `canary=always`
-(como en 3.1) y F12 → Consola:
+Mientras el canary tiene la 1.2.0 (peso 0), abrir un Chrome visible ya forzado al canary:
+```bash
+K6_BROWSER_HEADLESS=false K6_BROWSER_ARGS='auto-open-devtools-for-tabs' k6 run k6/browser-demo.js
+```
+(Abre con perfil limpio y la cookie puesta antes de la primera visita. A mano en Firefox suele fallar:
+la afinidad *sticky* de la primera visita le gana a `canary=always`; ver "Problemas frecuentes".)
+En las herramientas de desarrollador:
 📸 `capturas/06-consola-typeerror.png`: pantalla en blanco + `TypeError: Cannot read properties of undefined (reading 'api')`.
 📸 `capturas/06-network-200.png`: pestaña Red (Network) con el HTML y el JS en **200**. Demuestra por qué un chequeo HTTP no la detecta.
 
@@ -233,7 +239,7 @@ VERSION_CANARY=1.2.0 SALTEAR_ETAPA0=1 PESOS="25" DURATION=2m ./scripts/rollout.s
 ```
 Resultado esperado: el split da los thresholds **OK** (todo responde 200), pero el navegador encuentra
 pantallas en blanco → `ROLLBACK completo: tráfico 100% en stable en X s`.
-🎥 `videos/06-rollback-1.2.0.mp4` (**el video más importante del TP**): el script, el navegador en blanco y el rollback.
+🎥 `videos/06-rollback-1.2.0.mkv` (**el video más importante del TP**): el script, el navegador en blanco y el rollback.
 Anotar el **tiempo de rollback** (también queda en la bitácora).
 
 ---
@@ -280,6 +286,9 @@ Para volver a empezar desde cero: `minikube delete` y otra vez `./scripts/deploy
 | Front en `CrashLoopBackOff` | Permisos de nginx con el UID no root | `kubectl -n terrasense logs deploy/front-stable`; verificar los `emptyDir` en `/var/cache/nginx` y `/tmp` |
 | Back no pasa a `Ready` | La DB no está lista o falta el Secret | `kubectl -n terrasense get secret db-secret`; `kubectl -n terrasense logs deploy/back` |
 | k6 browser: `could not find browser` | No encuentra Chrome | `export K6_BROWSER_EXECUTABLE_PATH=/usr/bin/google-chrome` |
+| Navegador con `canary=always` sigue viendo la stable | La cookie de afinidad `terrasense-front` de una visita anterior le gana a la del canary | Usar `k6/browser-demo.js` (perfil limpio), o borrar `terrasense-front` en DevTools → Almacenamiento y recargar |
+| Minikube no arranca: `RSRC_OVER_ALLOC_MEM` | La PC tiene menos RAM que la pedida | `MINIKUBE_CPUS=2 MINIKUBE_MEM=3072 ./scripts/deploy.sh` (con 4 GB de RAM; anotarlo en el informe) |
+| `sudo: a terminal is required` al final de `deploy.sh` | Se corrió sin terminal interactiva | Correr a mano los dos comandos de `/etc/hosts` del final del script |
 | HPA en `<unknown>` | metrics-server sin datos todavía | Esperar 1–2 min; `minikube addons list | grep metrics` |
 | `rollout.sh`: "sin reporte del split" | k6 se cortó | Leer `evidencias/reportes/peso-N-split.log` |
 | La PC se cuelga en stress/spike | El generador de carga y el cluster comparten la máquina | Bajar los `target` de los escalones y anotarlo; revisar las iteraciones descartadas |

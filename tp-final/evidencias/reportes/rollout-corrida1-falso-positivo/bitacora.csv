@@ -1,0 +1,3 @@
+inicio,fin,etapa,version,peso,pct_observado,visitas,p95_canary_ms,p95_stable_ms,err_canary,assets_rotos,pantallas_blancas,decision,motivo
+2026-11-18T01:18:39-03:00,2026-11-18T01:18:58-03:00,etapa-0,1.1.0,0,,3,,,,,0,AVANZA,3/3 visitas forzadas OK
+2026-11-18T01:18:59-03:00,2026-11-18T01:24:07-03:00,peso-10,1.1.0,10,9.83,6001,10.42115349999997,5.2143915,0,0,0,ROLLBACK,p95 canary 10.42115349999997 ms > stable 5.2143915 ms +10% (dif 5;21 ms); rollback en 1;8 s

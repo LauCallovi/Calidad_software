@@ -1,0 +1,88 @@
+
+================ [2026-11-18 02:14:07] ROLLOUT canary 1.2.0 (stable 1.0.0) | pesos: 10 25 50 100 | split 20/s x 5m ================
+
+================ [2026-11-18 02:14:08] Preparando canary con terrasense-front:1.2.0 (peso 0) ================
+2026-11-18T02:14:09-03:00 peso 0 -> 0
+deployment.apps/front-canary patched
+deployment.apps/front-canary scaled
+Waiting for deployment "front-canary" rollout to finish: 0 of 1 updated replicas are available...
+deployment "front-canary" successfully rolled out
+
+================ [2026-11-18 02:14:13] ETAPA 0: peso 0, navegador forzado al canary (3 visitas) ================
+2026-11-18T02:14:13-03:00 peso 0 -> 0
+
+         /\      Grafana   /‾‾/  
+    /\  /  \     |\  __   /  /   
+   /  \/    \    | |/ /  /   ‾‾\ 
+  /          \   |   (  |  (‾)  |
+ / __________ \  |_|\_\  \_____/ 
+
+
+     execution: local
+        script: k6/browser-canary.js
+        output: -
+
+     scenarios: (100.00%) 1 scenario, 1 max VUs, 10m30s max duration (incl. graceful stop):
+              * visitas: 3 iterations shared among 1 VUs (maxDuration: 10m0s, gracefulStop: 30s)
+
+
+running (00m01.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+visitas   [   0% ] 1 VUs  00m01.0s/10m0s  0/3 shared iters
+
+running (00m02.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+visitas   [   0% ] 1 VUs  00m02.0s/10m0s  0/3 shared iters
+
+running (00m03.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+visitas   [   0% ] 1 VUs  00m03.0s/10m0s  0/3 shared iters
+
+running (00m04.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+visitas   [   0% ] 1 VUs  00m04.0s/10m0s  0/3 shared iters
+
+running (00m05.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+visitas   [   0% ] 1 VUs  00m05.0s/10m0s  0/3 shared iters
+
+running (00m06.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+visitas   [   0% ] 1 VUs  00m06.0s/10m0s  0/3 shared iters
+
+running (00m07.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+visitas   [   0% ] 1 VUs  00m07.0s/10m0s  0/3 shared iters
+time="2026-11-18T02:14:26-03:00" level=info msg="2026-11-18T05:14:26.780Z visita 01: v1.2.0 PANTALLA EN BLANCO" source=console
+
+running (00m08.0s), 1/1 VUs, 0 complete and 0 interrupted iterations
+visitas   [   0% ] 1 VUs  00m08.0s/10m0s  0/3 shared iters
+
+running (00m09.0s), 1/1 VUs, 1 complete and 0 interrupted iterations
+visitas   [  33% ] 1 VUs  00m09.0s/10m0s  1/3 shared iters
+
+running (00m10.0s), 1/1 VUs, 1 complete and 0 interrupted iterations
+visitas   [  33% ] 1 VUs  00m10.0s/10m0s  1/3 shared iters
+
+running (00m11.0s), 1/1 VUs, 1 complete and 0 interrupted iterations
+visitas   [  33% ] 1 VUs  00m11.0s/10m0s  1/3 shared iters
+
+running (00m12.0s), 1/1 VUs, 1 complete and 0 interrupted iterations
+visitas   [  33% ] 1 VUs  00m12.0s/10m0s  1/3 shared iters
+time="2026-11-18T02:14:32-03:00" level=info msg="2026-11-18T05:14:32.147Z visita 02: v1.2.0 PANTALLA EN BLANCO" source=console
+
+running (00m13.0s), 1/1 VUs, 1 complete and 0 interrupted iterations
+visitas   [  33% ] 1 VUs  00m13.0s/10m0s  1/3 shared iters
+
+running (00m14.0s), 1/1 VUs, 2 complete and 0 interrupted iterations
+visitas   [  67% ] 1 VUs  00m14.0s/10m0s  2/3 shared iters
+
+running (00m15.0s), 1/1 VUs, 2 complete and 0 interrupted iterations
+visitas   [  67% ] 1 VUs  00m15.0s/10m0s  2/3 shared iters
+
+running (00m16.0s), 1/1 VUs, 2 complete and 0 interrupted iterations
+visitas   [  67% ] 1 VUs  00m16.0s/10m0s  2/3 shared iters
+time="2026-11-18T02:14:35-03:00" level=info msg="2026-11-18T05:14:35.878Z visita 03: v1.2.0 PANTALLA EN BLANCO" source=console
+
+running (00m17.0s), 0/1 VUs, 3 complete and 0 interrupted iterations
+visitas ✓ [ 100% ] 1 VUs  00m17.0s/10m0s  3/3 shared iters
+
+=== etapa-0 (navegador): 3 visitas → canary 3, stable 0, pantallas en blanco 3 ===
+
+running (00m17.0s), 0/1 VUs, 3 complete and 0 interrupted iterations
+visitas ✓ [ 100% ] 1 VUs  00m17.0s/10m0s  3/3 shared iters
+time="2026-11-18T02:14:36-03:00" level=error msg="thresholds on metrics 'pantalla_blanca' have been crossed"
+>>> ETAPA 0 FALLA: 3 de 3 visitas con pantalla en blanco. Ningún usuario real fue expuesto (peso 0).
